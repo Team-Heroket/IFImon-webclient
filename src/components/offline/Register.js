@@ -91,7 +91,7 @@ class Register extends React.Component {
                 password: this.state.password
             });
             await api.post('/users', requestBody);
-            this.props.history.push('/login');
+            this.goToLogin();
 
         } catch (error) {
             alert(`Something went wrong during the login: \n${handleError(error)}`);
