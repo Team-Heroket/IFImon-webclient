@@ -16,7 +16,7 @@ export const Button = styled.button`
   border-radius: 25px;
   margin-top: 10px;
   cursor: ${props => (props.disabled ? "default" : "pointer")};
-  opacity: ${props => (props.disabled ? "66%" : "90%")};
+  opacity: ${props => (props.disabled ? "66%" : "100%")};
   background: rgb(255, 255, 255, ${props => (props.disabled ? "0%" : "100%")});
   transition: all 0.3s ease;
 `;
@@ -39,14 +39,14 @@ export const MenuButton = styled.button`
   border-radius: 25px;
   margin-top: 10px;
   cursor: ${props => (props.disabled ? "default" : "pointer")};
-  opacity: ${props => (props.disabled ? "66%" : "90%")};
+  opacity: ${props => (props.disabled ? "66%" : "100%")};
   background: rgb(255, 255, 255, ${props => (props.disabled ? "0%" : "100%")});
   transition: all 0.3s ease;
 `;
 
 export const LogOutButton = styled.button`
   &:hover {
-    transform: translateY(${props => (props.disabled ? 0 : 2)}px);
+    transform: translateY(2px);
     font-weight: 700;
     color: rgba(255, 255, 255, 1);
     opacity: 90%;
@@ -65,7 +65,7 @@ export const LogOutButton = styled.button`
   height: 35px;
   border: 0px solid #FFFFFF;;
   border-radius: 25px;
-  margin-top: 10px;
+  margin-top: 30px;
   cursor: "pointer";
   opacity: 90%;
   background: rgb(255, 255, 255);

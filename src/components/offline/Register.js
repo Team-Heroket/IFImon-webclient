@@ -60,9 +60,12 @@ const Label = styled.label`
 `;
 
 const ButtonContainer = styled.div`
-  display: flex;
+      display: flex;
+  flex-direction: column;
+  
+  align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  margin-bottom:20px
 `;
 
 const PasswordField = styled.input`
@@ -148,8 +151,7 @@ class Register extends React.Component {
                             >
                                 Register
                             </Button>
-                        </ButtonContainer>
-                        <ButtonContainer>
+
                             <Button
                                 width="50%"
                                 onClick={() => {

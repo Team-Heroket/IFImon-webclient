@@ -1,10 +1,11 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styled from 'styled-components';
 import { BaseContainer } from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
 import User from '../../shared/models/User';
 import { withRouter } from 'react-router-dom';
-import { Button, LogOutButton, MenuButton } from '../../../views/design/Button';
+import { Button, LogOutButton, MenuButton, MenuIcon } from '../../../views/design/Button';
 import Header from "../../../views/Header";
 
 
@@ -53,7 +54,7 @@ class MainMenu extends React.Component {
     }
 
     goToLeaderBoard() {
-        this.props.history.push('/leaderboard')
+        this.props.history.push('/leaderboards')
     }
 
     async logOut(){
@@ -74,7 +75,7 @@ class MainMenu extends React.Component {
     render() {
         return (
             <BaseContainer>
-                <Header height={140} top={33} />
+                <Header height={140} top={33}/>
                 <FormContainer>
                     <Form>
                         <ButtonContainer>
@@ -94,6 +95,7 @@ class MainMenu extends React.Component {
                                 width="50%"
                                 onClick = {() => {this.logOut()}}
                             >
+
                                 Log Out
                             </LogOutButton>
                         </ButtonContainer>

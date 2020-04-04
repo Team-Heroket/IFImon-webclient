@@ -6,6 +6,7 @@ import User from '../../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../../views/design/Button';
 import ReactDOM from "react-dom";
+import Header from "../../../views/Header";
 const FormContainer = styled.div`
   margin-top: 2em;
   display: flex;
@@ -106,7 +107,8 @@ class Settings extends React.Component {
         //"Edit Profile" Button is invisible to users that look at a profile that is not theirs
 
         return(
-            <div>
+            <BaseContainer>
+            <Header height={140} top={33} />
                 {/*
                  <img alt="avatar" src={require('../../shared/images/avatar/'+this.state.avatarid+'.png')}/>
                  For now only commented, since we don't have pictures in directory
@@ -125,7 +127,7 @@ class Settings extends React.Component {
                 >
                     Edit Profile
                 </Button> : null}
-            </div>
+            </BaseContainer>
         );
     }
 }

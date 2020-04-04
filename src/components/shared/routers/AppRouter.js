@@ -8,6 +8,7 @@ import Register from "../../offline/Register";
 import MainMenu from "../../online/mainmenu/MainMenu";
 import Settings from "../../online/profile/Settings";
 import Edit from "../../online/profile/Edit";
+import Leaderboards from "../../online/leaderboards/Leaderboards";
 /**
  * Main router of your application.
  * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/offline"
@@ -37,6 +38,14 @@ class AppRouter extends React.Component {
                   render={() => (
                       <GameGuard>
                           <MainMenu/>
+                      </GameGuard>
+                  )}
+              />
+              <Route
+                  path="/leaderboards"
+                  render={() => (
+                      <GameGuard>
+                          <Leaderboards/>
                       </GameGuard>
                   )}
               />
