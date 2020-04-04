@@ -26,7 +26,6 @@ const Form = styled.div`
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
@@ -34,18 +33,27 @@ const InputField = styled.input`
   &::placeholder {
     color: rgba(255, 255, 255, 1.0);
   }
+  position: relative;
+  transform : translate(-50%, 0%);
   height: 35px;
-  padding-left: 15px;
-  margin-left: -4px;
+  width: 400px;
+  left: 50%;
   border: none;
-  border-radius: 20px;
+  border-radius: 25px;
   margin-bottom: 20px;
+  padding-left:10px;
   background: rgba(255, 255, 255, 0.2);
   color: white;
+  
 `;
 
 const Label = styled.label`
+  position: relative;
+  transform : translate(-50%, 0%);
+  width: 400px;
+  left: 50%;
   color: white;
+  margin-left: 4px;
   margin-bottom: 10px;
   text-transform: uppercase;
 `;
