@@ -3,7 +3,7 @@ import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { GameGuard } from "../routeProtectors/GameGuard";
 import GameRouter from "./GameRouter";
 import { LoginGuard } from "../routeProtectors/LoginGuard";
-import Login from "../../login/Login"
+import Login from "../../offline/Login"
 import Register from "../../offline/Register";
 import MainMenu from "../../online/mainmenu/MainMenu";
 import Settings from "../../online/profile/Settings";

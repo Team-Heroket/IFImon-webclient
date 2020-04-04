@@ -5,6 +5,7 @@ import { api, handleError } from '../../helpers/api';
 import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
+import Header from "../../views/Header";
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -120,6 +121,7 @@ class Register extends React.Component {
     render() {
         return (
             <BaseContainer>
+                <Header height={195} top={66} />
                 <FormContainer>
                     <Form>
                         <Label>Username</Label>

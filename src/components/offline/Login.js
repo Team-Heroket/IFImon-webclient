@@ -5,6 +5,7 @@ import { api, handleError } from '../../helpers/api';
 import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
+import Header from "../../views/Header";
 
 const FormContainer = styled.div`
   margin-top: 2em;
@@ -59,9 +60,12 @@ const Label = styled.label`
 `;
 
 const ButtonContainer = styled.div`
-  display: flex;
+      display: flex;
+  flex-direction: column;
+  
+  align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  margin-bottom:20px
 `;
 
 /**
@@ -140,6 +144,7 @@ class Login extends React.Component {
   render() {
     return (
       <BaseContainer>
+        <Header height={195} top={66} />
         <FormContainer>
           <Form>
             <Label>Username</Label>
@@ -166,8 +171,6 @@ class Login extends React.Component {
               >
                 Login
               </Button>
-            </ButtonContainer>
-            <ButtonContainer>
               <Button
                   width="50%"
                   onClick={() => {

@@ -4,23 +4,9 @@ import { BaseContainer } from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
 import User from '../../shared/models/User';
 import { withRouter } from 'react-router-dom';
-import { Button } from '../../../views/design/Button';
+import { Button, LogOutButton, MenuButton } from '../../../views/design/Button';
+import Header from "../../../views/Header";
 
-
-
-const InputField = styled.input`
-  &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
-  }
-  height: 35px;
-  padding-left: 15px;
-  margin-left: -4px;
-  border: none;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-`;
 
 const Label = styled.label`
   color: white;
@@ -30,8 +16,11 @@ const Label = styled.label`
 
 const ButtonContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  
+  align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  margin-bottom:20px
 `;
 
 const FormContainer = styled.div`
@@ -54,7 +43,6 @@ const Form = styled.div`
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
@@ -68,13 +56,25 @@ class MainMenu extends React.Component {
         this.props.history.push('/leaderboard')
     }
 
+    async logOut(){
+        try {
+            const requestBody = JSON.stringify({
+                token: localStorage.getItem('token')
+            });
+            const response = await api.put('/logout', requestBody);
 
-
-
+            // Get the returned user and update a new object.
+            localStorage.removeItem('id');
+            localStorage.removeItem('token');
+        } catch (error) {
+            alert(`Something went wrong during the login: \n${handleError(error)}`);
+        }
+    }
 
     render() {
         return (
-
+            <BaseContainer>
+                <Header height={140} top={33} />
                 <FormContainer>
                     <Form>
                         <ButtonContainer>
@@ -84,18 +84,23 @@ class MainMenu extends React.Component {
                             >
                                 Leaderboard
                             </Button>
-                        </ButtonContainer>
-                        <ButtonContainer>
                             <Button
                                 width="50%"
                                 onClick = {() => {this.goToSettings()}}
                             >
                                 Settings
                             </Button>
+                            <LogOutButton
+                                width="50%"
+                                onClick = {() => {this.logOut()}}
+                            >
+                                Log Out
+                            </LogOutButton>
                         </ButtonContainer>
+
                     </Form>
                 </FormContainer>
-
+            </BaseContainer>
         );
     }
 }
