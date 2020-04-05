@@ -1,7 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import {ReactLogo} from "./ReactLogo";
-import Header from "./Header";
 
 const Container = styled.button`
     &:hover {
@@ -90,10 +88,10 @@ const Id = styled.div`
  * https://reactjs.org/docs/components-and-props.html
  * @FunctionalComponent
  */
-export const Player = ({ user }) => {
+export let Player = ({ user }) => {
   return (
       <Container>
-      <Rank>{user.rank}.</Rank> <UserName>{user.username}</UserName>
+      <Rank>{user.statistics.rating}.</Rank> <UserName>{user.username}</UserName>
       <Id>{user.statistics.gamesWon}</Id>
     </Container>
   );
@@ -137,24 +135,28 @@ color: #ffffff;
 `;
 
 
-export const PlayerStatCard = ({ user }) => {
+export let PlayerStatCard = ({ user }) => {
     return (
         <ExternContainer>
 
             <Row>
+
+
                 <Column span={"20"}>
                     <StatCardContainer>
-                        <img alt="avatar" src={require('../components/shared/images/avatarSVG/00'+user.avatarid+'-avatar.svg')} height={"66px"} width={"66px"}/>
+                        {console.log("user id:"+user.avatarId)}
+                        <img alt="avatar" src={require('../components/shared/images/avatarSVG/00'+user.avatarId+'-avatar.svg')} height={"66px"} width={"66px"}/>
                         <br/>
                         <RankCard>
                             Rank:
                         </RankCard>
                         <br/>
                         <RankValCard>
-                            {user.rank}
+                            {user.statistics.rating}
                         </RankValCard>
                     </StatCardContainer>
                 </Column>
+
                 <Column span={"80"}>
                     <StatsContainer>
                         <UserNameCard>
@@ -167,7 +169,7 @@ export const PlayerStatCard = ({ user }) => {
                         </RankCard>
                         <br/>
                         <RankCard>
-                            Wins: {user.statistics.gamesWon}
+                      x      Wins: {user.statistics.gamesWon}
                         </RankCard>
                         <br/>
                         <RankCard>
@@ -185,4 +187,3 @@ export const PlayerStatCard = ({ user }) => {
 
     );
 };
-

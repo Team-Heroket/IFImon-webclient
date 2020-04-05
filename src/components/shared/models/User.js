@@ -7,7 +7,7 @@ class User {
     this.username = null;
     this.token = null;
     this.status = null;
-    this.avatarid = null;
+    this.avatarId = null;
     this.rank = null;
     this.gamesPlayed = null;
     this.gamesWon = null;

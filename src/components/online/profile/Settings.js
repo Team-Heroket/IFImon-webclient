@@ -78,7 +78,14 @@ class Settings extends React.Component {
         };
     }
 
+    goBack() {
+        this.props.history.push('/menu')
+    }
 
+    handleClick(i
+    ) {
+        console.log('Click happened');
+    }
 
     async componentDidMount() {
         //Checks if id in URL corresponds with our id. If it does, we can see edit button
@@ -135,14 +142,13 @@ class Settings extends React.Component {
                 enable = true;
             }
             this.state.avatar_list.push(
-                <AvatarButton
+                <AvatarButton id = {i}
                     enabled={enable}
-                    onClick={() => {
-                        this.setState({'avatarid': i});
-                    }}
                 >
-                    <li>
+                    <li key={i}>
+                        <button onClick={this.handleClick.bind(null,i)}>
                         <img alt="avatar" src={require('../../shared/images/avatarSVG/0'+s+'-avatar.svg')} height={"66px"} width={"66px"}/>
+                        </button>
                     </li>
                 </AvatarButton>
             )
@@ -161,10 +167,10 @@ class Settings extends React.Component {
 
         try {
             const requestBody = JSON.stringify(response);
-            await api.put('/users/'+this.props.match.params, requestBody);
+            await api.put('/users/'+localStorage.getItem('id'), requestBody, { headers: {'Token': localStorage.getItem('token')}});
             this.goToSettings();
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            alert(`Something went wrong during saving: \n${handleError(error)}`);
         }
 
     }
