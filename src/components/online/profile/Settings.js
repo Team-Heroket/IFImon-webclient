@@ -4,57 +4,55 @@ import { BaseContainer } from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
 import User from '../../shared/models/User';
 import { withRouter } from 'react-router-dom';
-import { Button, AvatarButton } from '../../../views/design/Button';
+import {Button, AvatarButton, RoundContainer} from '../../../views/design/Button';
 import ReactDOM from "react-dom";
 import Header from "../../../views/Header";
-const FormContainer = styled.div`
-  margin-top: 2em;
+import {Player, PlayerStatCard} from "../../../views/Player";
+import {BackIcon} from "../../../views/design/Icons";
+
+const Label = styled.label`
+  position: relative;
+  transform : translate(-50%, 0%);
+  width: 400px;
+  left: 50%;
+  color: white;
+  margin-left: 4px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+`;
+
+const Row = styled.div`
+    &::after{
+    content: "";
+    clear: "";
+    display: table "";
+    }
+    `;
+
+const PlayerContainer = styled.li`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 300px;
   justify-content: center;
 `;
 
-const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 60%;
-  height: 375px;
-  font-size: 16px;
-  font-weight: 300;
-  padding-left: 37px;
-  padding-right: 37px;
-  border-radius: 5px;
-  background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
-  transition: opacity 0.5s ease, transform 0.5s ease;
-`;
 
 const InputField = styled.input`
   &::placeholder {
     color: rgba(255, 255, 255, 1.0);
   }
+  position: relative;
+  transform : translate(-50%, 0%);
   height: 35px;
-  padding-left: 15px;
-  margin-left: -4px;
+  width: 400px;
+  left: 50%;
   border: none;
-  border-radius: 20px;
+  border-radius: 25px;
   margin-bottom: 20px;
+  padding-left:10px;
   background: rgba(255, 255, 255, 0.2);
   color: white;
-`;
-
-const Label = styled.label`
-  color: white;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
+  
 `;
 
 class Settings extends React.Component {
@@ -62,15 +60,19 @@ class Settings extends React.Component {
         super();
 
         this.state = {
-            username: null,
-            avatarid: 3,
-            id: null,
-            rank: null,
-            gamesPlayed: null,
-            gamesWon: null,
-            gamesLost: null,
-            winToLoseRatio: null,
-            editClicked: false,
+            user: {
+                rank: '2',
+                avatarid: '2',
+                username: 'Player2',
+                gamesWon: '55',
+                year: 1988,
+                statistics: {
+                    gamesWon: 33,
+                    gamesLost: 32,
+                    gamesPlayed: 65,
+                    pokemonDiscovered: 225,
+                }
+            },
             avatar_list: []
         };
     }
@@ -85,9 +87,24 @@ class Settings extends React.Component {
             this.goToMenu();
         }
 
-        this.setState({id: url_id})
 
-        const response = api.get('/users/'+this.state.id)
+        //const response = api.get('/users/'+url_id
+        let response = {
+            rank: '2',
+            avatarid: '2',
+            username: 'Player2',
+            gamesWon: '55',
+            year: 1988,
+            statistics: {
+                gamesWon: 33,
+                gamesLost: 32,
+                gamesPlayed: 65,
+                pokemonDiscovered: 225,
+            }
+        }
+        this.setState({user: response})
+
+
         //sets fetched data to state that will be displayed
         /*
         this.setState({
@@ -135,6 +152,22 @@ class Settings extends React.Component {
         this.props.history.push('/menu');
     }
 
+    async save() {
+        let response = {};
+        if (this.state.username !== null) {response.username = this.state.username}
+        if (this.state.password !== null) {response.password = this.state.password}
+        if (this.state.avatarid !== null) {response.avatarid = this.state.avatarid}
+
+        try {
+            const requestBody = JSON.stringify(response);
+            await api.put('/users/'+this.props.match.params, requestBody);
+            this.goToSettings();
+        } catch (error) {
+            alert(`Something went wrong during the login: \n${handleError(error)}`);
+        }
+
+    }
+
 
 
     handleInputChange(key, value) {
@@ -150,14 +183,15 @@ class Settings extends React.Component {
         return(
             <BaseContainer>
             <Header height={140} top={33} />
+                <Row>
+                    <RoundContainer onClick = {() => {this.goBack()}}>
+                        <BackIcon />
+                    </RoundContainer>
+                </Row>
+                <Row>
                 {this.state.editClicked ? null :
                     <div>
-                        <h1>Username: {this.state.username}</h1>
-                        <h1>Rank: {this.state.rank}</h1>
-                        <h1>Games played: {this.state.gamesPlayed}</h1>
-                        <h1>Games won: {this.state.gamesWon}</h1>
-                        <h1>Games lost: {this.state.gamesLost}</h1>
-                        <h1>Win to lose ratio: {this.state.winToLoseRatio}</h1>
+                        <PlayerStatCard user={this.state.user}/>
                         <Button
                             width="50%"
                             onClick={() => {
@@ -171,14 +205,14 @@ class Settings extends React.Component {
                 {this.state.editClicked ?
                     <div>
                         <h1>Enter new Username</h1>
-                        <input
+                        <InputField
                             placeholder="Enter here.."
                             onChange={e => {
                                 this.handleInputChange('username', e.target.value);
                             }}
                         />
                         <h1>Enter new Password</h1>
-                        <input
+                        <InputField
                             placeholder="Enter here.."
                             onChange={e => {
                                 this.handleInputChange('username', e.target.value);
@@ -218,7 +252,7 @@ class Settings extends React.Component {
                     : null
                 }
 
-
+                </Row>
             </BaseContainer>
         );
     }
