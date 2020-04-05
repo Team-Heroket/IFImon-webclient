@@ -70,63 +70,142 @@ class Settings extends React.Component {
             gamesWon: null,
             gamesLost: null,
             winToLoseRatio: null,
-            showEdit: false
+            editClicked: false,
+            avatar_list: []
         };
     }
+
+
 
     async componentDidMount() {
         //Checks if id in URL corresponds with our id. If it does, we can see edit button
         let url_id = this.props.match.params;
-        if (url_id=== localStorage.getItem('id')) {
-            this.setState({showEdit: true})
+
+        if (url_id === localStorage.getItem('id')) {
+            this.goToMenu();
         }
 
-        //Fetches data of user with the id from backend
         this.setState({id: url_id})
+
         const response = api.get('/users/'+this.state.id)
-        const newUser = new User(response.data);
         //sets fetched data to state that will be displayed
+        /*
         this.setState({
-            username: newUser.username,
-            avatarid: newUser.avatarid,
-            rank: newUser.rank,
-            gamesPlayed: newUser.gamesPlayed,
-            gamesWon: newUser.gamesWon,
-            gamesLost: newUser.gamesLost,
-            winToLoseRatio: newUser.winToLoseRatio
+            username: response.username,
+            avatarid: response.avatarid,
+            rank: response.statistics.rating,
+            gamesPlayed: response.statistics.gamesPlayed,
+            gamesWon: response.statistics.gamesWon,
+            gamesLost: response.statistics.gamesLost,
+            winToLoseRatio: response.statistics.winToLoseRatio
         })
+        */
+
+
+        for (let i=1; i<61; i++) {
+            this.state.avatar_list.push(
+                <button
+                    width="50%"
+                    onClick={() => {
+                        this.setState({avatarid: i});
+                    }}
+                >
+                    <li>
+                        <img alt="avatar" src={require('../../shared/images/avatar/'+i+'.png')}/>
+                    </li>
+                </button>
+            )
+        }
     }
 
-    goToEdit() {
-        this.props.history.push('/edit/'+this.state.id);
+    goToMenu() {
+        this.props.history.push('/menu');
+    }
+
+
+
+    handleInputChange(key, value) {
+        // Example: if the key is username, this statement is the equivalent to the following one:
+        // this.setState({'username': value});
+        this.setState({ [key]: value });
     }
 
     render() {
-
         //Shows user information
         //"Edit Profile" Button is invisible to users that look at a profile that is not theirs
 
         return(
             <BaseContainer>
             <Header height={140} top={33} />
-                {/*
-                 <img alt="avatar" src={require('../../shared/images/avatar/'+this.state.avatarid+'.png')}/>
-                 For now only commented, since we don't have pictures in directory
-                 */}
-                <h1>Username: {this.state.username}</h1>
-                <h1>Rank: {this.state.rank}</h1>
-                <h1>Games played: {this.state.gamesPlayed}</h1>
-                <h1>Games won: {this.state.gamesWon}</h1>
-                <h1>Games lost: {this.state.gamesLost}</h1>
-                <h1>Win to lose ratio: {this.state.winToLoseRatio}</h1>
-                {this.state.showEdit ? <Button
-                    width="50%"
-                    onClick={() => {
-                         this.goToEdit();
-                    }}
-                >
-                    Edit Profile
-                </Button> : null}
+                {this.state.editClicked ? null :
+                    <div>
+                        <h1>Username: {this.state.username}</h1>
+                        <h1>Rank: {this.state.rank}</h1>
+                        <h1>Games played: {this.state.gamesPlayed}</h1>
+                        <h1>Games won: {this.state.gamesWon}</h1>
+                        <h1>Games lost: {this.state.gamesLost}</h1>
+                        <h1>Win to lose ratio: {this.state.winToLoseRatio}</h1>
+                        <Button
+                            width="50%"
+                            onClick={() => {
+                                this.setState({editClicked: true});
+                            }}
+                        >
+
+                            Edit Profile
+                        </Button>
+                    </div>}
+                {this.state.editClicked ?
+                    <div>
+                        <h1>Enter new Username</h1>
+                        <input
+                            placeholder="Enter here.."
+                            onChange={e => {
+                                this.handleInputChange('username', e.target.value);
+                            }}
+                        />
+                        <h1>Enter new Password</h1>
+                        <input
+                            placeholder="Enter here.."
+                            onChange={e => {
+                                this.handleInputChange('username', e.target.value);
+                            }}
+                        />
+
+                        <h1>Choose new Avatar</h1>
+                        <ul>
+                            {
+                                this.state.avatar_list
+                            }
+                        </ul>
+                        <h1>Current avatar={this.state.avatarid}</h1>
+                        <Button
+                            width="50%"
+                            onClick={() => {
+
+                                this.setState({editClicked: false,
+                                    username: null,
+                                    password: null,
+                                    avatarid: null
+                                });
+                            }}
+                        >
+                            Go to Settings
+                        </Button>
+                        <Button
+                            width="50%"
+                            onClick={() => {
+                                this.setState({editClicked: false});
+                                this.save();
+                            }}
+                        >
+                            Save
+                        </Button>
+                    </div>
+                    : null
+                }
+
+
             </BaseContainer>
         );
     }
