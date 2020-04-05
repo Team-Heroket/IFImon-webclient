@@ -41,17 +41,18 @@ class MainMenu extends React.Component {
 
     async logOut(){
         try {
-            const requestBody = JSON.stringify({
-                token: localStorage.getItem('token')
-            });
-            const response = await api.put('/logout', requestBody);
+            const body = JSON.stringify({});
+            const response = await api.put('/logout', body , { headers: {'Token': localStorage.getItem('token')}});
 
             // Get the returned user and update a new object.
             localStorage.removeItem('id');
             localStorage.removeItem('token');
+
+            this.props.history.push('/login')
         } catch (error) {
             alert(`Something went wrong during the login: \n${handleError(error)}`);
         }
+
     }
 
     render() {

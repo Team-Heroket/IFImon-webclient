@@ -15,7 +15,6 @@ import { ReactLogo } from "./ReactLogo";
 const Header = props => {
   return (
       <ReactLogo height={$props => props.height} left={50} top={$props => props.top} />
-
   );
 };
 

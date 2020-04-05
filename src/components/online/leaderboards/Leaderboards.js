@@ -52,50 +52,9 @@ function list(userlist) {
 class Leaderboard extends React.Component {
 
 
-    user = {
-        rank: '1',
-        avatarid: '4',
-        username: 'Player1',
-        year: 1988,
-        statistics: {
-            gamesWon: 88,
-            gamesLost: 12,
-            gamesPlayed:100,
-            pokemonDiscovered: 200
-        },
-    }
-
-     userlist = [
-        {
-            rank: '1',
-            avatarid: '3',
-            username: 'Player1',
-            gamesWon: '77',
-            year: 1988,
-            statistics: {
-                gamesWon: 88,
-                gamesLost: 12,
-                gamesPlayed:100,
-            },
-        },
-        {
-            rank: '2',
-            avatarid: '2',
-            username: 'Player2',
-            gamesWon: '55',
-            year: 1988,
-            statistics: {
-                gamesWon: 33,
-                gamesLost: 32,
-                gamesPlayed:65,
-                pokemonDiscovered: 225,
-            },
-        },
-    ];
-
     componentWillMount() {
         try {
-            //this.userlist = api.get('/users');
+            this.userlist = api.get('/users', { headers: {'Token': localStorage.getItem('token')}});
 
 
         } catch (error) {

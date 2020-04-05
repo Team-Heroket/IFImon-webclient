@@ -90,7 +90,8 @@ class Login extends React.Component {
       // Get the returned user and update a new object.
       const data = response.data;
 
-      localStorage.setItem('token', data.token);
+
+      localStorage.setItem('token', data.Token);
       localStorage.setItem('id', data.id)
 
       // Login successfully worked --> navigate to the route /game in the GameRouter
@@ -100,7 +101,7 @@ class Login extends React.Component {
     }
   }
 
-  goToRegister() {
+  async goToRegister() {
     this.props.history.push('/register');
   }
 
@@ -112,17 +113,8 @@ class Login extends React.Component {
   handleInputChange(key, value) {
     // Example: if the key is username, this statement is the equivalent to the following one:
     // this.setState({'username': value});
-    this.setState({ [key]: value });
+    this.setState( {[key]: value} );
   }
-
-  /**
-   * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
-   * Initialization that requires DOM nodes should go here.
-   * If you need to load data from a remote endpoint, this is a good place to instantiate the network request.
-   * You may call setState() immediately in componentDidMount().
-   * It will trigger an extra rendering, but it will happen before the browser updates the screen.
-   */
-  componentDidMount() {}
 
   render() {
     return (
