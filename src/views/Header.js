@@ -2,25 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { ReactLogo } from "./ReactLogo";
 
-/**
- * Using styled-components you can visual HTML primitives and use props with it!
- * The idea behind this external package, it's to have a better structure and overview for your HTML and CSS
- * Using styled-components, you can have styling conditions using the following syntax: ${props => ...}
- * https://www.styled-components.com/
- */
-const Container = styled.div`
-  height: ${props => props.height}px;
-  background: ${props => props.background};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Title = styled.h1`
-  font-weight: bold;
-  color: white;
-  text-align: center;
-`;
 
 
 /**

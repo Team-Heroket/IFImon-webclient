@@ -4,7 +4,7 @@ import { BaseContainer } from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
 import User from '../../shared/models/User';
 import { withRouter } from 'react-router-dom';
-import { Button } from '../../../views/design/Button';
+import { Button, AvatarButton } from '../../../views/design/Button';
 import ReactDOM from "react-dom";
 import Header from "../../../views/Header";
 const FormContainer = styled.div`
@@ -63,7 +63,7 @@ class Settings extends React.Component {
 
         this.state = {
             username: null,
-            avatarid: null,
+            avatarid: 3,
             id: null,
             rank: null,
             gamesPlayed: null,
@@ -103,17 +103,30 @@ class Settings extends React.Component {
 
 
         for (let i=1; i<61; i++) {
+            let s;
+            let enable;
+            enable = false;
+            s = '';
+            if(i<10){
+                s='0'+i;
+            }
+            else{
+                s=i.toString();
+            }
+            if(i == this.state.avatarid){
+                enable = true;
+            }
             this.state.avatar_list.push(
-                <button
-                    width="50%"
+                <AvatarButton
+                    enabled={enable}
                     onClick={() => {
                         this.setState({avatarid: i});
                     }}
                 >
                     <li>
-                        <img alt="avatar" src={require('../../shared/images/avatar/'+i+'.png')}/>
+                        <img alt="avatar" src={require('../../shared/images/avatarSVG/0'+s+'-avatar.svg')} height={"66px"} width={"66px"}/>
                     </li>
-                </button>
+                </AvatarButton>
             )
         }
     }

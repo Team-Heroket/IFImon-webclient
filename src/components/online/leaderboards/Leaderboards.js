@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import { BaseContainer, ButtonContainer, FormContainer } from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
 import { withRouter } from 'react-router-dom';
-import { Button, LogOutButton, MenuButton, MenuIcon } from '../../../views/design/Button';
+import { Button, LogOutButton, BackButton, RoundContainer} from '../../../views/design/Button';
 import Header from "../../../views/Header";
-import Player from "../../../views/Player";
+import {Player, PlayerStatCard} from "../../../views/Player";
+import {BackIcon} from "../../../views/design/Icons";
 
 const PlayerContainer = styled.li`
   display: flex;
@@ -13,6 +14,24 @@ const PlayerContainer = styled.li`
   align-items: center;
   justify-content: center;
 `;
+
+const Row = styled.div`
+    &::after{
+    content: "";
+    clear: "";
+    display: table "";
+    }
+    `;
+
+const Column = styled.div`
+    float: left
+    align-items: center
+    width = 100%
+    
+    @media only screen and (min-width: 768px){
+    width: 50%;
+    }
+`
 
 function list(userlist) {
     return (
@@ -31,6 +50,7 @@ function list(userlist) {
 }
 
 class Leaderboard extends React.Component {
+
 
      userlist = [
         {
@@ -64,22 +84,42 @@ class Leaderboard extends React.Component {
             //this.userlist = api.get('/users');
 
 
-
         } catch (error) {
             alert(`Something went wrong during the login: \n${handleError(error)}`);
         }
     }
 
+    goBack() {
+        this.props.history.push('/menu')
+    }
+
+
+
     render() {
         return (
             <BaseContainer>
                 <Header height={140} top={33}/>
-                <FormContainer>
-                    {list(this.userlist)}
-                </FormContainer>
+                <Row>
+                    <RoundContainer onClick = {() => {this.goBack()}}>
+                        <BackIcon />
+                    </RoundContainer>
+                </Row>
+                <Row>
+                <Column>
+                    <FormContainer>
+                        {list(this.userlist)}
+                    </FormContainer>
+                </Column>
+                <Column>
+                    <PlayerStatCard/>
+                </Column>
+                </Row>
             </BaseContainer>
         );
     }
+
+
+
 }
 
 export default withRouter(Leaderboard);
