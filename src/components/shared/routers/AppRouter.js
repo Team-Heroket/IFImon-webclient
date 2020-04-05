@@ -7,7 +7,6 @@ import Login from "../../offline/Login"
 import Register from "../../offline/Register";
 import MainMenu from "../../online/mainmenu/MainMenu";
 import Settings from "../../online/profile/Settings";
-import Edit from "../../online/profile/Edit";
 import Leaderboards from "../../online/leaderboards/Leaderboards";
 /**
  * Main router of your application.
@@ -54,15 +53,6 @@ class AppRouter extends React.Component {
                   render={() => (
                       <GameGuard>
                           <Settings/>
-                      </GameGuard>
-                  )}
-              />
-
-              <Route
-                  path="/edit/:id"
-                  render={() => (
-                      <GameGuard>
-                          <Edit/>
                       </GameGuard>
                   )}
               />
