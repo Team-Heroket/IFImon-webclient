@@ -1,5 +1,4 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styled from 'styled-components';
 import { BaseContainer, ButtonContainer, FormContainer } from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';

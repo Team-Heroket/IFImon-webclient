@@ -56,6 +56,7 @@ const InputField = styled.input`
 `;
 
 class Settings extends React.Component {
+
     constructor() {
         super();
 
@@ -137,7 +138,7 @@ class Settings extends React.Component {
                 <AvatarButton
                     enabled={enable}
                     onClick={() => {
-                        this.setState({avatarid: i});
+                        this.setState({'avatarid': i});
                     }}
                 >
                     <li>
