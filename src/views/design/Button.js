@@ -22,7 +22,6 @@ export const Button = styled.button`
 `;
 
 
-
 export const MenuButton = styled.button`
   &:hover {
     transform: translateY(${props => (props.disabled ? 0 : 2)}px);

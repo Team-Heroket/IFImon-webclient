@@ -12,3 +12,21 @@ export const BaseContainer = styled.div`
   padding-right: 15px;
   max-width: ${DESKTOP_WIDTH}px;
 `;
+
+export const  ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  
+  align-items: center;
+  justify-content: center;
+  margin-bottom:20px
+`;
+
+export const FormContainer = styled.div`
+  margin-top: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 300px;
+  justify-content: center;
+`;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styled from 'styled-components';
-import { BaseContainer } from '../../../helpers/layout';
+import { BaseContainer, ButtonContainer, FormContainer } from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
 import User from '../../shared/models/User';
 import { withRouter } from 'react-router-dom';
@@ -13,24 +13,6 @@ const Label = styled.label`
   color: white;
   margin-bottom: 10px;
   text-transform: uppercase;
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  
-  align-items: center;
-  justify-content: center;
-  margin-bottom:20px
-`;
-
-const FormContainer = styled.div`
-  margin-top: 2em;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 300px;
-  justify-content: center;
 `;
 
 const Form = styled.div`

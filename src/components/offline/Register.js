@@ -1,20 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BaseContainer } from '../../helpers/layout';
+import { BaseContainer, ButtonContainer, FormContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 import Header from "../../views/Header";
 
-const FormContainer = styled.div`
-  margin-top: 2em;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 300px;
-  justify-content: center;
-`;
 
 const Form = styled.div`
   display: flex;
@@ -59,14 +51,6 @@ const Label = styled.label`
   text-transform: uppercase;
 `;
 
-const ButtonContainer = styled.div`
-      display: flex;
-  flex-direction: column;
-  
-  align-items: center;
-  justify-content: center;
-  margin-bottom:20px
-`;
 
 const PasswordField = styled.input`
   &::placeholder {

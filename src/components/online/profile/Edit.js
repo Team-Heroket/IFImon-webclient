@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BaseContainer } from '../../../helpers/layout';
+import { BaseContainer, ButtonContainer, FormContainer } from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
 import User from '../../shared/models/User';
 import { withRouter } from 'react-router-dom';
@@ -43,7 +43,7 @@ class Edit extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.match.params !== localStorage.getItem('id')) {
+        if (this.props.match.params == localStorage.getItem('id')) {
             this.goToSettings();
         }
 
