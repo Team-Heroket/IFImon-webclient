@@ -27,11 +27,11 @@ const ExternContainer = styled.div`
   display: flex;
   border: 1px solid #ffffff;
   transition: all 0.3s ease;
-  background: rgb(255, 255, 255, 0%);
+  background: rgb(255, 255, 255, 33%);
 `;
 
 const StatCardContainer = styled.div`
-  width: 100%;
+  width: 125px;
   border-bottom-left-radius: 25px;
   border-top-left-radius: 25px;
   height: 275px;
@@ -58,11 +58,7 @@ const Row = styled.div`
 const Column = styled.div`
     float: left;
     align-items: center;
-    width = ${props => props.span}px;;
-    height = 100px;
-    
-    @media only screen and (min-width: 768px){
-    width: 50%;
+    width = ${props => props.span}%;
     white-space: normal !important
 }
     }
@@ -104,6 +100,8 @@ export const Player = ({ user }) => {
 };
 
 const RankCard = styled.div`
+    display: flex;
+    font-family: Helvetica;
   font-weight: bold;
   font-size:20px;
   color: #FFFFFF;
@@ -114,20 +112,28 @@ const RankValCard = styled.div`
   color: #000000;
 `;
 
+const UserNameCard = styled.div`
+  font-weight: bold;
+  font-size:30px;
+  color: #FFFFFF;
+`;
+
 const StatsContainer = styled.div`
   position: relative;
-  left: 10%;
-  top: 40px;
+  left: 10px;
+  top: 20px;
+  width: 300px;
 
   font-family: Helvetica;
   font-style: normal;
   font-size: 20px;
   line-height: 23px;
   display: flex;
+  flex-direction: column;
   text-align: left;
   align-items: left;
 
-color: #FFFFFF;
+color: #ffffff;
 `;
 
 
@@ -136,31 +142,41 @@ export const PlayerStatCard = ({ user }) => {
         <ExternContainer>
 
             <Row>
-                <Column span={175}>
+                <Column span={"20"}>
                     <StatCardContainer>
-                        <img alt="avatar" src={require('../components/shared/images/avatarSVG/001-avatar.svg')} height={"66px"} width={"66px"}/>
+                        <img alt="avatar" src={require('../components/shared/images/avatarSVG/00'+user.avatarid+'-avatar.svg')} height={"66px"} width={"66px"}/>
                         <br/>
                         <RankCard>
                             Rank:
                         </RankCard>
                         <br/>
                         <RankValCard>
-                            1
+                            {user.rank}
                         </RankValCard>
                     </StatCardContainer>
                 </Column>
-                <Column span={200}>
+                <Column span={"80"}>
                     <StatsContainer>
-                        username: Tim
+                        <UserNameCard>
+                            {user.username}
+                        </UserNameCard>
                         <br/>
                         <br/>
-                        games: 80
+                        <RankCard>
+                            Games played: {user.statistics.gamesPlayed}
+                        </RankCard>
                         <br/>
-                        wins: 3
+                        <RankCard>
+                            Wins: {user.statistics.gamesWon}
+                        </RankCard>
                         <br/>
-                        lost: 2
+                        <RankCard>
+                            Lost: {user.statistics.gamesLost}
+                        </RankCard>
                         <br/>
-                        Pokemon discovered: 213
+                        <RankCard>
+                            Pokemon discovered: {Math.round(user.statistics.pokemonDiscovered/725*1000)/10}%
+                        </RankCard>
                     </StatsContainer>
 
                 </Column>

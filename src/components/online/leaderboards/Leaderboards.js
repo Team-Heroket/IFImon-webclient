@@ -52,10 +52,23 @@ function list(userlist) {
 class Leaderboard extends React.Component {
 
 
+    user = {
+        rank: '1',
+        avatarid: '4',
+        username: 'Player1',
+        year: 1988,
+        statistics: {
+            gamesWon: 88,
+            gamesLost: 12,
+            gamesPlayed:100,
+            pokemonDiscovered: 200
+        },
+    }
+
      userlist = [
         {
             rank: '1',
-            id: 'Id2',
+            avatarid: '3',
             username: 'Player1',
             gamesWon: '77',
             year: 1988,
@@ -67,7 +80,7 @@ class Leaderboard extends React.Component {
         },
         {
             rank: '2',
-            id: 'Id231',
+            avatarid: '2',
             username: 'Player2',
             gamesWon: '55',
             year: 1988,
@@ -75,6 +88,7 @@ class Leaderboard extends React.Component {
                 gamesWon: 33,
                 gamesLost: 32,
                 gamesPlayed:65,
+                pokemonDiscovered: 225,
             },
         },
     ];
@@ -111,7 +125,7 @@ class Leaderboard extends React.Component {
                     </FormContainer>
                 </Column>
                 <Column>
-                    <PlayerStatCard/>
+                    <PlayerStatCard user={this.user}/>
                 </Column>
                 </Row>
             </BaseContainer>
