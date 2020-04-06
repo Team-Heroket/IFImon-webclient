@@ -91,10 +91,10 @@ class Settings extends React.Component {
         }
 
         try {
-            const resp = await api.get('/users/' + url_id, {headers: {'Token': localStorage.getItem('token')}});
+            const resp = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
             let test = {
                 rank: '2',
-                avatarid: '2',
+                avatarId: '2',
                 username: 'Player2',
                 gamesWon: '55',
                 year: 1988,
@@ -106,7 +106,7 @@ class Settings extends React.Component {
                 }
             }
             let response = resp.data;
-
+            response.avatarId = 1;
             await this.setState({user: response});
             console.log('requested data:', resp.data);
         }
