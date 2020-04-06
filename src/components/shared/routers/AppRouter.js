@@ -8,6 +8,7 @@ import Register from "../../offline/Register";
 import MainMenu from "../../online/mainmenu/MainMenu";
 import Settings from "../../online/profile/Settings";
 import Leaderboards from "../../online/leaderboards/Leaderboards";
+
 /**
  * Main router of your application.
  * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/offline"
@@ -76,6 +77,7 @@ class AppRouter extends React.Component {
                       </LoginGuard>
                   )}
               />
+
             <Route path="/" exact render={() => <Redirect to={"/login"} />} />
           </div>
         </Switch>
