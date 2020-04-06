@@ -144,7 +144,7 @@ export const PlayerStatCard = ({ user }) => {
             <Row>
                 <Column span={"20"}>
                     <StatCardContainer>
-                        <img alt="avatar" src={require('../components/shared/images/avatarSVG/00'+user.avatarid+'-avatar.svg')} height={"66px"} width={"66px"}/>
+                        <img alt="avatar" src={require('../components/shared/images/avatarSVG/00'+user.avatarId+'-avatar.svg')} height={"66px"} width={"66px"}/>
                         <br/>
                         <RankCard>
                             Rank:
