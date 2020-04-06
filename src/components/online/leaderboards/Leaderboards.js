@@ -56,80 +56,27 @@ class Leaderboard extends React.Component {
         "id": 1
     };
 
-    userlist =[
-        {
-            "username": "Tim",
-            "avatarId": 0,
-            "statistics": {
-                "id": 1,
-                "encounteredPokemon": [],
-                "gamesWon": 0,
-                "gamesPlayed": 0,
-                "rating": 0,
-                "storyProgress": 0
-            },
-            "creationDate": "05.04.2020",
-            "online": true,
-            "id": 1
-        },
-{
-    "username": "Lol",
-    "avatarId": 0,
-    "statistics": {
-        "id": 2,
-        "encounteredPokemon": [],
-        "gamesWon": 0,
-        "gamesPlayed": 0,
-        "rating": 0,
-        "storyProgress": 0
-    },
-    "creationDate": "05.04.2020",
-    "online": false,
-    "id": 2
-},
-{
-    "username": "123",
-    "avatarId": 0,
-    "statistics": {
-    "id": 3,
-        "encounteredPokemon": [],
-        "gamesWon": 0,
-        "gamesPlayed": 0,
-        "rating": 0,
-        "storyProgress": 0
-},
-    "creationDate": "05.04.2020",
-    "online": true,
-    "id": 3
-}];
-
     constructor() {
         super();
         this.state = {
             displaySecondaryCard: null,
-            users: 'Lol',
+            users: null,
         };
 
     }
 
     async componentDidMount() {
         try {
-            const response = api.get('/users', { headers: {'Token': localStorage.getItem('token')}});
+            const response = await api.get('/users', { headers: {'Token': localStorage.getItem('token')}});
 
             await new Promise(resolve => setTimeout(resolve, 2000));
 
-
-
-            //this.setState({ users: response.data });
+            this.setState({ users: response.data });
 
             // See here to get more data.
-            console.log(response);
-
-            console.log(this.state.users);
+            console.log("response", response.data);
 
         } catch (error) {
-
-
             alert(`Something went wrong during the login: \n${handleError(error)}`);
         }
     }
@@ -159,14 +106,16 @@ class Leaderboard extends React.Component {
                     <Column>
                     <ButtonContainer>
                         {
-                            this.userlist.map(player => {
+                            this.state.users.map(player => {
                                 return (
                                     <PlayerContainer onClick={() => {
-                                        this.setState('displaySecondaryCard', player);
+                                        console.log('Player Clicked:', player);
+                                        this.setState({displaySecondaryCard: player});
                                         console.log(this.state.displaySecondaryCard);
                                     }}>
                                         <Player user={player}  />
                                     </PlayerContainer>
+
                                 );
                             })
                         }
@@ -177,7 +126,7 @@ class Leaderboard extends React.Component {
                     <PlayerStatCard user={this.user} />
                     {this.state.displaySecondaryCard ? (
                         this.displayPlayerCard()
-                    ) : <PlayerStatCard user={this.user} />
+                    ) : null
                     }
                 </Column>
                 </Row>
