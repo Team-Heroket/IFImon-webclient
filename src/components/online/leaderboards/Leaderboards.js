@@ -15,6 +15,7 @@ const PlayerContainer = styled.li`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  
 `;
 
 const Row = styled.div`
@@ -105,6 +106,7 @@ class Leaderboard extends React.Component {
     constructor() {
         super();
         this.state = {
+            displaySecondaryCard: null,
             users: 'Lol',
         };
 
@@ -137,6 +139,10 @@ class Leaderboard extends React.Component {
     }
 
 
+    displayPlayerCard() {
+        return <PlayerStatCard user={this.state.displaySecondaryCard} />
+    }
+
     render() {
         return (
             <BaseContainer>
@@ -153,10 +159,13 @@ class Leaderboard extends React.Component {
                     <Column>
                     <ButtonContainer>
                         {
-                            this.userlist.map(item => {
+                            this.userlist.map(player => {
                                 return (
-                                    <PlayerContainer>
-                                        <Player user={item} />
+                                    <PlayerContainer onClick={() => {
+                                        this.setState('displaySecondaryCard', player);
+                                        console.log(this.state.displaySecondaryCard);
+                                    }}>
+                                        <Player user={player}  />
                                     </PlayerContainer>
                                 );
                             })
@@ -166,6 +175,10 @@ class Leaderboard extends React.Component {
                 </Column>
                 <Column>
                     <PlayerStatCard user={this.user} />
+                    {this.state.displaySecondaryCard ? (
+                        this.displayPlayerCard()
+                    ) : <PlayerStatCard user={this.user} />
+                    }
                 </Column>
                 </Row>
                     </div>

@@ -24,6 +24,7 @@ const ExternContainer = styled.div`
   border-radius: 25px;
   display: flex;
   border: 1px solid #ffffff;
+  margin-bottom: 10px
   transition: all 0.3s ease;
   background: rgb(255, 255, 255, 33%);
 `;
@@ -169,7 +170,7 @@ export let PlayerStatCard = ({ user }) => {
                         </RankCard>
                         <br/>
                         <RankCard>
-                      x      Wins: {user.statistics.gamesWon}
+                            Wins: {user.statistics.gamesWon}
                         </RankCard>
                         <br/>
                         <RankCard>
@@ -177,7 +178,7 @@ export let PlayerStatCard = ({ user }) => {
                         </RankCard>
                         <br/>
                         <RankCard>
-                            Pokemon discovered: {Math.round(user.statistics.pokemonDiscovered/725*1000)/10}%
+                            Pokemon discovered: {Math.round((user.statistics.pokemonDiscovered)/725*1000)/10}%
                         </RankCard>
                     </StatsContainer>
 
