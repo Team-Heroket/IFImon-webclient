@@ -5,14 +5,17 @@ import { api, handleError } from '../../../helpers/api';
 import { withRouter } from 'react-router-dom';
 import { Button, LogOutButton, BackButton, RoundContainer} from '../../../views/design/Button';
 import Header from "../../../views/Header";
-import {Player, PlayerStatCard} from "../../../views/Player";
+import {PlayerStatCard, Player} from "../../../views/Player";
+
 import {BackIcon} from "../../../views/design/Icons";
+import {Spinner} from "../../../views/design/Spinner";
 
 const PlayerContainer = styled.li`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  
 `;
 
 const Row = styled.div`
@@ -33,31 +36,100 @@ const Column = styled.div`
     }
 `
 
-function list(userlist) {
-    return (
-        <ul>{
-            userlist.map(item => {
-                return (
-                    <PlayerContainer key={item.rank}>
-                        <Player user={item} />
-                    </PlayerContainer>
-                );
-            })
-        }
-        </ul>
-    );
 
-}
 
 class Leaderboard extends React.Component {
 
+    user = {
+        "username": "Tim",
+        "avatarId": 1,
+        "statistics": {
+            "id": 1,
+            "encounteredPokemon": 272,
+            "gamesWon": 0,
+            "gamesPlayed": 0,
+            "rating": 0,
+            "storyProgress": 0
+        },
+        "creationDate": "05.04.2020",
+        "online": false,
+        "id": 1
+    };
 
-    componentWillMount() {
+    userlist =[
+        {
+            "username": "Tim",
+            "avatarId": 0,
+            "statistics": {
+                "id": 1,
+                "encounteredPokemon": [],
+                "gamesWon": 0,
+                "gamesPlayed": 0,
+                "rating": 0,
+                "storyProgress": 0
+            },
+            "creationDate": "05.04.2020",
+            "online": true,
+            "id": 1
+        },
+{
+    "username": "Lol",
+    "avatarId": 0,
+    "statistics": {
+        "id": 2,
+        "encounteredPokemon": [],
+        "gamesWon": 0,
+        "gamesPlayed": 0,
+        "rating": 0,
+        "storyProgress": 0
+    },
+    "creationDate": "05.04.2020",
+    "online": false,
+    "id": 2
+},
+{
+    "username": "123",
+    "avatarId": 0,
+    "statistics": {
+    "id": 3,
+        "encounteredPokemon": [],
+        "gamesWon": 0,
+        "gamesPlayed": 0,
+        "rating": 0,
+        "storyProgress": 0
+},
+    "creationDate": "05.04.2020",
+    "online": true,
+    "id": 3
+}];
+
+    constructor() {
+        super();
+        this.state = {
+            displaySecondaryCard: null,
+            users: 'Lol',
+        };
+
+    }
+
+    async componentDidMount() {
         try {
-            this.userlist = api.get('/users', { headers: {'Token': localStorage.getItem('token')}});
+            const response = api.get('/users', { headers: {'Token': localStorage.getItem('token')}});
 
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+
+
+            //this.setState({ users: response.data });
+
+            // See here to get more data.
+            console.log(response);
+
+            console.log(this.state.users);
 
         } catch (error) {
+
+
             alert(`Something went wrong during the login: \n${handleError(error)}`);
         }
     }
@@ -67,26 +139,51 @@ class Leaderboard extends React.Component {
     }
 
 
+    displayPlayerCard() {
+        return <PlayerStatCard user={this.state.displaySecondaryCard} />
+    }
 
     render() {
         return (
             <BaseContainer>
                 <Header height={140} top={33}/>
-                <Row>
-                    <RoundContainer onClick = {() => {this.goBack()}}>
-                        <BackIcon />
-                    </RoundContainer>
-                </Row>
-                <Row>
-                <Column>
-                    <FormContainer>
-                        {list(this.userlist)}
-                    </FormContainer>
+                {!this.state.users ? (
+                    <Spinner />
+                    ) : (<div>
+                    <Row>
+                        <RoundContainer onClick = {() => {this.goBack()}}>
+                            <BackIcon />
+                        </RoundContainer>
+                    </Row>
+                    <Row>
+                    <Column>
+                    <ButtonContainer>
+                        {
+                            this.userlist.map(player => {
+                                return (
+                                    <PlayerContainer onClick={() => {
+                                        this.setState('displaySecondaryCard', player);
+                                        console.log(this.state.displaySecondaryCard);
+                                    }}>
+                                        <Player user={player}  />
+                                    </PlayerContainer>
+                                );
+                            })
+                        }
+
+                    </ButtonContainer>
                 </Column>
                 <Column>
-                    <PlayerStatCard user={this.user}/>
+                    <PlayerStatCard user={this.user} />
+                    {this.state.displaySecondaryCard ? (
+                        this.displayPlayerCard()
+                    ) : <PlayerStatCard user={this.user} />
+                    }
                 </Column>
                 </Row>
+                    </div>
+                )
+                    }
             </BaseContainer>
         );
     }
