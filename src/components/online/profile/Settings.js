@@ -60,6 +60,7 @@ class Settings extends React.Component {
     constructor() {
         super();
 
+        this.handleClick = this.handleClick.bind(this);
         this.state = {
             user: {
                 rank: '2',
@@ -81,7 +82,10 @@ class Settings extends React.Component {
             newAvatarId: null
         };
     }
-
+    handleClick(event) {
+        const id = event.currentTarget.id;
+        this.setState({avatarId : id})
+    }
     async componentDidMount() {
         //Checks if id in URL corresponds with our id. If it does, we can see edit button
         let url_id = this.props.match.params;
@@ -89,7 +93,6 @@ class Settings extends React.Component {
         if (url_id === localStorage.getItem('id')) {
             this.goToMenu();
         }
-
         try {
             const resp = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
             let test = {
@@ -143,11 +146,9 @@ class Settings extends React.Component {
                 enable = true;
             }
             this.state.avatar_list.push(
-                <AvatarButton
+                <AvatarButton id={i}
                     enabled={enable}
-                    onClick={() => {
-                        this.setState({avatarId: i});
-                    }}
+                    onClick={this.handleClick}
                 >
                     <li>
                         <img alt="avatar" src={require('../../shared/images/avatarSVG/0'+s+'-avatar.svg')} height={"66px"} width={"66px"}/>
@@ -211,6 +212,7 @@ class Settings extends React.Component {
                                         width="50%"
                                         onClick={() => {
                                             this.setState({editClicked: true});
+
                                         }}
                                     >
 

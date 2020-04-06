@@ -153,7 +153,7 @@ export let PlayerStatCard = ({ user }) => {
                 <Column span={"20"}>
                     <StatCardContainer>
                         {console.log("user id:"+user.avatarId)}
-                        <img alt="avatar" src={require('../components/shared/images/avatarSVG/00'+(user.avatarId+1)+'-avatar.svg')} height={"66px"} width={"66px"}/>
+                        <img alt="avatar" src={require('../components/shared/images/avatarSVG/00'+(user.avatarId)+'-avatar.svg')} height={"66px"} width={"66px"}/>
                         <br/>
                         <RankCard>
                             Rank:
