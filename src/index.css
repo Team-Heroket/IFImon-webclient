@@ -6,15 +6,17 @@ This file contains the general and shared style of your application.
 body {
   margin: 0;
   padding: 0;
-  font-family: "Open Sans", sans-serif;
-  background: #0e3d61;
+  font-family: "Helvetica";
+
+  background: radial-gradient(134.72% 134.72% at 61.48% 128.19%, rgba(255, 255, 255, 0) 0%, #6EBFC5 100%) fixed, #6FCF97;
 }
+
 
 input,
 textarea,
 select,
 button {
-  font-family: inherit;
+  font-family: "Helvetica";
   line-height: inherit;
   font-size: inherit;
   outline: none;
@@ -24,7 +26,9 @@ button {
   outline: none;
 }
 
+
 * {
+
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
 }

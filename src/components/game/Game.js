@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
-import Player from '../../views/Player';
+import {Player} from '../../views/Player';
 import { Spinner } from '../../views/design/Spinner';
 import { Button } from '../../views/design/Button';
 import { withRouter } from 'react-router-dom';
@@ -64,33 +64,33 @@ class Game extends React.Component {
 
   render() {
     return (
-      <Container>
-        <h2>Happy Coding! </h2>
-        <p>Get all users from secure end point:</p>
-        {!this.state.users ? (
-          <Spinner />
-        ) : (
-          <div>
-            <Users>
-              {this.state.users.map(user => {
-                return (
-                  <PlayerContainer key={user.id}>
-                    <Player user={user} />
-                  </PlayerContainer>
-                );
-              })}
-            </Users>
-            <Button
-              width="100%"
-              onClick={() => {
-                this.logout();
-              }}
-            >
-              Logout
-            </Button>
-          </div>
-        )}
-      </Container>
+        <Container>
+          <h2>Happy Coding! </h2>
+          <p>Get all users from secure end point:</p>
+          {!this.state.users ? (
+              <Spinner />
+          ) : (
+              <div>
+                <Users>
+                  {this.state.users.map(user => {
+                    return (
+                        <PlayerContainer key={user.id}>
+                          <Player user={user} />
+                        </PlayerContainer>
+                    );
+                  })}
+                </Users>
+                <Button
+                    width="100%"
+                    onClick={() => {
+                      this.logout();
+                    }}
+                >
+                  Logout
+                </Button>
+              </div>
+          )}
+        </Container>
     );
   }
 }

@@ -1,19 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BaseContainer } from '../../helpers/layout';
+import { BaseContainer, ButtonContainer, FormContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
+import Header from "../../views/Header";
 
-const FormContainer = styled.div`
-  margin-top: 2em;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 300px;
-  justify-content: center;
-`;
 
 const Form = styled.div`
   display: flex;
@@ -26,7 +19,6 @@ const Form = styled.div`
   padding-left: 37px;
   padding-right: 37px;
   border-radius: 5px;
-  background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
@@ -34,26 +26,29 @@ const InputField = styled.input`
   &::placeholder {
     color: rgba(255, 255, 255, 1.0);
   }
+  position: relative;
+  transform : translate(-50%, 0%);
   height: 35px;
-  padding-left: 15px;
-  margin-left: -4px;
+  width: 400px;
+  left: 50%;
   border: none;
-  border-radius: 20px;
+  border-radius: 25px;
   margin-bottom: 20px;
+  padding-left:10px;
   background: rgba(255, 255, 255, 0.2);
   color: white;
+  
 `;
 
 const Label = styled.label`
+  position: relative;
+  transform : translate(-50%, 0%);
+  width: 400px;
+  left: 50%;
   color: white;
+  margin-left: 4px;
   margin-bottom: 10px;
   text-transform: uppercase;
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
 `;
 
 /**
@@ -75,7 +70,7 @@ class Login extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: null,
+      password: null,
       username: null
     };
   }
@@ -88,21 +83,26 @@ class Login extends React.Component {
     try {
       const requestBody = JSON.stringify({
         username: this.state.username,
-        name: this.state.name
+        password: this.state.password
       });
-      const response = await api.post('/users', requestBody);
+      const response = await api.put('/login', requestBody);
 
       // Get the returned user and update a new object.
-      const user = new User(response.data);
+      const data = response.data;
 
-      // Store the token into the local storage.
-      localStorage.setItem('token', user.token);
+
+      localStorage.setItem('token', data.Token);
+      localStorage.setItem('id', data.Id)
 
       // Login successfully worked --> navigate to the route /game in the GameRouter
-      this.props.history.push(`/game`);
+      this.props.history.push(`/menu`);
     } catch (error) {
       alert(`Something went wrong during the login: \n${handleError(error)}`);
     }
+  }
+
+  async goToRegister() {
+    this.props.history.push('/register');
   }
 
   /**
@@ -113,21 +113,13 @@ class Login extends React.Component {
   handleInputChange(key, value) {
     // Example: if the key is username, this statement is the equivalent to the following one:
     // this.setState({'username': value});
-    this.setState({ [key]: value });
+    this.setState( {[key]: value} );
   }
-
-  /**
-   * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
-   * Initialization that requires DOM nodes should go here.
-   * If you need to load data from a remote endpoint, this is a good place to instantiate the network request.
-   * You may call setState() immediately in componentDidMount().
-   * It will trigger an extra rendering, but it will happen before the browser updates the screen.
-   */
-  componentDidMount() {}
 
   render() {
     return (
       <BaseContainer>
+        <Header height={195} top={66} />
         <FormContainer>
           <Form>
             <Label>Username</Label>
@@ -137,16 +129,16 @@ class Login extends React.Component {
                 this.handleInputChange('username', e.target.value);
               }}
             />
-            <Label>Name</Label>
+            <Label>Password</Label>
             <InputField
               placeholder="Enter here.."
               onChange={e => {
-                this.handleInputChange('name', e.target.value);
+                this.handleInputChange('password', e.target.value);
               }}
             />
             <ButtonContainer>
               <Button
-                disabled={!this.state.username || !this.state.name}
+                disabled={!this.state.username || !this.state.password}
                 width="50%"
                 onClick={() => {
                   this.login();
@@ -154,7 +146,16 @@ class Login extends React.Component {
               >
                 Login
               </Button>
-            </ButtonContainer>
+              <Button
+                  width="50%"
+                  onClick={() => {
+                    this.goToRegister();
+                  }}
+              >
+                Sign Up
+              </Button>
+              </ButtonContainer>
+
           </Form>
         </FormContainer>
       </BaseContainer>
