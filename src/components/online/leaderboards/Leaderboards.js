@@ -38,47 +38,36 @@ const Column = styled.div`
 
 
 
-class Leaderboard extends React.Component {
-
-    user = {
-        "username": "Tim",
-        "avatarId": 1,
-        "statistics": {
-            "id": 1,
-            "encounteredPokemon": 272,
-            "gamesWon": 0,
-            "gamesPlayed": 0,
-            "rating": 0,
-            "storyProgress": 0
-        },
-        "creationDate": "05.04.2020",
-        "online": false,
-        "id": 1
-    };
+class Leaderboards extends React.Component {
 
     constructor() {
         super();
         this.state = {
             displaySecondaryCard: null,
             users: null,
+            user: null
         };
 
     }
 
+
+
     async componentDidMount() {
         try {
-            const response = await api.get('/users', { headers: {'Token': localStorage.getItem('token')}});
+            const response1 = await api.get('/users', { headers: {'Token': localStorage.getItem('token')}});
 
             await new Promise(resolve => setTimeout(resolve, 2000));
 
-            this.setState({ users: response.data });
-
+            const response2 = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
+            await this.setState({user: response2.data,
+                users: response1.data});
             // See here to get more data.
-            console.log("response", response.data);
-
+            console.log("response me", response2.data);
+            console.log("response all", response1.data);
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            alert(`Something went wrong: \n${handleError(error)}`);
         }
+
     }
 
     goBack() {
@@ -94,7 +83,7 @@ class Leaderboard extends React.Component {
         return (
             <BaseContainer>
                 <Header height={140} top={33}/>
-                {!this.state.users ? (
+                {(!this.state.users || !this.state.user) ? (
                     <Spinner />
                     ) : (<div>
                     <Row>
@@ -123,7 +112,7 @@ class Leaderboard extends React.Component {
                     </ButtonContainer>
                 </Column>
                 <Column>
-                    <PlayerStatCard user={this.user} />
+                    <PlayerStatCard user={this.state.user} />
                     {this.state.displaySecondaryCard ? (
                         this.displayPlayerCard()
                     ) : null
@@ -141,4 +130,4 @@ class Leaderboard extends React.Component {
 
 }
 
-export default withRouter(Leaderboard);
+export default withRouter(Leaderboards);
