@@ -8,6 +8,7 @@ import Register from "../../offline/Register";
 import MainMenu from "../../online/mainmenu/MainMenu";
 import Settings from "../../online/profile/Settings";
 import Leaderboards from "../../online/leaderboards/Leaderboards";
+import SocialMode from "../../online/game/socialmode/SocialMode";
 
 /**
  * Main router of your application.
@@ -54,6 +55,15 @@ class AppRouter extends React.Component {
                   render={() => (
                       <GameGuard>
                           <Settings/>
+                      </GameGuard>
+                  )}
+              />
+
+              <Route
+                  path="/socialmode"
+                  render={() => (
+                      <GameGuard>
+                          <SocialMode/>
                       </GameGuard>
                   )}
               />

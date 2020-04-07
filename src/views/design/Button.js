@@ -23,6 +23,27 @@ export const Button = styled.button`
   transition: all 0.3s ease;
 `;
 
+export const TransparentButton = styled.button`
+  &:hover {
+    transform: translateY(${props => (props.disabled ? 0 : 2)}px);
+  }
+  padding: 6px;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 16px;
+  text-align: center;
+  color: rgb(255, 255, 255);
+  width: ${props => props.width || null};
+  height: 35px;
+  border: 1px solid #FFFFFF;;
+  border-radius: 25px;
+  margin-top: 10px;
+  cursor: ${props => (props.disabled ? "default" : "pointer")};
+  opacity: ${props => (props.disabled ? "66%" : "100%")};
+  background: transparent;
+  transition: all 0.3s ease;
+`;
+
 export const AvatarButton = styled.button`
  &:hover {
     transform: translateY(2px);

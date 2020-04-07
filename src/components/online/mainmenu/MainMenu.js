@@ -4,7 +4,7 @@ import { BaseContainer, ButtonContainer, FormContainer } from '../../../helpers/
 import { api, handleError } from '../../../helpers/api';
 import User from '../../shared/models/User';
 import { withRouter } from 'react-router-dom';
-import { Button, LogOutButton, MenuButton, MenuIcon } from '../../../views/design/Button';
+import {Button, LogOutButton, MenuButton, MenuIcon, TransparentButton} from '../../../views/design/Button';
 import Header from "../../../views/Header";
 
 
@@ -38,6 +38,10 @@ class MainMenu extends React.Component {
         this.props.history.push('/leaderboards')
     }
 
+    goToSocialMode() {
+        this.props.history.push('/socialmode')
+    }
+
     async logOut(){
         try {
             const body = JSON.stringify({});
@@ -61,18 +65,24 @@ class MainMenu extends React.Component {
                 <FormContainer>
                     <Form>
                         <ButtonContainer>
-                            <Button
+                            <TransparentButton
+                                width="50%"
+                                onClick = {() => {this.goToSocialMode()}}
+                            >
+                                SocialMode
+                            </TransparentButton>
+                            <TransparentButton
                                 width="50%"
                                 onClick = {() => {this.goToLeaderBoard()}}
                             >
                                 Leaderboard
-                            </Button>
-                            <Button
+                            </TransparentButton>
+                            <TransparentButton
                                 width="50%"
                                 onClick = {() => {this.goToSettings()}}
                             >
                                 Settings
-                            </Button>
+                            </TransparentButton>
                             <LogOutButton
                                 width="50%"
                                 onClick = {() => {this.logOut()}}

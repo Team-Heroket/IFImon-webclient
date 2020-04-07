@@ -40,6 +40,27 @@ const InputField = styled.input`
   
 `;
 
+const PasswordField = styled.input`
+  &::placeholder {
+    color: rgba(255, 255, 255, 1.0);
+  }
+  position: relative;
+  transform : translate(-50%, 0%);
+  height: 35px;
+  width: 400px;
+  left: 50%;
+  border: none;
+  border-radius: 25px;
+  margin-bottom: 20px;
+  padding-left:10px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 16px;
+  font-weight: 300;
+  -Webkit-text-security: disc;
+  text-security: disc;
+`;
+
 const Label = styled.label`
   position: relative;
   transform : translate(-50%, 0%);
@@ -130,7 +151,7 @@ class Login extends React.Component {
               }}
             />
             <Label>Password</Label>
-            <InputField
+            <PasswordField
               placeholder="Enter here.."
               onChange={e => {
                 this.handleInputChange('password', e.target.value);

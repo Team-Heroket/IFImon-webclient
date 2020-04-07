@@ -6,11 +6,13 @@ import { Redirect } from "react-router-dom";
  * They are functional components. Based on the props passed, a route gets rendered.
  * In this case, if the user is authenticated (i.e., a token is stored in the local storage)
  * {props.children} are rendered --> The content inside the <GameGuard> in the App.js file, i.e. the user is able to access the main app.
- * If the user isn't authenticated, the components redirects to the /login screen
+ * If the user isn't authenticated, the components redirects to the /offline screen
  * @Guard
  * @param props
  */
 export const GameGuard = props => {
+
+  //Important: This is only done for testing. Change !localStorage.getItem back to localStorage.getItem after testing
   if (localStorage.getItem("token")) {
     return props.children;
   }
