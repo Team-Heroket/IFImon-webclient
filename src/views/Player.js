@@ -19,6 +19,24 @@ const Container = styled.button`
   background: rgb(255, 255, 255, 0%);
 `;
 
+const ContainerMe = styled.button`
+    &:hover {
+    transform: translateY(2px);
+    transition: all 0.1s ease;
+  }
+  margin:5px;
+  width: 280px;
+  height: 35px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  border: 2px solid yellow;
+  transition: all 0.3s ease;
+  background: rgb(255, 255, 255, 0%);
+`;
+
 const ExternContainer = styled.div`
   width: 450px;
   border-radius: 25px;
@@ -97,6 +115,34 @@ export let Player = ({ user }) => {
     </Container>
   );
 };
+
+export let PlayerMe = ({ user }) => {
+    return (
+        <ContainerMe>
+            <Rank>{user.statistics.rating}.</Rank> <UserName>{user.username}</UserName>
+            <Id>{user.statistics.gamesWon}</Id>
+        </ContainerMe>
+    );
+};
+
+export let PlayerAdmin = ({ user }) => {
+    return (
+        <Container>
+            <Rank>{user.statistics.rating}.</Rank> <UserName>{user.username} (Admin)</UserName>
+            <Id>{user.statistics.gamesWon}</Id>
+        </Container>
+    );
+};
+
+export let PlayerMeAndAdmin = ({ user }) => {
+    return (
+        <ContainerMe>
+            <Rank>{user.statistics.rating}.</Rank> <UserName>{user.username} (Admin)</UserName>
+            <Id>{user.statistics.gamesWon}</Id>
+        </ContainerMe>
+    );
+};
+
 
 const RankCard = styled.div`
     display: flex;

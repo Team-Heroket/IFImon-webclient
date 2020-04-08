@@ -7,6 +7,7 @@ import {Button, MenuButton, RoundContainer, TransparentButton} from "../../../..
 import {BackIcon} from "../../../../views/design/Icons";
 import {api, handleError} from "../../../../helpers/api";
 import {Spinner} from "../../../../views/design/Spinner";
+import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin, PlayerStatCard} from "../../../../views/Player";
 
 
 const Row = styled.div`
@@ -91,6 +92,24 @@ const Space = styled.div`
   margin-bottom: 45px
 `;
 
+const PlayerContainer = styled.li`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+`;
+
+const Column = styled.div`
+    float: right
+    align-items: center
+    width = 100%
+    
+    @media only screen and (min-width: 768px){
+    width: 50%;
+    }
+`
+
 
 
 
@@ -101,9 +120,14 @@ class Lobby extends React.Component {
 
         this.state = {
             pokeCode: null,
-            users: [1,2,3],
-            admin: null,
+            users: [{username: "Alex1", avatarId: "43", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}},
+                {username: "Alex2", avatarId: "43", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}},
+                {username: "Alexander", avatarId: "43", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}},
+                {username: "Alex5", avatarId: "43", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}}],
+            admin: {username: "Alex5", avatarId: "13", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}},
+            user: {username: "Alex5", avatarId: "13", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}},
             amount: 6,
+            displaySecondaryCard: false,
             start: false
         };
     }
@@ -120,6 +144,29 @@ class Lobby extends React.Component {
     }
 
      */
+
+    displayPlayer(player) {
+        let playerBox = null;
+        if (player.username === this.state.user.username) {
+            if (player.username === this.state.admin.username) {
+                playerBox=<PlayerMeAndAdmin user={player}/>
+            }
+            else {
+                playerBox=<PlayerMe user={player}/>
+            }
+        }
+        else if (player.username === this.state.admin.username) {
+            playerBox=<PlayerAdmin user={player}/>
+        }
+        else {
+            playerBox=<Player user={player}/>
+        }
+
+        return playerBox;
+
+
+    }
+
 
     render() {
 
@@ -148,12 +195,34 @@ class Lobby extends React.Component {
                         <Label2>
                             Waiting for Players ({this.state.users.length}/{this.state.amount})
                         </Label2>
+
+                        <ButtonContainer>
+                            {
+                                this.state.users.map(player => {
+                                    return (
+                                        <PlayerContainer onClick={() => {
+                                            console.log('Player Clicked:', player);
+                                            this.setState({displaySecondaryCard: player});
+                                            console.log(this.state.displaySecondaryCard);
+                                        }}>
+                                            {this.displayPlayer(player)}
+
+                                        </PlayerContainer>
+
+                                    );
+                                })
+                            }
+
+                        </ButtonContainer>
+
                         <CenterContainer>
                             <Spinner animation="grow" />
                         </CenterContainer>
                     </Form>
                 </FormContainer>
+
             </BaseContainer>
+
         );
     }
 
