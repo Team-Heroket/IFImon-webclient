@@ -8,7 +8,8 @@ import Register from "../../offline/Register";
 import MainMenu from "../../online/mainmenu/MainMenu";
 import Settings from "../../online/profile/Settings";
 import Leaderboards from "../../online/leaderboards/Leaderboards";
-import SocialMode from "../../online/game/socialmode/SocialMode";
+import SocialMode from "../../online/game/beforeGameStart/SocialMode";
+import Lobby from "../../online/game/beforeGameStart/Lobby";
 
 /**
  * Main router of your application.
@@ -65,6 +66,14 @@ class AppRouter extends React.Component {
                       <GameGuard>
                           <SocialMode/>
                       </GameGuard>
+                  )}
+              />
+              <Route
+                  path="/lobby/:pokeCode"
+                  render={() => (
+
+                          <Lobby/>
+
                   )}
               />
 

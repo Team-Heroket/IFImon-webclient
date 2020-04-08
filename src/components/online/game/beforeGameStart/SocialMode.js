@@ -29,6 +29,8 @@ const Row = styled.div`
     }
     `;
 
+
+
 const InputField = styled.input`
   &::placeholder {
     color: rgba(255, 255, 255, 1.0);
@@ -47,7 +49,6 @@ const InputField = styled.input`
   color: white;
   
 `;
-
 
 
 const Line = styled.div`
@@ -140,8 +141,13 @@ class SocialMode extends React.Component {
                                New Game
                            </TransparentButton>
                        </ButtonContainer>
+                       <div>
+
+                       </div>
                    </Form>
+
                 </FormContainer>
+
             </BaseContainer>
 
         );
