@@ -374,7 +374,7 @@ class Lobby extends React.Component {
 
                         <CenterContainer>
 
-                            
+                            <Spinner/>
                             {this.state.amIAdmin ?
                                 <MenuButton
                                     width = "280px"
@@ -391,6 +391,7 @@ class Lobby extends React.Component {
                                 }}>
                                 Leave
                             </MenuButton>
+
                         </CenterContainer>
 
                     </Form>

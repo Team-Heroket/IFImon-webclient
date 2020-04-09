@@ -99,7 +99,12 @@ class Leaderboards extends React.Component {
                                 return (
                                     <PlayerContainer onClick={() => {
                                         console.log('Player Clicked:', player);
-                                        this.setState({displaySecondaryCard: player});
+                                        if (this.state.user.username != player.username) {
+                                            if (this.state.displaySecondaryCard != null && this.state.displaySecondaryCard.username == player.username) {
+                                                this.setState({displaySecondaryCard: null});
+                                            }
+                                            else {this.setState({displaySecondaryCard: player});}}
+
                                         console.log(this.state.displaySecondaryCard);
                                     }}>
                                         <Player user={player}  />
