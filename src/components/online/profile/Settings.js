@@ -91,12 +91,13 @@ class Settings extends React.Component {
 
     async componentDidMount() {
         //Checks if id in URL corresponds with our id. If it does, we can see edit button
-        let url_id = this.props.match.params;
+        let url_id = this.props.match.params.id;
 
-        if (url_id === localStorage.getItem('id')) {
+        if (url_id !== localStorage.getItem('id')) {
             this.goToMenu();
         }
-
+        console.log('Token: '+localStorage.getItem('token'))
+        console.log('Id in params: '+url_id)
         try {
             const resp = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
 
