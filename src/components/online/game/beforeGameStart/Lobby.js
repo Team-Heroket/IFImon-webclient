@@ -125,7 +125,7 @@ class Lobby extends React.Component {
                 {username: "Alexander", avatarId: "43", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}},
                 {username: "Alex5", avatarId: "43", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}}],
             admin: {username: "Alex5", avatarId: "13", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}},
-            user: {username: "Alex5", avatarId: "13", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}},
+            user: {username: "Alexander", avatarId: "13", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}},
             amount: 6,
             displaySecondaryCard: false,
             start: false
@@ -216,8 +216,13 @@ class Lobby extends React.Component {
                         </ButtonContainer>
 
                         <CenterContainer>
-                            <Spinner animation="grow" />
+                            <Spinner />
+                            <MenuButton
+                                width = "50%">
+                                Leave
+                            </MenuButton>
                         </CenterContainer>
+
                     </Form>
                 </FormContainer>
 

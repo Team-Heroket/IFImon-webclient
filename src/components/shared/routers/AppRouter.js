@@ -71,9 +71,9 @@ class AppRouter extends React.Component {
               <Route
                   path="/lobby/:pokeCode"
                   render={() => (
-
+                      <GameGuard>
                           <Lobby/>
-
+                      </GameGuard>
                   )}
               />
 

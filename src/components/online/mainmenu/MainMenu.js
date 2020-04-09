@@ -61,6 +61,8 @@ class MainMenu extends React.Component {
     render() {
         return (
             <BaseContainer>
+                {console.log(localStorage.getItem('token'))}
+                {console.log(localStorage.getItem('id'))}
                 <Header height={140} top={33}/>
                 <FormContainer>
                     <Form>
