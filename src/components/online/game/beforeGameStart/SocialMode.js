@@ -93,20 +93,16 @@ class SocialMode extends React.Component {
         // '/lobby/pokeCode' is not implemented yet neither as a component nor in the AppRouter
         try {
             const requestBody = JSON.stringify({
-                action: "JOIN",
+                action: 0,
                 id: localStorage.getItem('id')
             });
-            await api.put('/games/'+this.state.pokeCode+'/players', requestBody,{ headers: {'Token': localStorage.getItem('token')}});
+            await api.put('/game/'+this.state.pokeCode+'/users', requestBody);
 
             // Login successfully worked --> navigate to the route /game in the GameRouter
             this.props.history.push(`/lobby/`+this.state.pokeCode);
         } catch (error) {
             alert(`Something went wrong during the login: \n${handleError(error)}`);
         }
-    }
-
-    async createGame() {
-        this.props.history.push('/createGame');
     }
 
     render() {
@@ -141,9 +137,6 @@ class SocialMode extends React.Component {
                            <Line>OR</Line>
                            <TransparentButton
                                width = "400px"
-                               onClick={() => {
-                                   this.createGame();
-                               }}
                            >
                                New Game
                            </TransparentButton>

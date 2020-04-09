@@ -72,6 +72,7 @@ const PokeCodeContainer = styled.div`
   }
   padding: 6px;
   font-weight: 500;
+  text-transform: uppercase;
   font-size: 16px;
   text-align: center;
   color: white;
@@ -92,7 +93,6 @@ const Space = styled.div`
 `;
 
 const PlayerContainer = styled.li`
-  
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -113,188 +113,37 @@ const Column = styled.div`
 
 
 
-
 class Lobby extends React.Component {
-
-    recurrentTimer= null;
-    totalTimer=null;
 
     constructor() {
         super();
 
         this.state = {
             pokeCode: null,
-            users: null,
-            admin: null,
-            user: null,
+            users: [{username: "Alex1", avatarId: "43", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}},
+                {username: "Alex2", avatarId: "43", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}},
+                {username: "Alexander", avatarId: "43", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}},
+                {username: "Alex5", avatarId: "43", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}}],
+            admin: {username: "Alex5", avatarId: "13", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}},
+            user: {username: "Alexander", avatarId: "13", statistics: {rating: 2, gamesPlayed: 120, gamesWon: 118, gamesLost: 2}},
             amount: 6,
             displaySecondaryCard: false,
-            timestamp: new Date(),
-            //timestamp: "2020-04-09 21:09:00",
-            npcs: 0,
-            state: null,
-            amIAdmin: null
+            start: false
         };
     }
 
-    getTimePassed(start) {
-        let startmili = parseInt(new Date(start).getTime(),10);
-        let nowmili = parseInt(new Date().getTime(), 10)
-        console.log(startmili);
-        console.log(nowmili);
-        let remainingTime = nowmili-startmili;
-        return remainingTime;
-    }
-
-
-
-    async getAndSetUserInformation() {
-        try {
-
-            console.log("tried right now");
-
-
-            const response1 = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
-            let resp1 = response1.data
-            const response2 = await api.get('/games/'+this.props.match.params.pokeCode, { headers: {'Token': localStorage.getItem('token')}});
-            const resp2 = response2.data;
-            let usersList = [];
-            for (let i=0; i<resp2.players.length; i++) {
-                usersList.push(resp2.players[i].user)
-            }
-            let amIAdmin1=false;
-            if (resp1.username == resp2.creator.user.username) {
-                amIAdmin1=true;
-            }
-
-
-            this.setState({
-                admin: resp2.creator.user,
-                users: usersList,
-                user: resp1,
-                state: resp2.state,
-                amIAdmin: amIAdmin1
-            })
-
-
-
-        } catch (error) {
-            alert(`Something went wrong: \n${handleError(error)}`);
-        }
-    }
-
-    async getUpdate() {
-        this.recurrentTimer = setInterval(() => {
-            try {
-                console.log("tried after 30 seconds");
-
-                this.getAndSetUserInformation()
-
-
-            } catch (error) {
-                alert(`Something went wrong: \n${handleError(error)}`);
-            }
-        }, 30000)
-    }
-
-    async startGame() {
-        try {
-
-            const requestBody = JSON.stringify({
-                username: this.state.npcs
-            });
-            await api.put('/games/'+this.props.match.params.pokeCode, requestBody,{ headers: {'Token': localStorage.getItem('token')}});
-            this.goToIntermediary();
-
-        } catch (error) {
-            alert(`Something went wrong: \n${handleError(error)}`);
-        }
-    }
-
-    async leaveGame() {
-        try {
-            const requestBody = JSON.stringify({
-                id: this.state.user.id,
-                action: "LEAVE"
-            });
-            await api.put('/games/'+this.props.match.params.pokeCode+'/players', requestBody,{ headers: {'Token': localStorage.getItem('token')}});
-            this.goToSocialMode();
-        } catch (error) {
-            alert(`Something went wrong: \n${handleError(error)}`);
-        }
-    }
-
-    goToSocialMode() {
-        this.props.history.push('/socialmode');
-    }
-
-    //IMPORTANT: Yet to be Implemented
-    goToIntermediary() {
-
-    }
-
-    goToGame() {
-        this.props.history.push('/game/'+this.props.match.params.pokeCode)
-    }
-
-    async setTimerUntilStart() {
-        let timePassed = this.getTimePassed(this.state.timestamp);
-        console.log("Time passed: "+timePassed)
-        if (timePassed > 240000) {
-            this.goToSocialMode();
-        }
-        else {
-            let remainingTime = 240000-timePassed;
-            this.totalTimer = setTimeout(() => {
-                if (this.state.amIAdmin) {
-                    this.startGame()
-                }
-                this.goToIntermediary()
-            }, remainingTime)
-        }
-    }
-
-
-
+    /*
     async componentDidMount() {
-        this.setTimerUntilStart();
-        this.setState({pokeCode: this.props.match.params.pokeCode});
-        this.getAndSetUserInformation();
-        this.getUpdate();
-    }
+        try {
+            const response = await api.get('/game/'+this.state.pokeCode);
 
-    componentDidUpdate() {
-        if (this.state.users && this.state.user) {
-            let kicked = true;
-            for (let i=0; i<this.state.users.length; i++) {
-                if (this.state.users[i].username == this.state.user.username) {
-                    kicked = false;
-                    break;
-                }
-            }
-            if (kicked) {
-                this.goToSocialMode();
-            }
-            else if (this.state.state == "RUNNING") {
-                this.goToGame();
-            }
+
+        } catch (error) {
+            alert(`Something went wrong: \n${handleError(error)}`);
         }
-
     }
 
-
-    componentWillUnmount() {
-        clearInterval(this.recurrentTimer);
-        this.recurrentTimer=null;
-        clearTimeout(this.totalTimer);
-        this.totalTimer=null;
-    }
-
-
-
-    goBack() {
-        this.leaveGame()
-    }
+     */
 
     displayPlayer(player) {
         let playerBox = null;
@@ -324,10 +173,6 @@ class Lobby extends React.Component {
         return (
             <BaseContainer>
                 <Header height={140} top={33} />
-                {(!this.state.users || !this.state.admin) ? (
-                    <Spinner/> ) :
-                <div>
-                    {console.log("Went in main")}
                 <Row>
                     <RoundContainer onClick={() => {
                         this.goBack()
@@ -355,16 +200,14 @@ class Lobby extends React.Component {
                             {
                                 this.state.users.map(player => {
                                     return (
-
                                         <PlayerContainer onClick={() => {
                                             console.log('Player Clicked:', player);
-                                            this.setState({displaySecondaryCard: player.user});
+                                            this.setState({displaySecondaryCard: player});
                                             console.log(this.state.displaySecondaryCard);
                                         }}>
                                             {this.displayPlayer(player)}
 
                                         </PlayerContainer>
-
 
                                     );
                                 })
@@ -373,30 +216,16 @@ class Lobby extends React.Component {
                         </ButtonContainer>
 
                         <CenterContainer>
-
-                            
-                            {this.state.amIAdmin ?
-                                <MenuButton
-                                    width = "280px"
-                                    onClick={() => {
-                                        this.startGame();
-                                    }}>
-                                    Start
-                                </MenuButton>
-                            : null}
+                            <Spinner />
                             <MenuButton
-                                width = "280px"
-                                onClick={() => {
-                                    this.leaveGame();
-                                }}>
+                                width = "50%">
                                 Leave
                             </MenuButton>
                         </CenterContainer>
 
                     </Form>
                 </FormContainer>
-                </div>
-                }
+
             </BaseContainer>
 
         );
