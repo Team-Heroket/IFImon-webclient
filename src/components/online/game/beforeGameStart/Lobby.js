@@ -137,6 +137,8 @@ class Lobby extends React.Component {
         };
     }
 
+
+
     getTimePassed(start) {
         let startmili = parseInt(new Date(start).getTime(),10);
         let nowmili = parseInt(new Date().getTime(), 10)
@@ -218,7 +220,6 @@ class Lobby extends React.Component {
                 action: "LEAVE"
             });
             await api.put('/games/'+this.props.match.params.pokeCode+'/players', requestBody,{ headers: {'Token': localStorage.getItem('token')}});
-            this.goToSocialMode();
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
         }
@@ -288,12 +289,14 @@ class Lobby extends React.Component {
         this.recurrentTimer=null;
         clearTimeout(this.totalTimer);
         this.totalTimer=null;
+        this.leaveGame();
     }
 
 
 
     goBack() {
-        this.leaveGame()
+        this.leaveGame();
+        this.props.history.push('/socialmode');
     }
 
     displayPlayer(player) {
@@ -388,6 +391,7 @@ class Lobby extends React.Component {
                                 width = "280px"
                                 onClick={() => {
                                     this.leaveGame();
+                                    this.goToSocialMode();
                                 }}>
                                 Leave
                             </MenuButton>
