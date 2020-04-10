@@ -4,8 +4,16 @@ import { BaseContainer, ButtonContainer, FormContainer } from '../../../helpers/
 import { api, handleError } from '../../../helpers/api';
 import User from '../../shared/models/User';
 import { withRouter } from 'react-router-dom';
-import {Button, LogOutButton, MenuButton, MenuIcon, TransparentButton} from '../../../views/design/Button';
+import {
+    Button,
+    LogOutButton,
+    MenuButton,
+    MenuButtonIcon,
+    MenuIcon,
+    TransparentButton
+} from '../../../views/design/Button';
 import Header from "../../../views/Header";
+import {BackIcon} from "../../../views/design/Icons";
 
 
 const Label = styled.label`
@@ -45,7 +53,7 @@ class MainMenu extends React.Component {
     async logOut(){
         try {
             const body = JSON.stringify({});
-            const response = await api.put('/logout', body , { headers: {'Token': localStorage.getItem('token')}});
+            await api.put('/logout', body , { headers: {'Token': localStorage.getItem('token')}});
 
             // Get the returned user and update a new object.
             localStorage.removeItem('id');
@@ -67,29 +75,21 @@ class MainMenu extends React.Component {
                 <FormContainer>
                     <Form>
                         <ButtonContainer>
-                            <TransparentButton
-                                width="50%"
-                                onClick = {() => {this.goToSocialMode()}}
-                            >
-                                SocialMode
-                            </TransparentButton>
-                            <TransparentButton
-                                width="50%"
-                                onClick = {() => {this.goToLeaderBoard()}}
-                            >
-                                Leaderboard
-                            </TransparentButton>
-                            <TransparentButton
-                                width="50%"
-                                onClick = {() => {this.goToSettings()}}
-                            >
-                                Settings
-                            </TransparentButton>
+
+                            <MenuButtonIcon type={{text: "social mode"}}
+                                            onClicktoDo = {() => {this.goToSocialMode()}}
+                            />
+                            <MenuButtonIcon type={{text: "leaderboard"}}
+                                            onClicktoDo = {() => {this.goToLeaderBoard()}}
+                            />
+                            <MenuButtonIcon type={{text: "settings"}}
+                                            onClicktoDo = {() => {this.goToSettings()}}
+                            />
+
                             <LogOutButton
                                 width="50%"
                                 onClick = {() => {this.logOut()}}
                             >
-
                                 Log Out
                             </LogOutButton>
                         </ButtonContainer>

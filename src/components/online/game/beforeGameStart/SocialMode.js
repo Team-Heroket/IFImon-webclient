@@ -38,7 +38,8 @@ const InputField = styled.input`
   position: relative;
   transform : translate(-50%, 0%);
   height: 35px;
-  width: 400px;
+  
+  width: ${props => props.width || "400px"};
   left: 50%;
   text-align: center;
   border: none;
@@ -125,13 +126,14 @@ class SocialMode extends React.Component {
                    <Form>
                        <InputField
                            placeholder="Enter PokeCode"
+                           width={"55%"}
                            onChange={e => {
                                this.handleInputChange('pokeCode', e.target.value);
                            }}/>
                        <ButtonContainer>
                            <Button
                                disabled={!this.state.pokeCode}
-                               width="400px"
+                               width="55%"
                                onClick={() => {
                                    this.join();
                                }}
@@ -140,7 +142,7 @@ class SocialMode extends React.Component {
                            </Button>
                            <Line>OR</Line>
                            <TransparentButton
-                               width = "400px"
+                               width = "55%"
                                onClick={() => {
                                    this.createGame();
                                }}

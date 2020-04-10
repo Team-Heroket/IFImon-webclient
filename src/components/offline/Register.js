@@ -4,7 +4,7 @@ import { BaseContainer, ButtonContainer, FormContainer } from '../../helpers/lay
 import { api, handleError } from '../../helpers/api';
 import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
-import {AvatarButton, Button} from '../../views/design/Button';
+import {AvatarButton, Button, LogOutButton} from '../../views/design/Button';
 import Header from "../../views/Header";
 
 
@@ -99,7 +99,6 @@ const Label = styled.label`
   font-size: 16px;
   font-weight: 300;
 `;
-
 
 
 class Register extends React.Component {
@@ -208,22 +207,22 @@ class Register extends React.Component {
                         <ButtonContainer>
                             <Button
                                 disabled={!this.state.username || !this.state.password || !this.state.avatarId}
-                                width="50%"
+                                width="55%"
                                 onClick={() => {
                                     this.register();
                                 }}
                             >
                                 Sign Up
                             </Button>
-                            <Button
+                            <LogOutButton
 
                                 width="50%"
                                 onClick={() => {
                                     this.goToLogin();
                                 }}
                             >
-                                Login
-                            </Button>
+                                Cancel
+                            </LogOutButton>
 
                         </ButtonContainer>
                     </Column>

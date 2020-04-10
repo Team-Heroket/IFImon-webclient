@@ -1,22 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BaseContainer, ButtonContainer, FormContainer } from '../../../helpers/layout';
+import { BaseContainer, ButtonContainer, FormContainer, PlayerContainer } from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
 import { withRouter } from 'react-router-dom';
 import { Button, LogOutButton, BackButton, RoundContainer} from '../../../views/design/Button';
 import Header from "../../../views/Header";
-import {PlayerStatCard, Player} from "../../../views/Player";
+import {PlayerStatCard, Player, PlayerMe} from "../../../views/Player";
 
 import {BackIcon} from "../../../views/design/Icons";
 import {Spinner} from "../../../views/design/Spinner";
-
-const PlayerContainer = styled.li`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  
-`;
 
 const Row = styled.div`
     &::after{
@@ -83,14 +75,14 @@ class Leaderboards extends React.Component {
         return (
             <BaseContainer>
                 <Header height={140} top={33}/>
+                <Row>
+                    <RoundContainer onClick = {() => {this.goBack()}}>
+                        <BackIcon />
+                    </RoundContainer>
+                </Row>
                 {(!this.state.users || !this.state.user) ? (
-                    <Spinner />
-                    ) : (<div>
-                    <Row>
-                        <RoundContainer onClick = {() => {this.goBack()}}>
-                            <BackIcon />
-                        </RoundContainer>
-                    </Row>
+                    <FormContainer><Spinner /></FormContainer>
+                    ) : (
                     <Row>
                     <Column>
                     <ButtonContainer>
@@ -103,11 +95,19 @@ class Leaderboards extends React.Component {
                                             if (this.state.displaySecondaryCard != null && this.state.displaySecondaryCard.username == player.username) {
                                                 this.setState({displaySecondaryCard: null});
                                             }
-                                            else {this.setState({displaySecondaryCard: player});}}
-
+                                            else {
+                                                this.setState({displaySecondaryCard: player});
+                                            }
+                                        }
+                                        else{
+                                                this.setState({displaySecondaryCard: null});
+                                            }
                                         console.log(this.state.displaySecondaryCard);
                                     }}>
-                                        <Player user={player}  />
+                                        {player.id == localStorage.getItem('id') ?
+                                            (<PlayerMe user={player}  />) :
+                                            (<Player user={player}  />)
+                                        }
                                     </PlayerContainer>
 
                                 );
@@ -124,7 +124,7 @@ class Leaderboards extends React.Component {
                     }
                 </Column>
                 </Row>
-                    </div>
+
                 )
                     }
             </BaseContainer>

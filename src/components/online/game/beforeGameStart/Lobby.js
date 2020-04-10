@@ -1,6 +1,6 @@
 import React from 'react';
 import {withRouter} from "react-router-dom";
-import {BaseContainer, ButtonContainer, FormContainer} from "../../../../helpers/layout";
+import {BaseContainer, ButtonContainer, FormContainer, PokeCodeContainer, PlayerContainer} from "../../../../helpers/layout";
 import Header from "../../../../views/Header";
 import styled from "styled-components";
 import {Button, MenuButton, RoundContainer, TransparentButton} from "../../../../views/design/Button";
@@ -61,43 +61,14 @@ const Label2 = styled.label`
 export const CenterContainer = styled.div`
   display: flex;
   flex-direction: column;
+  margin: 15px;
   align-items: center;
   justify-content: center;
 `;
 
-
-const PokeCodeContainer = styled.div`
-  &:hover {
-    transform: translateY(${props => (props.disabled ? 0 : 2)}px);
-  }
-  padding: 6px;
-  font-weight: 500;
-  font-size: 16px;
-  text-align: center;
-  color: white;
-  width: ${props => props.width || null};
-  height: 35px;
-  border: 1px solid #FFFFFF;;
-  border-radius: 25px;
-  margin-top: 10px;
-  cursor: ${props => (props.disabled ? "default" : "pointer")};
-  opacity: ${props => (props.disabled ? "66%" : "100%")};
-  background: rgba(255, 255, 255, 0.2);;
-  transition: all 0.3s ease;
-  margin: 0 auto;
-`;
 
 const Space = styled.div`
   margin-bottom: 45px
-`;
-
-const PlayerContainer = styled.li`
-  
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  
 `;
 
 const Column = styled.div`
@@ -380,7 +351,7 @@ class Lobby extends React.Component {
                             <Spinner/>
                             {this.state.amIAdmin ?
                                 <MenuButton
-                                    width = "280px"
+                                    width = "55%"
                                     onClick={() => {
                                         this.startGame();
                                     }}>
@@ -388,7 +359,7 @@ class Lobby extends React.Component {
                                 </MenuButton>
                             : null}
                             <MenuButton
-                                width = "280px"
+                                width = "50%"
                                 onClick={() => {
                                     this.leaveGame();
                                     this.goToSocialMode();

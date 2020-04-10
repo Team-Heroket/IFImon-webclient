@@ -222,7 +222,6 @@ export let PlayerStatCard = ({ user }) => {
                             Since: {user.creationDate}
                         </UserSince>
                         <br/>
-                        <br/>
                         <RankCard>
                             Games played: {user.statistics.gamesPlayed}
                         </RankCard>

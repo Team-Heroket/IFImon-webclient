@@ -160,7 +160,7 @@ class Login extends React.Component {
             <ButtonContainer>
               <Button
                 disabled={!this.state.username || !this.state.password}
-                width="50%"
+                width="55%"
                 onClick={() => {
                   this.login();
                 }}
@@ -168,7 +168,7 @@ class Login extends React.Component {
                 Login
               </Button>
               <Button
-                  width="50%"
+                  width="55%"
                   onClick={() => {
                     this.goToRegister();
                   }}
