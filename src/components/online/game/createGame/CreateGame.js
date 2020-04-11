@@ -147,7 +147,7 @@ class CreateGame extends React.Component {
             const response1 = await api.get('/users/' + localStorage.getItem('id'), {headers: {'Token': localStorage.getItem('token')}});
             let resp1 = response1.data;
 
-            const response2 = await api.get('/games/' + this.state.pokeCode, {headers: {'Token': localStorage.getItem('token')}});
+            const response2 = await api.get('/games/' + this.state.pokeCode.toString(), {headers: {'Token': localStorage.getItem('token')}});
             const resp2 = response2.data;
             let usersList = [];
             for (let i = 0; i < resp2.players.length; i++) {
@@ -211,11 +211,11 @@ class CreateGame extends React.Component {
         try {
 
             const requestBody = JSON.stringify({
-                action: "LEAVE",
+                action: "KICK",
                 id: player.id
             });
-            await api.put('/games/' + this.state.pokeCode + "/users", requestBody, {headers: {'Token': localStorage.getItem('token')}});
-            this.goToIntermediary();
+            await api.put('/games/' + this.state.pokeCode.toString() + "/players", requestBody, {headers: {'Token': localStorage.getItem('token')}});
+            this.getAndSetUserInformation();
 
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
