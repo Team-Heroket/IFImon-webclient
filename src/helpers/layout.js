@@ -51,12 +51,11 @@ export const FormContainer = styled.div`
 
 export const SimpleContainer = styled.div`
   width: ${props => props.width || null};
+  float: ${props => props.defFloat || null};
+  justify-content:center;
+  margin:auto;
+  align-items: center;
   display: flex;
-  
-    align-items: center;
-    align-text: center;
-  
-  justify-content: center;
 `;
 
 export const PokeCodeContainer = styled.label`

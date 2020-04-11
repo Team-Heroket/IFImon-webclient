@@ -11,6 +11,7 @@ import Leaderboards from "../../online/leaderboards/Leaderboards";
 import SocialMode from "../../online/game/beforeGameStart/SocialMode";
 import Lobby from "../../online/game/beforeGameStart/Lobby";
 import CreateGame from "../../online/game/createGame/CreateGame"
+import Quickplay from "../../online/quickplay/Quickplay";
 /**
  * Main router of your application.
  * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/offline"
@@ -81,6 +82,14 @@ class AppRouter extends React.Component {
                   render={() => (
                       <GameGuard>
                           <CreateGame/>
+                      </GameGuard>
+                  )}
+              />
+              <Route
+                  path="/quickplay"
+                  render={() => (
+                      <GameGuard>
+                          <Quickplay/>
                       </GameGuard>
                   )}
               />

@@ -6,7 +6,7 @@ const Container = styled.button`
     transform: translateY(2px);
     transition: all 0.1s ease;
   }
-  margin:5px;
+  margin-bottom:10px;
   width: 280px;
   height: 35px;
   padding-left: 5px;
@@ -24,7 +24,7 @@ const ContainerMe = styled.button`
     transform: translateY(2px);
     transition: all 0.1s ease;
   }
-  margin:5px;
+  margin-bottom:10px;
   width: 280px;
   height: 35px;
   padding-left: 5px;

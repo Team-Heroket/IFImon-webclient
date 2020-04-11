@@ -42,6 +42,10 @@ class MainMenu extends React.Component {
         this.props.history.push('/settings/'+localStorage.getItem('id'))
     }
 
+    goToQuickplay() {
+        this.props.history.push('/quickplay')
+    }
+
     goToLeaderBoard() {
         this.props.history.push('/leaderboards')
     }
@@ -81,6 +85,9 @@ class MainMenu extends React.Component {
                             />
                             <MenuButtonIcon type={{text: "leaderboard"}}
                                             onClicktoDo = {() => {this.goToLeaderBoard()}}
+                            />
+                            <MenuButtonIcon type={{text: "quickplay"}}
+                                            onClicktoDo = {() => {this.goToQuickplay()}}
                             />
                             <MenuButtonIcon type={{text: "settings"}}
                                             onClicktoDo = {() => {this.goToSettings()}}

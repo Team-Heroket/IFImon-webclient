@@ -3,8 +3,15 @@ import {withRouter} from "react-router-dom";
 import {BaseContainer, ButtonContainer, FormContainer, PokeCodeContainer, PlayerContainer, SimpleContainer} from "../../../../helpers/layout";
 import Header from "../../../../views/Header";
 import styled from "styled-components";
-import {Button, LogOutButton, MenuButton, RoundContainer, TextRoundContainer} from "../../../../views/design/Button";
-import {BackIcon} from "../../../../views/design/Icons";
+import {
+    ButtonRow,
+    KickContainer,
+    LogOutButton,
+    MenuButton,
+    RoundContainer,
+    TextRoundContainer
+} from "../../../../views/design/Button";
+import {BackIcon, KickIcon} from "../../../../views/design/Icons";
 import {api, handleError} from "../../../../helpers/api";
 import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin} from "../../../../views/Player";
 import {Spinner} from "../../../../views/design/Spinner";
@@ -96,7 +103,7 @@ class CreateGame extends React.Component {
             users: null,
             admin: null,
             user: null,
-            displaySecondaryCard: false,
+            selectedUser: false,
             timestamp: new Date(),
             state: null,
             amIAdmin: true,
@@ -117,7 +124,7 @@ class CreateGame extends React.Component {
             console.log(request.data)
             this.setState({pokeCode: (request.data).token})
 
-            setInterval('', 3000);
+            setInterval('', 1000);
 
             this.getAndSetUserInformation();
             this.getUpdate();
@@ -151,7 +158,6 @@ class CreateGame extends React.Component {
                 amIAdmin1 = true;
             }
 
-
             this.setState({
                 admin: resp2.creator.user,
                 users: usersList,
@@ -160,6 +166,13 @@ class CreateGame extends React.Component {
                 amIAdmin: amIAdmin1
             })
 
+            if (this.state.amountOfNPC+this.state.users.length > 6) {
+                this.setState({message: "New user entered - amount of NPCs is now "+ (6-this.state.users.length)})
+                this.setState({amountOfNPC: 6-this.state.users.length})
+            }
+            else{
+                if(this.state.message){this.state.message = ''}
+            }
 
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
@@ -192,6 +205,22 @@ class CreateGame extends React.Component {
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
         }
+    }
+
+    async kick(player) {
+        try {
+
+            const requestBody = JSON.stringify({
+                action: "LEAVE",
+                id: player.id
+            });
+            await api.put('/games/' + this.state.pokeCode + "/users", requestBody, {headers: {'Token': localStorage.getItem('token')}});
+            this.goToIntermediary();
+
+        } catch (error) {
+            alert(`Something went wrong: \n${handleError(error)}`);
+        }
+
     }
 
     getTimePassed(start) {
@@ -262,12 +291,14 @@ class CreateGame extends React.Component {
 
     handleNPCEvent(value) {
         if (this.state.regexp.test(this.state.amountOfNPC + value) && (this.state.amountOfNPC + value + this.state.users.length <= 6)) {
+
+            this.setState({message: ''})
             this.setState({amountOfNPC: this.state.amountOfNPC + value});
 
         } else {
-            if (this.state.amountOfNPC >= 5) {
+            if (this.state.amountOfNPC+this.state.users.length >= 5) {
                 this.setState({message: 'Maximum amount of players is 6'})
-                this.setState({amountOfNPC: 5})
+                this.setState({amountOfNPC: 6-this.state.users.length})
             } else {
                 this.setState({amountOfNPC: 0})
             }
@@ -374,24 +405,22 @@ class CreateGame extends React.Component {
 
                         <br/>
                         <Label>Amount of NPCs: </Label>
-                        <SimpleContainer width={"55%"}>
-                            <Row>
+                        <SimpleContainer width={"55%"} defFloat={"center"}>
                                 <Column width={"15%"} floate={"left"}>
                                     <TextRoundContainer onClick={() => this.handleNPCEvent(-1)}>
                                         -
                                     </TextRoundContainer>
                                 </Column>
-                                <Column width={"66%"} floate={"left"}>
+                                <Column width={"250px"} floate={"center"}>
                                     <InputField
-                                        width={"100%"}
+                                        width={"250px"}
                                         value={this.state.amountOfNPC}/>
                                 </Column>
-                                <Column width={'15%'} floate={"left"}>
+                                <Column width={'15%'} floate={"right"}>
                                     <TextRoundContainer onClick={() => this.handleNPCEvent(1)}>
                                         +
                                     </TextRoundContainer>
                                 </Column>
-                            </Row>
                         </SimpleContainer>
                         <br/>
                         <Label>Waiting for Players ({this.state.users.length}/{this.state.amount})</Label>
@@ -399,14 +428,20 @@ class CreateGame extends React.Component {
                             {
                                 this.state.users.map(player => {
                                     return (
+                                        <ButtonRow>
                                         <PlayerContainer onClick={() => {
                                             console.log('Player Clicked:', player);
-                                            this.setState({displaySecondaryCard: player.user});
-                                            console.log(this.state.displaySecondaryCard);
+                                            this.setState({selectedUser: player.user});
+                                            console.log(this.state.selectedUser);
                                         }}>
                                             {this.displayPlayer(player)}
-
                                         </PlayerContainer>
+                                            { (player.id == localStorage.getItem('id')) ? <SimpleContainer width={"40px"}/> :
+                                                <KickContainer onClick={()=> this.kick(player)}>
+                                                    <KickIcon/>
+                                                </KickContainer>
+                                            }
+                                        </ButtonRow>
                                     );
                                 })
                             }
