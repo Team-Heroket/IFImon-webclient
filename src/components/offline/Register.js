@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BaseContainer, ButtonContainer, FormContainer } from '../../helpers/layout';
+import {AvatarContainer, BaseContainer, ButtonContainer, FormContainer, SimpleContainer} from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
@@ -21,7 +21,6 @@ const Form = styled.div`
   border-radius: 5px;
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
-
 
 const Row = styled.div`
     &::after{
@@ -77,8 +76,9 @@ const PasswordField = styled.input`
 
 
 const Column = styled.div`
-    float: left
+    float: ${props => props.float || "left"};;
     align-items: center
+    
     width = 100%
     
     @media only screen and (min-width: 768px){
@@ -89,7 +89,6 @@ const Column = styled.div`
 
 const Label = styled.label`
   position: relative;
-  transform : translate(-50%, 0%);
   width: 400px;
   left: 15%;
   color: white;
@@ -99,7 +98,6 @@ const Label = styled.label`
   font-size: 16px;
   font-weight: 300;
 `;
-
 
 class Register extends React.Component {
     constructor() {
@@ -142,9 +140,9 @@ class Register extends React.Component {
                     id = {i}
                     onClick={this.handleClick}
                 >
-                    <li index = {i}>
+                    <SimpleContainer index = {i}>
                         <img alt="avatar" src={require('../shared/images/avatarSVG/0'+s+'-avatar.svg')} height={"66px"} width={"66px"} index = {i}/>
-                    </li>
+                    </SimpleContainer>
                 </AvatarButton>
             )
         }
@@ -205,6 +203,8 @@ class Register extends React.Component {
                             }}
                         />
                         <ButtonContainer>
+                            <br/>
+                            <br/>
                             <Button
                                 disabled={!this.state.username || !this.state.password || !this.state.avatarId}
                                 width="55%"
@@ -214,6 +214,7 @@ class Register extends React.Component {
                             >
                                 Sign Up
                             </Button>
+                            <br/>
                             <LogOutButton
 
                                 width="50%"
@@ -226,13 +227,13 @@ class Register extends React.Component {
 
                         </ButtonContainer>
                     </Column>
-                    <Column>
+                    <Column float={"right"}>
                         <Label>Choose new Avatar</Label>
-                        <ul>
+                        <AvatarContainer>
                             {
                                 this.createAvatarList()
                             }
-                        </ul>
+                        </AvatarContainer>
                     </Column>
 
                 </div>

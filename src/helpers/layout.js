@@ -70,7 +70,7 @@ export const PokeCodeContainer = styled.label`
   color: white;
   width: ${props => props.width || null};
   height: 35px;
-  border: 1px solid #FFFFFF;;
+  border: 1px solid #FFFFFF;
   border-radius: 25px;
   margin-top: 10px;
   cursor: ${props => (props.disabled ? "default" : "pointer")};
@@ -78,6 +78,18 @@ export const PokeCodeContainer = styled.label`
   background: rgba(255, 255, 255, 0.2);;
   transition: all 0.3s ease;
   margin: 0 auto;
+`;
+
+export const AvatarContainer = styled.div`
+  overflow-y: scroll;
+  background: rgba(255, 255, 255, 0.2);
+  margin-left: 15%;
+  border-radius: 25px;
+  margin-top: 15px;
+  height:  ${props => props.height || "350px"};
+  width: 450px;
+  padding-left: 15px;
+  
 `;
 
 export const PlayerContainer = styled.li`

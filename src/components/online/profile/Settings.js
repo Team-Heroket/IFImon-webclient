@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {BaseContainer, ButtonContainer, FormContainer} from '../../../helpers/layout';
+import {AvatarContainer, BaseContainer, ButtonContainer, FormContainer} from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
 import User from '../../shared/models/User';
 import { withRouter } from 'react-router-dom';
@@ -89,33 +89,6 @@ class Settings extends React.Component {
         console.log("New avatarClicked: "+this.state.avatarClicked);
     }
 
-    async componentDidMount() {
-        //Checks if id in URL corresponds with our id. If it does, we can see edit button
-        let url_id = this.props.match.params.id;
-
-        if (url_id !== localStorage.getItem('id')) {
-            this.goToMenu();
-        }
-        console.log('Token: '+localStorage.getItem('token'))
-        console.log('Id in params: '+url_id)
-        try {
-            const resp = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
-
-            let response = resp.data;
-            console.log('requested data:', resp.data);
-            if (response.avatarId ===0) {
-                response.avatarId = 1;
-            }
-            await this.setState({user: response,
-            avatarClicked: response.avatarId});
-
-
-        }
-        catch (error) {
-            alert(`Something went wrong: \n${handleError(error)}`);
-        }
-    }
-
     createAvatarList() {
         let avatar_list = [];
         for (let i=1; i<61; i++) {
@@ -147,6 +120,33 @@ class Settings extends React.Component {
         }
 
         return avatar_list;
+    }
+
+    async componentDidMount() {
+        //Checks if id in URL corresponds with our id. If it does, we can see edit button
+        let url_id = this.props.match.params.id;
+
+        if (url_id !== localStorage.getItem('id')) {
+            this.goToMenu();
+        }
+        console.log('Token: '+localStorage.getItem('token'))
+        console.log('Id in params: '+url_id)
+        try {
+            const resp = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
+
+            let response = resp.data;
+            console.log('requested data:', resp.data);
+            if (response.avatarId ===0) {
+                response.avatarId = 1;
+            }
+            await this.setState({user: response,
+            avatarClicked: response.avatarId});
+
+
+        }
+        catch (error) {
+            alert(`Something went wrong: \n${handleError(error)}`);
+        }
     }
 
     goToMenu() {
@@ -280,11 +280,11 @@ class Settings extends React.Component {
                             </Column>
                             <Column>
                             <Label>Choose new Avatar</Label>
-                            <ul>
+                            <AvatarContainer>
                             {
                                 this.createAvatarList()
                             }
-                            </ul>
+                            </AvatarContainer>
                             </Column>
 
                             </div>

@@ -209,14 +209,14 @@ class CreateGame extends React.Component {
                 id: this.state.user.id,
                 action: "LEAVE"
             });
-            await api.put('/games/' + this.props.match.params.pokeCode + '/players', requestBody, {headers: {'Token': localStorage.getItem('token')}});
+            await api.put('/games/' + this.state.pokeCode.toString() + '/players', requestBody, {headers: {'Token': localStorage.getItem('token')}});
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
         }
     }
 
     goToGame() {
-        this.props.history.push('/game/' + this.props.match.params.pokeCode)
+        this.props.history.push('/game/' + this.state.pokeCode)
     }
 
     componentDidUpdate() {
@@ -242,7 +242,6 @@ class CreateGame extends React.Component {
         this.recurrentTimer = null;
         clearTimeout(this.totalTimer);
         this.totalTimer = null;
-        this.leaveGame();
     }
 
     async setTimerUntilStart() {
@@ -262,16 +261,23 @@ class CreateGame extends React.Component {
     }
 
     handleNPCEvent(value) {
-        if (this.state.regexp.test(value)) {
+        if (this.state.regexp.test(this.state.amountOfNPC + value) && (this.state.amountOfNPC + value + this.state.users.length <= 6)) {
             this.setState({amountOfNPC: this.state.amountOfNPC + value});
+
         } else {
-            this.setState({message: 'Maximum amount of players is 6'})
-            this.setState({amountOfNPC: 0})
+            if (this.state.amountOfNPC >= 5) {
+                this.setState({message: 'Maximum amount of players is 6'})
+                this.setState({amountOfNPC: 5})
+            } else {
+                this.setState({amountOfNPC: 0})
+            }
         }
     }
 
+
     goBack() {
 
+        this.leaveGame();
         this.props.history.push('/socialmode');
     }
 
@@ -422,7 +428,6 @@ class CreateGame extends React.Component {
                             <LogOutButton
                                 width="55%"
                                 onClick={() => {
-                                    this.leaveGame();
                                     this.goBack();
                                 }}>
                                 Leave Lobby
