@@ -141,14 +141,13 @@ class Lobby extends React.Component {
                 this.goToIntermediary()
             }
 
-            this.setState({
+            await this.setState({
                 admin: resp2.creator.user,
                 users: usersList,
                 state: resp2.state,
                 creationTime: resp2.creationTime.toString()
             })
 
-            this.setTimerUntilStart(resp2.creationTime)
 
 
 
@@ -198,8 +197,9 @@ class Lobby extends React.Component {
         this.props.history.push('/game/'+this.props.match.params.pokeCode)
     }
 
-    async setTimerUntilStart(startTime) {
-        let timePassed = this.getTimePassed(this.state.creationTime);
+    async setTimerUntilStart() {
+        console.log("CreationTime: "+this.state.creationTime)
+        let timePassed = this.getTimePassed(this.state.timestamp);
         console.log("Time passed: "+timePassed)
         if (timePassed > 240000) {
             this.goToSocialMode();
@@ -208,7 +208,6 @@ class Lobby extends React.Component {
             let remainingTime = 240000-timePassed;
             console.log("Remaining Time: "+ remainingTime)
             this.totalTimer = setTimeout(() => {
-
                 this.goToIntermediary()
             }, remainingTime)
         }
@@ -217,10 +216,11 @@ class Lobby extends React.Component {
 
 
     async componentDidMount() {
-        
+
         this.setState({pokeCode: this.props.match.params.pokeCode});
         this.getAndSetUserInformation();
         this.getUpdate();
+        this.setTimerUntilStart();
     }
 
     componentDidUpdate() {
@@ -285,7 +285,7 @@ class Lobby extends React.Component {
         return (
             <BaseContainer>
                 <Header height={140} top={33} />
-                {(!this.state.users || !this.state.admin || !this.state.user) ? (
+                {(!this.state.users || !this.state.admin || !this.state.user || !this.state.creationTime) ? (
                     <Spinner/> ) :
                 <div>
                     {console.log("Went in main")}

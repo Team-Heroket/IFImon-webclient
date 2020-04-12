@@ -136,7 +136,8 @@ class CreateGame extends React.Component {
     }
 
     async componentDidMount() {
-
+        console.log("Creation Time Check: "+ this.state.creationTime)
+        this.setTimerUntilStart()
     }
 
     async getAndSetUserInformation() {
@@ -167,8 +168,9 @@ class CreateGame extends React.Component {
                 amIAdmin: amIAdmin1,
                 creationTime: resp2.creationTime
             })
+            console.log("creationTime in here: "+ resp2.creationTime)
 
-            this.setTimerUntilStart(resp2.creationTime)
+
 
             if (this.state.amountOfNPC+this.state.users.length > 6) {
                 this.setState({message: "New user entered - amount of NPCs is now "+ (6-this.state.users.length)})
@@ -286,10 +288,9 @@ class CreateGame extends React.Component {
         this.totalTimer = null;
     }
 
-    async setTimerUntilStart(startTime) {
-        let timePassed = this.getTimePassed(this.state.creationTime);
+    async setTimerUntilStart() {
+        let timePassed = this.getTimePassed(this.state.timestamp);
         console.log("Time passed: " + timePassed)
-        console.log("Creation Time" + this.state.creationTime)
         if (timePassed > 240000) {
             this.goToSocialMode();
         } else {
