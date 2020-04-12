@@ -85,8 +85,9 @@ const Column = styled.div`
 
 
 
-class Lobby extends React.Component {
+class IntermediaryCounter extends React.Component {
 
+    /*
     recurrentTimer= null;
     totalTimer=null;
 
@@ -103,8 +104,7 @@ class Lobby extends React.Component {
             timestamp: new Date(),
             //timestamp: "2020-04-09 21:09:00",
             npcs: 0,
-            state: null,
-            creationTime: null
+            state: null
         };
     }
 
@@ -112,7 +112,6 @@ class Lobby extends React.Component {
 
     getTimePassed(start) {
         let startmili = parseInt(new Date(start).getTime(),10);
-        console.log("startmili: "+ startmili)
         let nowmili = parseInt(new Date().getTime(), 10)
         console.log(startmili);
         console.log(nowmili);
@@ -144,11 +143,8 @@ class Lobby extends React.Component {
             this.setState({
                 admin: resp2.creator.user,
                 users: usersList,
-                state: resp2.state,
-                creationTime: resp2.creationTime.toString()
+                state: resp2.state
             })
-
-            this.setTimerUntilStart(resp2.creationTime)
 
 
 
@@ -189,24 +185,23 @@ class Lobby extends React.Component {
         this.props.history.push('/socialmode');
     }
 
-
+    //IMPORTANT: Yet to be Implemented
     goToIntermediary() {
-        this.props.history.push('/intermediary')
+
     }
 
     goToGame() {
         this.props.history.push('/game/'+this.props.match.params.pokeCode)
     }
 
-    async setTimerUntilStart(startTime) {
-        let timePassed = this.getTimePassed(this.state.creationTime);
+    async setTimerUntilStart() {
+        let timePassed = this.getTimePassed(this.state.timestamp);
         console.log("Time passed: "+timePassed)
         if (timePassed > 240000) {
             this.goToSocialMode();
         }
         else {
             let remainingTime = 240000-timePassed;
-            console.log("Remaining Time: "+ remainingTime)
             this.totalTimer = setTimeout(() => {
 
                 this.goToIntermediary()
@@ -217,7 +212,7 @@ class Lobby extends React.Component {
 
 
     async componentDidMount() {
-        
+        this.setTimerUntilStart();
         this.setState({pokeCode: this.props.match.params.pokeCode});
         this.getAndSetUserInformation();
         this.getUpdate();
@@ -279,79 +274,15 @@ class Lobby extends React.Component {
 
     }
 
+     */
+
 
     render() {
 
         return (
             <BaseContainer>
                 <Header height={140} top={33} />
-                {(!this.state.users || !this.state.admin || !this.state.user) ? (
-                    <Spinner/> ) :
-                <div>
-                    {console.log("Went in main")}
-                <Row>
-                    <RoundContainer onClick={() => {
-                        this.goBack()
-                    }}>
-                        <BackIcon/>
-                    </RoundContainer>
-                </Row>
-                <FormContainer>
-                    <Form>
-                        <Label>
-                            Your Lobby's PokeCode
-                        </Label>
-
-                        <PokeCodeContainer
-                            width="50%"
-                        >
-                            {this.props.match.params.pokeCode}
-                        </PokeCodeContainer>
-                        <Space/>
-                        <Label2>
-                            Waiting for Players ({this.state.users.length}/{this.state.amount})
-                        </Label2>
-
-                        <ButtonContainer>
-                            {
-                                this.state.users.map(player => {
-                                    return (
-
-                                        <PlayerContainer onClick={() => {
-                                            console.log('Player Clicked:', player);
-                                            this.setState({displaySecondaryCard: player.user});
-                                            console.log(this.state.displaySecondaryCard);
-                                        }}>
-                                            {this.displayPlayer(player)}
-
-                                        </PlayerContainer>
-
-
-                                    );
-                                })
-                            }
-
-                        </ButtonContainer>
-
-                        <CenterContainer>
-
-                            <Spinner/>
-
-                            <MenuButton
-                                width = "50%"
-                                onClick={() => {
-                                    this.leaveGame();
-                                    this.goToSocialMode();
-                                }}>
-                                Leave
-                            </MenuButton>
-
-                        </CenterContainer>
-
-                    </Form>
-                </FormContainer>
-                </div>
-                }
+                <h1>Entered Intermediary Counter</h1>
             </BaseContainer>
 
         );
@@ -359,4 +290,4 @@ class Lobby extends React.Component {
 
 
 }
-export default withRouter(Lobby);
+export default withRouter(IntermediaryCounter);

@@ -107,6 +107,7 @@ class CreateGame extends React.Component {
             timestamp: new Date(),
             state: null,
             amIAdmin: true,
+            creationTime: null
         };
 
         this.requestPokeCode();
@@ -135,7 +136,7 @@ class CreateGame extends React.Component {
     }
 
     async componentDidMount() {
-        this.setTimerUntilStart();
+
     }
 
     async getAndSetUserInformation() {
@@ -163,8 +164,11 @@ class CreateGame extends React.Component {
                 users: usersList,
                 user: resp1,
                 state: resp2.state,
-                amIAdmin: amIAdmin1
+                amIAdmin: amIAdmin1,
+                creationTime: resp2.creationTime
             })
+
+            this.setTimerUntilStart(resp2.creationTime)
 
             if (this.state.amountOfNPC+this.state.users.length > 6) {
                 this.setState({message: "New user entered - amount of NPCs is now "+ (6-this.state.users.length)})
@@ -173,6 +177,7 @@ class CreateGame extends React.Component {
             else{
                 if(this.state.message){this.state.message = ''}
             }
+            
 
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
@@ -197,14 +202,18 @@ class CreateGame extends React.Component {
         try {
 
             const requestBody = JSON.stringify({
-                username: this.state.npcs
+                npc: this.state.npcs
             });
-            await api.put('/games/' + this.props.match.params.pokeCode, requestBody, {headers: {'Token': localStorage.getItem('token')}});
+            await api.put('/games/' + this.state.pokeCode.toString(), requestBody, {headers: {'Token': localStorage.getItem('token')}});
             this.goToIntermediary();
 
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
         }
+    }
+
+    goToIntermediary() {
+        this.props.history.push('/intermediary')
     }
 
     async kick(player) {
@@ -221,6 +230,10 @@ class CreateGame extends React.Component {
             alert(`Something went wrong: \n${handleError(error)}`);
         }
 
+    }
+
+    goToSocialMode() {
+        this.props.history.push('/socialmode')
     }
 
     getTimePassed(start) {
@@ -273,13 +286,15 @@ class CreateGame extends React.Component {
         this.totalTimer = null;
     }
 
-    async setTimerUntilStart() {
-        let timePassed = this.getTimePassed(this.state.timestamp);
+    async setTimerUntilStart(startTime) {
+        let timePassed = this.getTimePassed(this.state.creationTime);
         console.log("Time passed: " + timePassed)
+        console.log("Creation Time" + this.state.creationTime)
         if (timePassed > 240000) {
             this.goToSocialMode();
         } else {
             let remainingTime = 240000 - timePassed;
+            console.log("Remaining Time: "+ remainingTime)
             this.totalTimer = setTimeout(() => {
                 if (this.state.amIAdmin) {
                     this.startGame()
