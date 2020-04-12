@@ -199,18 +199,21 @@ class Lobby extends React.Component {
 
     async setTimerUntilStart() {
         console.log("CreationTime: "+this.state.creationTime)
-        let timePassed = this.getTimePassed(this.state.timestamp);
-        console.log("Time passed: "+timePassed)
-        if (timePassed > 240000) {
-            this.goToSocialMode();
-        }
-        else {
-            let remainingTime = 240000-timePassed;
-            console.log("Remaining Time: "+ remainingTime)
-            this.totalTimer = setTimeout(() => {
-                this.goToIntermediary()
-            }, remainingTime)
-        }
+        setTimeout(() => {
+            let timePassed = this.getTimePassed(this.state.creationTime);
+            console.log("Time passed: "+timePassed)
+            if (timePassed > 240000) {
+                this.goToSocialMode();
+            }
+            else {
+                let remainingTime = 240000-timePassed;
+                console.log("Remaining Time: "+ remainingTime)
+                this.totalTimer = setTimeout(() => {
+                    this.goToIntermediary()
+                }, remainingTime)
+            }
+        }, 100)
+
     }
 
 

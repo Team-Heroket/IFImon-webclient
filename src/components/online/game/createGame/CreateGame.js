@@ -289,20 +289,24 @@ class CreateGame extends React.Component {
     }
 
     async setTimerUntilStart() {
-        let timePassed = this.getTimePassed(this.state.timestamp);
-        console.log("Time passed: " + timePassed)
-        if (timePassed > 240000) {
-            this.goToSocialMode();
-        } else {
-            let remainingTime = 240000 - timePassed;
-            console.log("Remaining Time: "+ remainingTime)
-            this.totalTimer = setTimeout(() => {
-                if (this.state.amIAdmin) {
-                    this.startGame()
-                }
-                this.goToIntermediary()
-            }, remainingTime)
-        }
+        
+        setTimeout(() => {
+            let timePassed = this.getTimePassed(this.state.creationTime);
+            console.log("Time passed: " + timePassed)
+            if (timePassed > 240000) {
+                this.goToSocialMode();
+            } else {
+                let remainingTime = 240000 - timePassed;
+                console.log("Remaining Time: "+ remainingTime)
+                this.totalTimer = setTimeout(() => {
+                    if (this.state.amIAdmin) {
+                        this.startGame()
+                    }
+                    this.goToIntermediary()
+                }, remainingTime)
+
+            }
+        }, 100)
     }
 
     handleNPCEvent(value) {
