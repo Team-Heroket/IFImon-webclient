@@ -152,7 +152,7 @@ class Lobby extends React.Component {
 
 
         } catch (error) {
-            alert(`Something went wrong: \n${handleError(error)}`);
+            this.goToSocialMode();
         }
     }
 

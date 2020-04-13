@@ -95,7 +95,7 @@ class CreateGame extends React.Component {
         super();
         this.state = {
             pokeCode: null,
-            amountOfPlayers: 0,
+            amountOfPlayers: 6,
             amountOfNPC: 0,
             regexp: /^[1-6\b]$/,
             message: '',
@@ -289,7 +289,7 @@ class CreateGame extends React.Component {
     }
 
     async setTimerUntilStart() {
-        
+
         setTimeout(() => {
             let timePassed = this.getTimePassed(this.state.creationTime);
             console.log("Time passed: " + timePassed)
@@ -443,7 +443,7 @@ class CreateGame extends React.Component {
                                 </Column>
                         </SimpleContainer>
                         <br/>
-                        <Label>Waiting for Players ({this.state.users.length}/{this.state.amount})</Label>
+                        <Label>Waiting for Players ({this.state.users.length}/{this.state.amountOfPlayers})</Label>
                         <ButtonContainer>
                             {
                                 this.state.users.map(player => {
