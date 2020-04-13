@@ -4,8 +4,16 @@ import { BaseContainer, ButtonContainer, FormContainer } from '../../../helpers/
 import { api, handleError } from '../../../helpers/api';
 import User from '../../shared/models/User';
 import { withRouter } from 'react-router-dom';
-import { Button, LogOutButton, MenuButton, MenuIcon } from '../../../views/design/Button';
+import {
+    Button,
+    LogOutButton,
+    MenuButton,
+    MenuButtonIcon,
+    MenuIcon,
+    TransparentButton
+} from '../../../views/design/Button';
 import Header from "../../../views/Header";
+import {BackIcon} from "../../../views/design/Icons";
 
 
 const Label = styled.label`
@@ -34,14 +42,22 @@ class MainMenu extends React.Component {
         this.props.history.push('/settings/'+localStorage.getItem('id'))
     }
 
+    goToQuickplay() {
+        this.props.history.push('/quickplay')
+    }
+
     goToLeaderBoard() {
         this.props.history.push('/leaderboards')
+    }
+
+    goToSocialMode() {
+        this.props.history.push('/socialmode')
     }
 
     async logOut(){
         try {
             const body = JSON.stringify({});
-            const response = await api.put('/logout', body , { headers: {'Token': localStorage.getItem('token')}});
+            await api.put('/logout', body , { headers: {'Token': localStorage.getItem('token')}});
 
             // Get the returned user and update a new object.
             localStorage.removeItem('id');
@@ -57,27 +73,30 @@ class MainMenu extends React.Component {
     render() {
         return (
             <BaseContainer>
+                {console.log(localStorage.getItem('token'))}
+                {console.log(localStorage.getItem('id'))}
                 <Header height={140} top={33}/>
                 <FormContainer>
                     <Form>
                         <ButtonContainer>
-                            <Button
-                                width="50%"
-                                onClick = {() => {this.goToLeaderBoard()}}
-                            >
-                                Leaderboard
-                            </Button>
-                            <Button
-                                width="50%"
-                                onClick = {() => {this.goToSettings()}}
-                            >
-                                Settings
-                            </Button>
+
+                            <MenuButtonIcon type={{text: "social mode"}}
+                                            onClicktoDo = {() => {this.goToSocialMode()}}
+                            />
+                            <MenuButtonIcon type={{text: "leaderboard"}}
+                                            onClicktoDo = {() => {this.goToLeaderBoard()}}
+                            />
+                            <MenuButtonIcon type={{text: "quickplay"}}
+                                            onClicktoDo = {() => {this.goToQuickplay()}}
+                            />
+                            <MenuButtonIcon type={{text: "settings"}}
+                                            onClicktoDo = {() => {this.goToSettings()}}
+                            />
+
                             <LogOutButton
                                 width="50%"
                                 onClick = {() => {this.logOut()}}
                             >
-
                                 Log Out
                             </LogOutButton>
                         </ButtonContainer>

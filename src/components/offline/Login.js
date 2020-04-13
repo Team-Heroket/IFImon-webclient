@@ -40,6 +40,27 @@ const InputField = styled.input`
   
 `;
 
+const PasswordField = styled.input`
+  &::placeholder {
+    color: rgba(255, 255, 255, 1.0);
+  }
+  position: relative;
+  transform : translate(-50%, 0%);
+  height: 35px;
+  width: 400px;
+  left: 50%;
+  border: none;
+  border-radius: 25px;
+  margin-bottom: 20px;
+  padding-left:10px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 16px;
+  font-weight: 300;
+  -Webkit-text-security: disc;
+  text-security: disc;
+`;
+
 const Label = styled.label`
   position: relative;
   transform : translate(-50%, 0%);
@@ -91,8 +112,8 @@ class Login extends React.Component {
       const data = response.data;
 
 
-      localStorage.setItem('token', data.Token);
-      localStorage.setItem('id', data.Id)
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('id', data.id)
 
       // Login successfully worked --> navigate to the route /game in the GameRouter
       this.props.history.push(`/menu`);
@@ -130,7 +151,7 @@ class Login extends React.Component {
               }}
             />
             <Label>Password</Label>
-            <InputField
+            <PasswordField
               placeholder="Enter here.."
               onChange={e => {
                 this.handleInputChange('password', e.target.value);
@@ -139,7 +160,7 @@ class Login extends React.Component {
             <ButtonContainer>
               <Button
                 disabled={!this.state.username || !this.state.password}
-                width="50%"
+                width="55%"
                 onClick={() => {
                   this.login();
                 }}
@@ -147,7 +168,7 @@ class Login extends React.Component {
                 Login
               </Button>
               <Button
-                  width="50%"
+                  width="55%"
                   onClick={() => {
                     this.goToRegister();
                   }}

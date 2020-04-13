@@ -49,3 +49,53 @@ export const FormContainer = styled.div`
   justify-content: center;
 `;
 
+export const SimpleContainer = styled.div`
+  width: ${props => props.width || null};
+  float: ${props => props.defFloat || null};
+  justify-content:center;
+  margin:auto;
+  align-items: center;
+  display: flex;
+`;
+
+export const PokeCodeContainer = styled.label`
+  &:hover {
+    transform: translateY(${props => (props.disabled ? 0 : 2)}px);
+  }
+  padding: 6px;
+  font-weight: 700;
+  font-size: 16px;
+  text-align: center;
+  color: white;
+  width: ${props => props.width || null};
+  height: 35px;
+  border: 1px solid #FFFFFF;
+  border-radius: 25px;
+  margin-top: 10px;
+  cursor: ${props => (props.disabled ? "default" : "pointer")};
+  opacity: ${props => (props.disabled ? "66%" : "100%")};
+  background: rgba(255, 255, 255, 0.2);;
+  transition: all 0.3s ease;
+  margin: 0 auto;
+`;
+
+export const AvatarContainer = styled.div`
+  overflow-y: scroll;
+  background: rgba(255, 255, 255, 0.2);
+  margin-left: 15%;
+  border-radius: 25px;
+  margin-top: 15px;
+  height:  ${props => props.height || "350px"};
+  width: 450px;
+  padding-left: 15px;
+  
+`;
+
+export const PlayerContainer = styled.li`
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+`;

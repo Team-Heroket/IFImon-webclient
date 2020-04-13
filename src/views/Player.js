@@ -6,7 +6,7 @@ const Container = styled.button`
     transform: translateY(2px);
     transition: all 0.1s ease;
   }
-  margin:5px;
+  margin-bottom:10px;
   width: 280px;
   height: 35px;
   padding-left: 5px;
@@ -15,6 +15,24 @@ const Container = styled.button`
   display: flex;
   align-items: center;
   border: 1px solid #ffffff;
+  transition: all 0.3s ease;
+  background: rgb(255, 255, 255, 0%);
+`;
+
+const ContainerMe = styled.button`
+    &:hover {
+    transform: translateY(2px);
+    transition: all 0.1s ease;
+  }
+  margin-bottom:10px;
+  width: 280px;
+  height: 35px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  border: 2px solid yellow;
   transition: all 0.3s ease;
   background: rgb(255, 255, 255, 0%);
 `;
@@ -98,6 +116,34 @@ export let Player = ({ user }) => {
   );
 };
 
+export let PlayerMe = ({ user }) => {
+    return (
+        <ContainerMe>
+            <Rank>{user.statistics.rating}.</Rank> <UserName>{user.username}</UserName>
+            <Id>{user.statistics.gamesWon}</Id>
+        </ContainerMe>
+    );
+};
+
+export let PlayerAdmin = ({ user }) => {
+    return (
+        <Container>
+            <Rank>{user.statistics.rating}.</Rank> <UserName>{user.username} (Admin)</UserName>
+            <Id>{user.statistics.gamesWon}</Id>
+        </Container>
+    );
+};
+
+export let PlayerMeAndAdmin = ({ user }) => {
+    return (
+        <ContainerMe>
+            <Rank>{user.statistics.rating}.</Rank> <UserName>{user.username} (Admin)</UserName>
+            <Id>{user.statistics.gamesWon}</Id>
+        </ContainerMe>
+    );
+};
+
+
 const RankCard = styled.div`
     display: flex;
     font-family: Helvetica;
@@ -152,8 +198,10 @@ export let PlayerStatCard = ({ user }) => {
 
                 <Column span={"20"}>
                     <StatCardContainer>
-                        {console.log("user id:"+user.avatarId)}
-                        <img alt="avatar" src={require('../components/shared/images/avatarSVG/00'+(user.avatarId+1)+'-avatar.svg')} height={"66px"} width={"66px"}/>
+                        {console.log("user avatar id:"+user.avatarId)}
+                        {user.avatarId < 10 ? <img alt="avatar" src={require('../components/shared/images/avatarSVG/00'+(user.avatarId)+'-avatar.svg')} height={"66px"} width={"66px"}/>
+                        : <img alt="avatar" src={require('../components/shared/images/avatarSVG/0'+(user.avatarId)+'-avatar.svg')} height={"66px"} width={"66px"}/>}
+
                         <br/>
                         <RankCard>
                             Rank:
@@ -173,7 +221,6 @@ export let PlayerStatCard = ({ user }) => {
                         <UserSince>
                             Since: {user.creationDate}
                         </UserSince>
-                        <br/>
                         <br/>
                         <RankCard>
                             Games played: {user.statistics.gamesPlayed}

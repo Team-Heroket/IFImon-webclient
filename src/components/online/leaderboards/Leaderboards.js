@@ -1,22 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BaseContainer, ButtonContainer, FormContainer } from '../../../helpers/layout';
+import { BaseContainer, ButtonContainer, FormContainer, PlayerContainer } from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
 import { withRouter } from 'react-router-dom';
 import { Button, LogOutButton, BackButton, RoundContainer} from '../../../views/design/Button';
 import Header from "../../../views/Header";
-import {PlayerStatCard, Player} from "../../../views/Player";
+import {PlayerStatCard, Player, PlayerMe} from "../../../views/Player";
 
 import {BackIcon} from "../../../views/design/Icons";
 import {Spinner} from "../../../views/design/Spinner";
-
-const PlayerContainer = styled.li`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  
-`;
 
 const Row = styled.div`
     &::after{
@@ -38,47 +30,36 @@ const Column = styled.div`
 
 
 
-class Leaderboard extends React.Component {
-
-    user = {
-        "username": "Tim",
-        "avatarId": 1,
-        "statistics": {
-            "id": 1,
-            "encounteredPokemon": 272,
-            "gamesWon": 0,
-            "gamesPlayed": 0,
-            "rating": 0,
-            "storyProgress": 0
-        },
-        "creationDate": "05.04.2020",
-        "online": false,
-        "id": 1
-    };
+class Leaderboards extends React.Component {
 
     constructor() {
         super();
         this.state = {
             displaySecondaryCard: null,
             users: null,
+            user: null
         };
 
     }
 
+
+
     async componentDidMount() {
         try {
-            const response = await api.get('/users', { headers: {'Token': localStorage.getItem('token')}});
+            const response1 = await api.get('/users', { headers: {'Token': localStorage.getItem('token')}});
 
             await new Promise(resolve => setTimeout(resolve, 2000));
 
-            this.setState({ users: response.data });
-
+            const response2 = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
+            await this.setState({user: response2.data,
+                users: response1.data});
             // See here to get more data.
-            console.log("response", response.data);
-
+            console.log("response me", response2.data);
+            console.log("response all", response1.data);
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            alert(`Something went wrong: \n${handleError(error)}`);
         }
+
     }
 
     goBack() {
@@ -94,14 +75,14 @@ class Leaderboard extends React.Component {
         return (
             <BaseContainer>
                 <Header height={140} top={33}/>
-                {!this.state.users ? (
-                    <Spinner />
-                    ) : (<div>
-                    <Row>
-                        <RoundContainer onClick = {() => {this.goBack()}}>
-                            <BackIcon />
-                        </RoundContainer>
-                    </Row>
+                <Row>
+                    <RoundContainer onClick = {() => {this.goBack()}}>
+                        <BackIcon />
+                    </RoundContainer>
+                </Row>
+                {(!this.state.users || !this.state.user) ? (
+                    <FormContainer><Spinner /></FormContainer>
+                    ) : (
                     <Row>
                     <Column>
                     <ButtonContainer>
@@ -110,10 +91,23 @@ class Leaderboard extends React.Component {
                                 return (
                                     <PlayerContainer onClick={() => {
                                         console.log('Player Clicked:', player);
-                                        this.setState({displaySecondaryCard: player});
+                                        if (this.state.user.username != player.username) {
+                                            if (this.state.displaySecondaryCard != null && this.state.displaySecondaryCard.username == player.username) {
+                                                this.setState({displaySecondaryCard: null});
+                                            }
+                                            else {
+                                                this.setState({displaySecondaryCard: player});
+                                            }
+                                        }
+                                        else{
+                                                this.setState({displaySecondaryCard: null});
+                                            }
                                         console.log(this.state.displaySecondaryCard);
                                     }}>
-                                        <Player user={player}  />
+                                        {player.id == localStorage.getItem('id') ?
+                                            (<PlayerMe user={player}  />) :
+                                            (<Player user={player}  />)
+                                        }
                                     </PlayerContainer>
 
                                 );
@@ -123,14 +117,14 @@ class Leaderboard extends React.Component {
                     </ButtonContainer>
                 </Column>
                 <Column>
-                    <PlayerStatCard user={this.user} />
+                    <PlayerStatCard user={this.state.user} />
                     {this.state.displaySecondaryCard ? (
                         this.displayPlayerCard()
                     ) : null
                     }
                 </Column>
                 </Row>
-                    </div>
+
                 )
                     }
             </BaseContainer>
@@ -141,4 +135,4 @@ class Leaderboard extends React.Component {
 
 }
 
-export default withRouter(Leaderboard);
+export default withRouter(Leaderboards);

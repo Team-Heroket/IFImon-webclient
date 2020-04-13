@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BaseContainer, ButtonContainer, FormContainer } from '../../helpers/layout';
+import {AvatarContainer, BaseContainer, ButtonContainer, FormContainer, SimpleContainer} from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
-import { Button } from '../../views/design/Button';
+import {AvatarButton, Button, LogOutButton} from '../../views/design/Button';
 import Header from "../../views/Header";
 
 
@@ -22,6 +22,14 @@ const Form = styled.div`
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
+const Row = styled.div`
+    &::after{
+    content: "";
+    clear: "";
+    display: table "";
+    }
+    `;
+
 const InputField = styled.input`
   &::placeholder {
     color: rgba(255, 255, 255, 1.0);
@@ -37,46 +45,109 @@ const InputField = styled.input`
   padding-left:10px;
   background: rgba(255, 255, 255, 0.2);
   color: white;
+  font-size: 16px;
+  font-weight: 300;
+  margin-top: 15px;
   
 `;
-
-const Label = styled.label`
-  position: relative;
-  transform : translate(-50%, 0%);
-  width: 400px;
-  left: 50%;
-  color: white;
-  margin-left: 4px;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-`;
-
 
 const PasswordField = styled.input`
   &::placeholder {
     color: rgba(255, 255, 255, 1.0);
   }
+  position: relative;
+  transform : translate(-50%, 0%);
   height: 35px;
-  padding-left: 15px;
-  margin-left: -4px;
+  width: 400px;
+  left: 50%;
   border: none;
-  border-radius: 20px;
+  border-radius: 25px;
   margin-bottom: 20px;
+  padding-left:10px;
   background: rgba(255, 255, 255, 0.2);
   color: white;
-  -webkit-text-secuirty: disc;
-  -moz-text-security: disc;
+  font-size: 16px;
+  font-weight: 300;
+  margin-top: 15px;
+  -Webkit-text-security: disc;
   text-security: disc;
+`;
+
+
+
+const Column = styled.div`
+    float: ${props => props.float || "left"};;
+    align-items: center
+    
+    width = 100%
+    
+    @media only screen and (min-width: 768px){
+    width: 50%;
+    padding-top: 100px;
+    }
+`
+
+const Label = styled.label`
+  position: relative;
+  width: 400px;
+  left: 15%;
+  color: white;
+  margin-left: 4px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  font-size: 16px;
+  font-weight: 300;
 `;
 
 class Register extends React.Component {
     constructor() {
         super();
+        this.handleClick = this.handleClick.bind(this)
         this.state = {
             password: null,
             username: null,
-            image: null
+            avatarId: null,
+            avatarClicked: null
         };
+    }
+
+    handleClick(event) {
+        this.setState({avatarId: event.currentTarget.id,
+            avatarClicked: event.currentTarget.id});
+        console.log("New id: "+event.currentTarget.id);
+    }
+
+    createAvatarList() {
+        let avatar_list = [];
+        for (let i=1; i<61; i++) {
+            let s;
+            let enable;
+            enable = false;
+            s = '';
+            if(i<10){
+                s='0'+i;
+            }
+            else{
+                s=i.toString();
+            }
+            if(i == this.state.avatarClicked){
+                enable = true;
+            }
+            avatar_list.push(
+
+                <AvatarButton
+                    enabled={enable}
+                    id = {i}
+                    onClick={this.handleClick}
+                >
+                    <SimpleContainer index = {i}>
+                        <img alt="avatar" src={require('../shared/images/avatarSVG/0'+s+'-avatar.svg')} height={"66px"} width={"66px"} index = {i}/>
+                    </SimpleContainer>
+                </AvatarButton>
+            )
+        }
+
+        return avatar_list;
     }
 
 
@@ -84,7 +155,8 @@ class Register extends React.Component {
         try {
             const requestBody = JSON.stringify({
                 username: this.state.username,
-                password: this.state.password
+                password: this.state.password,
+                avatarId: this.state.avatarId
             });
             await api.post('/users', requestBody);
             this.goToLogin();
@@ -109,44 +181,62 @@ class Register extends React.Component {
         return (
             <BaseContainer>
                 <Header height={195} top={66} />
-                <FormContainer>
-                    <Form>
-                        <Label>Username</Label>
+                <div>
+                    <Column>
+
+                        <Row>
+                            <Label>Enter Username</Label>
+                        </Row>
                         <InputField
                             placeholder="Enter here.."
                             onChange={e => {
                                 this.handleInputChange('username', e.target.value);
                             }}
                         />
-                        <Label>password</Label>
-                        <InputField
+                        <Row>
+                            <Label>Enter Password</Label>
+                        </Row>
+                        <PasswordField
                             placeholder="Enter here.."
                             onChange={e => {
                                 this.handleInputChange('password', e.target.value);
                             }}
                         />
                         <ButtonContainer>
+                            <br/>
+                            <br/>
                             <Button
-                                disabled={!this.state.username || !this.state.password}
-                                width="50%"
+                                disabled={!this.state.username || !this.state.password || !this.state.avatarId}
+                                width="55%"
                                 onClick={() => {
                                     this.register();
                                 }}
                             >
-                                Register
+                                Sign Up
                             </Button>
+                            <br/>
+                            <LogOutButton
 
-                            <Button
                                 width="50%"
                                 onClick={() => {
                                     this.goToLogin();
                                 }}
                             >
-                                Go to Login
-                            </Button>
+                                Cancel
+                            </LogOutButton>
+
                         </ButtonContainer>
-                    </Form>
-                </FormContainer>
+                    </Column>
+                    <Column float={"right"}>
+                        <Label>Choose new Avatar</Label>
+                        <AvatarContainer>
+                            {
+                                this.createAvatarList()
+                            }
+                        </AvatarContainer>
+                    </Column>
+
+                </div>
             </BaseContainer>
         );
     }
@@ -156,3 +246,4 @@ class Register extends React.Component {
 }
 
 export default withRouter(Register);
+
