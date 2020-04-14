@@ -140,6 +140,7 @@ class CreateGame extends React.Component {
         this.setTimerUntilStart()
     }
 
+
     async getAndSetUserInformation() {
         try {
 
@@ -169,7 +170,8 @@ class CreateGame extends React.Component {
                 creationTime: resp2.creationTime
             })
             console.log("creationTime in here: "+ resp2.creationTime)
-
+            this.setState({'creationTime' : this.state.creationTime.substring(0, 10) + 'T' + this.state.creationTime.substring(11)});
+            console.log("creationTime in here: "+ resp2.creationTime)
 
 
             if (this.state.amountOfNPC+this.state.users.length > 6) {
@@ -179,7 +181,7 @@ class CreateGame extends React.Component {
             else{
                 if(this.state.message){this.state.message = ''}
             }
-            
+
 
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
@@ -241,8 +243,8 @@ class CreateGame extends React.Component {
     getTimePassed(start) {
         let startmili = parseInt(new Date(start).getTime(), 10);
         let nowmili = parseInt(new Date().getTime(), 10)
-        console.log(startmili);
-        console.log(nowmili);
+        console.log('startMil', startmili);
+        console.log('nowMili', nowmili);
         let remainingTime = nowmili - startmili;
         return remainingTime;
     }
@@ -291,6 +293,9 @@ class CreateGame extends React.Component {
     async setTimerUntilStart() {
 
         setTimeout(() => {
+
+
+            console.log('state.creation time', this.state.creationTime);
             let timePassed = this.getTimePassed(this.state.creationTime);
             console.log("Time passed: " + timePassed)
             if (timePassed > 240000) {
@@ -306,7 +311,7 @@ class CreateGame extends React.Component {
                 }, remainingTime)
 
             }
-        }, 100)
+        }, 1000)
     }
 
     handleNPCEvent(value) {
