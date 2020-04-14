@@ -148,6 +148,8 @@ class Lobby extends React.Component {
                 creationTime: resp2.creationTime.toString()
             })
 
+            this.setState({'creationTime' : this.state.creationTime.substring(0, 10) + 'T' + this.state.creationTime.substring(11)});
+
 
 
 
