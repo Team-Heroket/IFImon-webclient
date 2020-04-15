@@ -51,7 +51,9 @@ class Game extends React.Component {
             justInitialized: true,
             chosenCategory: null,
             evolved: 0,
-            remainingTime: null
+            remainingTime: null,
+            berries: null,
+            evolveBerries: 0
 
         }
     }
@@ -99,7 +101,9 @@ class Game extends React.Component {
                 turnPlayer: resp2.turnPlayer,
                 amIAdmin: amIAdmin1,
                 amITurnPlayer: amITurnPlayer1,
-                pokeCode: this.props.match.params.pokeCode
+                pokeCode: this.props.match.params.pokeCode,
+                berries: user_me.berries,
+                deck: user_me.deck
             })
 
             if (this.state.justInitialized) {
@@ -125,16 +129,7 @@ class Game extends React.Component {
         }, remainingTime)
 
     }
-    /*
-    beforeGameStart() {
-        let remainingTime = this.state.startTime+30000 - new Date().getTime();
-        this.setState({remainingTime: remainingTime})
-        this.timeout_intermediary = setTimeout(()=>{
-            this.setState({justInitialized: false})
-        }, remainingTime)
-    }
 
-     */
 
     promisedSetState = (newState) => {
         return new Promise((resolve) => {
@@ -163,7 +158,21 @@ class Game extends React.Component {
         }
     }
 
+    async evolvePokemon() {
+        try {
+            const requestBody = JSON.stringify({
+                amount: this.state.evolveBerries,
+                id: this.state.player_me.user.id
+            });
+            const response = await api.put('/games/'+this.state.pokeCode+'/berries',requestBody , { headers: {'Token': localStorage.getItem('token')}});
+            let currentBerries = this.state.berries;
+            this.setState({berries: currentBerries-this.state.evolveBerries})
 
+
+        } catch (error) {
+            alert(`Something went wrong: \n${handleError(error)}`);
+        }
+    }
 
 
     async makeTurn() {
@@ -175,7 +184,7 @@ class Game extends React.Component {
             category = categories[randomIndex]
             console.log("Random Category: "+category);
         }
-        /*
+
         try {
             console.log("Tried getting game info");
             const requestBody = JSON.stringify({
@@ -184,10 +193,10 @@ class Game extends React.Component {
             const response = await api.put('/games/'+this.state.pokeCode+'/categories',requestBody , { headers: {'Token': localStorage.getItem('token')}});
 
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            alert(`Something went wrong: \n${handleError(error)}`);
         }
 
-         */
+
     }
 
     promisedSetState = (newState) => {
@@ -217,7 +226,7 @@ class Game extends React.Component {
             }
 
         this.timeout_getMidInfo = setTimeout(()=>{
-            //this.getGameInfo()
+            this.getGameInfo()
             this.setState({
                 categoryChosen: null,
                 period: this.period.EVOLVE,
@@ -228,7 +237,9 @@ class Game extends React.Component {
 
         this.timeout_berry = setTimeout(()=>{
             console.log("Now every player has or hasn't evolved berry (after 20 seconds)")
-            //put request for berry
+            if (this.state.evolveBerries==0) {
+                this.evolvePokemon();
+            }
             this.setState({
                 period: this.period.WAIT,
                 remainingTime: startTime+25000 - new Date().getTime()
@@ -237,7 +248,7 @@ class Game extends React.Component {
 
         this.timeout_result =setTimeout(()=>{
             console.log("Now every player gets end result (after 25 seconds)")
-            //this.getGameInfo()
+            this.getGameInfo()
             this.setState({
                 period: this.period.RESULT
             })
