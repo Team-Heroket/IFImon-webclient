@@ -14,6 +14,7 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 class Game extends React.Component {
 
     recurrentTimer = null;
+    timeout_all = null;
     timeout_chose = null;
     timeout_getMidInfo = null;
     timeout_berry = null;
@@ -59,38 +60,38 @@ class Game extends React.Component {
         this.props.history.push('/socialmode');
     }
 
+
     async getGameInfo() {
         try {
             console.log("Tried getting game info");
 
             const response2 = await api.get('/games/'+this.props.match.params.pokeCode.toString(), { headers: {'Token': localStorage.getItem('token')}});
             const resp2 = response2.data;
-            let usersList = [];
-            let user_me = null
+            let usersList = resp2.players;
+            let user_me = null;
             for (let i=0; i<resp2.players.length; i++) {
-                usersList.push(resp2.players[i].user)
                 if (resp2.players[i].user.id == localStorage.getItem('id')) {
-                    user_me = resp2.players[i].user
+                    user_me = resp2.players[i]
                 }
             }
 
             if (resp2.state == "LOBBY") {
-                this.goToSocialMode()
+                this.goToLobby();
             }
 
 
             let amIAdmin1 = false;
-            if (user_me.username == resp2.creator.user.username) {
+            if (user_me.user.username == resp2.creator.user.username) {
                 amIAdmin1 = true;
             }
 
             let amITurnPlayer1 = false;
-            if (user_me.username == resp2.turnPlayer.user.username) {
+            if (user_me.user.username == resp2.turnPlayer.user.username) {
                 amITurnPlayer1 = true;
             }
 
 
-            await this.setState({
+            this.setState({
                 admin: resp2.creator.user,
                 players: usersList,
                 player_me: user_me,
@@ -102,20 +103,68 @@ class Game extends React.Component {
             })
 
             if (this.state.justInitialized) {
-                let startTime = this.state.startTime.substring(0, 10) + 'T' + this.state.startTime.substring(11);
+                let startTime = resp2.creationTime.substring(0, 10) + 'T' + resp2.creationTime.substring(11);
                 startTime = parseInt(new Date(startTime).getTime(), 10);
-                let startTimeDELETETHIS = startTime-30000;
-                console.log(startTime)
-                this.setState({'startTime' : startTime});
+                this.setState({'startTime' : startTime}, this.startGame);
             }
 
-            this.setState({justInitialized: false});
 
 
         } catch (error) {
             alert(`Something went wrong during the login: \n${handleError(error)}`);
         }
     }
+
+    startGame() {
+        let remainingTime = this.state.startTime+30000 - new Date().getTime();
+        this.setState({remainingTime: remainingTime})
+        this.timeout_all = setTimeout(()=>{
+            this.setState({justInitialized: false})
+            this.startRound();
+            this.recurrentRounds();
+        }, remainingTime)
+
+    }
+    /*
+    beforeGameStart() {
+        let remainingTime = this.state.startTime+30000 - new Date().getTime();
+        this.setState({remainingTime: remainingTime})
+        this.timeout_intermediary = setTimeout(()=>{
+            this.setState({justInitialized: false})
+        }, remainingTime)
+    }
+
+     */
+
+    promisedSetState = (newState) => {
+        return new Promise((resolve) => {
+            this.setState(newState, () => {
+                resolve()
+            });
+        });
+    }
+
+    startClock() {
+        if (!this.state.remainingTime) {
+            return <Spinner/>
+        }
+        else {
+            return <CountdownCircleTimer
+                isPlaying
+                durationSeconds={this.state.remainingTime/1000}
+                colors={[
+                    ['#004777', .33],
+                    ['#F7B801', .33],
+                    ['#A30000']
+                ]}
+                renderTime={this.renderTime}
+                trailColor="transparent"
+            />
+        }
+    }
+
+
+
 
     async makeTurn() {
         //Insert Put Function for turnPlayer to choose
@@ -141,10 +190,19 @@ class Game extends React.Component {
          */
     }
 
+    promisedSetState = (newState) => {
+        return new Promise((resolve) => {
+            this.setState(newState, () => {
+                resolve()
+            });
+        });
+    }
+
     startRound() {
+        console.log("Got In here start round")
         let startTime = this.state.startTime+30000;
         this.setState({'startTime': startTime});
-        //console.log(startTime+10000 - new Date().getTime());
+        console.log(startTime+10000 - new Date().getTime());
         this.setState({remainingTime: startTime+10000 - new Date().getTime(), period: this.period.CHOOSECATEGORY});
 
         if (this.state.amITurnPlayer) {
@@ -215,25 +273,18 @@ class Game extends React.Component {
 
         return (
             <div className="timer">
-                <div className="text">Period: {this.state.period} </div>
+                <div className="text">Game starts in</div>
                 <div className="value">{value}</div>
-
+                <div className="text">seconds</div>
             </div>
         );
     };
 
 
     componentDidMount() {
-        //this.getGameInfo();
-        setTimeout('', 500);
-        console.log("Entered mount")
-        this.recurrentRounds();
-        this.startRound();
+        this.getGameInfo();
     }
 
-    componentDidUpdate() {
-        console.log("Remaining Time: "+ this.state.remainingTime/1000 + " seconds for "+ this.state.period)
-    }
 
     componentWillUnmount() {
         clearInterval(this.recurrentTimer);
@@ -246,27 +297,17 @@ class Game extends React.Component {
         this.timeout_berry=null;
         clearTimeout(this.timeout_result);
         this.timeout_result=null;
+        clearTimeout(this.timeout_all);
+        this.timeout_all=null;
     }
 
-    circleTimer(time) {
-        return (<CountdownCircleTimer
-            isPlaying
-            durationSeconds={time}
-            colors={[
-                ['#004777', .33],
-                ['#F7B801', .33],
-                ['#A30000']
-            ]}
-            renderTime = {this.renderTime}
-            trailColor= "transparent"
-        />)
-    }
 
     render() {
         return (
             <BaseContainer>
                 <Header height={140} top={33} />
-                {this.circleTimer(this.state.remainingTime/1000)}
+                {this.state.justInitialized ? this.startClock() :
+                    <h1> {this.state.remainingTime}</h1>}
 
             </BaseContainer>
         );

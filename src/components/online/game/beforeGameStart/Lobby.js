@@ -138,7 +138,7 @@ class Lobby extends React.Component {
             }
 
             if (resp2.state == "RUNNING") {
-                this.goToIntermediary()
+                this.goToGame()
             }
 
             await this.setState({
@@ -169,7 +169,7 @@ class Lobby extends React.Component {
             } catch (error) {
                 alert(`Something went wrong: \n${handleError(error)}`);
             }
-        }, 30000)
+        }, 10000)
     }
 
     async leaveGame() {
@@ -191,13 +191,10 @@ class Lobby extends React.Component {
     }
 
 
-    goToIntermediary() {
-        this.props.history.push('/intermediary')
+    goToGame() {
+        this.props.history.push('/game/'+this.state.pokeCode)
     }
 
-    goToGame() {
-        this.props.history.push('/game/'+this.props.match.params.pokeCode)
-    }
 
     async setTimerUntilStart() {
         console.log("CreationTime: "+this.state.creationTime)
@@ -211,7 +208,7 @@ class Lobby extends React.Component {
                 let remainingTime = 240000-timePassed;
                 console.log("Remaining Time: "+ remainingTime)
                 this.totalTimer = setTimeout(() => {
-                    this.goToIntermediary()
+                    this.goToGame()
                 }, remainingTime)
             }
         }, 100)

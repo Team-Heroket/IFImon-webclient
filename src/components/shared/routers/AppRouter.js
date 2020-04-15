@@ -11,7 +11,6 @@ import SocialMode from "../../online/game/beforeGameStart/SocialMode";
 import Lobby from "../../online/game/beforeGameStart/Lobby";
 import CreateGame from "../../online/game/beforeGameStart/CreateGame"
 import Quickplay from "../../online/quickplay/Quickplay";
-import IntermediaryCounter from "../../online/game/beforeGameStart/IntermediaryCounter";
 import Game from "../../online/game/afterGameStart/Game";
 /**
  * Main router of your application.
@@ -79,14 +78,7 @@ class AppRouter extends React.Component {
                       </GameGuard>
                   )}
               />
-              <Route
-                  path="/intermediary/:pokeCode"
-                  render={() => (
-                      <GameGuard>
-                          <IntermediaryCounter/>
-                      </GameGuard>
-                  )}
-              />
+
               <Route
                   path="/game/:pokeCode"
                   render={() => (

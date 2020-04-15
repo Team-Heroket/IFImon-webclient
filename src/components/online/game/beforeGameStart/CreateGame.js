@@ -99,7 +99,6 @@ class CreateGame extends React.Component {
             amountOfNPC: 0,
             regexp: /^[1-6\b]$/,
             message: '',
-
             users: null,
             admin: null,
             user: null,
@@ -107,7 +106,8 @@ class CreateGame extends React.Component {
             timestamp: new Date(),
             state: null,
             amIAdmin: true,
-            creationTime: null
+            creationTime: null,
+            startingGame: false
         };
 
         this.requestPokeCode();
@@ -208,16 +208,17 @@ class CreateGame extends React.Component {
             const requestBody = JSON.stringify({
                 npc: this.state.npcs
             });
+            this.setState({startingGame: true})
             await api.put('/games/' + this.state.pokeCode.toString(), requestBody, {headers: {'Token': localStorage.getItem('token')}});
-            this.goToIntermediary();
+            this.goToGame();
 
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
         }
     }
 
-    goToIntermediary() {
-        this.props.history.push('/intermediary')
+    goToGame() {
+        this.props.history.push('/game/'+this.state.pokeCode)
     }
 
     async kick(player) {
@@ -261,9 +262,7 @@ class CreateGame extends React.Component {
         }
     }
 
-    goToGame() {
-        this.props.history.push('/game/' + this.state.pokeCode)
-    }
+
 
     componentDidUpdate() {
         if (this.state.users && this.state.user) {
@@ -307,7 +306,7 @@ class CreateGame extends React.Component {
                     if (this.state.amIAdmin) {
                         this.startGame()
                     }
-                    this.goToIntermediary()
+                    this.goToGame()
                 }, remainingTime)
 
             }
@@ -413,7 +412,7 @@ class CreateGame extends React.Component {
                     <BackIcon/>
                 </RoundContainer>
                 <FormContainer>
-                    {(!this.state.users || !this.state.admin) ? (
+                    {(!this.state.users || !this.state.admin || this.state.startingGame) ? (
                         <Spinner/>) : <Form>
                         <ErrorMessage> {this.state.message ? (
                             this.state.message
