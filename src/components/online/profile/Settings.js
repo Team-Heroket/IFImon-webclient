@@ -239,7 +239,7 @@ class Settings extends React.Component {
                             <PlayerStatCard user={this.state.user}/>
 
                             <Button
-                            width="40%"
+                            width="30%"
                             onClick={() => {
                             this.setState({editClicked: true});
                         }}
@@ -252,6 +252,7 @@ class Settings extends React.Component {
                             <div>
                             <Column>
                             <Label>Enter new Username</Label>
+                                <div></div>
                             <InputField
                             placeholder="Enter here.."
                             onChange={e => {
@@ -260,6 +261,7 @@ class Settings extends React.Component {
                             />
                             <div></div>
                             <Label>Enter new Password</Label>
+                                <div></div>
                             <InputField
                             placeholder="Enter here.."
                             onChange={e => {
@@ -268,7 +270,7 @@ class Settings extends React.Component {
                             />
                             <ButtonContainer>
                             <Button
-                            width="71%"
+                            width="55%"
                             onClick={() => {
                             this.setState({editClicked: false});
                             this.save();

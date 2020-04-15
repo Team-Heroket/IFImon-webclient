@@ -212,11 +212,12 @@ class Game extends React.Component {
         let startTime = this.state.startTime+30000;
         this.setState({'startTime': startTime});
         console.log(startTime+10000 - new Date().getTime());
-        this.setState({remainingTime: startTime+10000 - new Date().getTime(), period: this.period.CHOOSECATEGORY});
+
 
         if (this.state.amITurnPlayer) {
+            this.setState({remainingTime: startTime+10000 - new Date().getTime(), period: this.period.CHOOSECATEGORY});
             this.timeout_chose = setTimeout(()=>{
-                this.makeTurn();
+                //this.makeTurn();
                 this.setState({
                     categoryChosen: null,
                     remainingTime: startTime+15000 - new Date().getTime()
@@ -224,7 +225,7 @@ class Game extends React.Component {
                 console.log("Now turnPlayer made a turn (after 10 seconds)")
             }, startTime+10000 - new Date().getTime());
             }
-
+        if (!this.state.amITurnPlayer) {this.setState({remainingTime: startTime+15000 - new Date().getTime(), period: this.period.CHOOSECATEGORY})};
         this.timeout_getMidInfo = setTimeout(()=>{
             this.getGameInfo()
             this.setState({
@@ -238,7 +239,7 @@ class Game extends React.Component {
         this.timeout_berry = setTimeout(()=>{
             console.log("Now every player has or hasn't evolved berry (after 20 seconds)")
             if (this.state.evolveBerries==0) {
-                this.evolvePokemon();
+                //this.evolvePokemon();
             }
             this.setState({
                 period: this.period.WAIT,
