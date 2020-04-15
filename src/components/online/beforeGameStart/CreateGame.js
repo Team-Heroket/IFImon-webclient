@@ -1,7 +1,7 @@
 import React from 'react';
 import {withRouter} from "react-router-dom";
-import {BaseContainer, ButtonContainer, FormContainer, PokeCodeContainer, PlayerContainer, SimpleContainer} from "../../../../helpers/layout";
-import Header from "../../../../views/Header";
+import {BaseContainer, ButtonContainer, FormContainer, PokeCodeContainer, PlayerContainer, SimpleContainer} from "../../../helpers/layout";
+import Header from "../../../views/Header";
 import styled from "styled-components";
 import {
     ButtonRow,
@@ -10,12 +10,12 @@ import {
     MenuButton,
     RoundContainer,
     TextRoundContainer
-} from "../../../../views/design/Button";
-import {BackIcon, KickIcon} from "../../../../views/design/Icons";
-import {api, handleError} from "../../../../helpers/api";
-import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin} from "../../../../views/Player";
-import {Spinner} from "../../../../views/design/Spinner";
-import {CenterContainer} from "../beforeGameStart/Lobby";
+} from "../../../views/design/Button";
+import {BackIcon, KickIcon} from "../../../views/design/Icons";
+import {api, handleError} from "../../../helpers/api";
+import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin} from "../../../views/Player";
+import {Spinner} from "../../../views/design/Spinner";
+import {CenterContainer} from "../game/beforeGameStart/Lobby";
 
 const Form = styled.div`
   display: flex;
