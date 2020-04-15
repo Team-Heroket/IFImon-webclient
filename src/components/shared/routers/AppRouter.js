@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { GameGuard } from "../routeProtectors/GameGuard";
-import GameRouter from "./GameRouter";
 import { LoginGuard } from "../routeProtectors/LoginGuard";
 import Login from "../../offline/Login"
 import Register from "../../offline/Register";
@@ -10,7 +9,7 @@ import Settings from "../../online/profile/Settings";
 import Leaderboards from "../../online/leaderboards/Leaderboards";
 import SocialMode from "../../online/game/beforeGameStart/SocialMode";
 import Lobby from "../../online/game/beforeGameStart/Lobby";
-import CreateGame from "../../online/beforeGameStart/CreateGame"
+import CreateGame from "../../online/game/beforeGameStart/CreateGame"
 import Quickplay from "../../online/quickplay/Quickplay";
 import IntermediaryCounter from "../../online/game/beforeGameStart/IntermediaryCounter";
 import Game from "../../online/game/afterGameStart/Game";
