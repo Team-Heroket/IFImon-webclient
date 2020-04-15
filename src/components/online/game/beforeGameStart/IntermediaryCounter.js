@@ -8,7 +8,7 @@ import {BackIcon} from "../../../../views/design/Icons";
 import {api, handleError} from "../../../../helpers/api";
 import {Spinner} from "../../../../views/design/Spinner";
 import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin, PlayerStatCard} from "../../../../views/Player";
-
+import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
 const Row = styled.div`
     &::after{
@@ -93,7 +93,7 @@ class IntermediaryCounter extends React.Component {
         super();
 
         this.state = {
-            pokeCode: this.props.match.params.pokeCode,
+            pokeCode: null,
             clickedOnStart: null
         };
     }
@@ -141,13 +141,28 @@ class IntermediaryCounter extends React.Component {
     }
 
     componentDidMount() {
-        this.setTimer();
+        this.setState({pokeCode: this.props.match.params.pokeCode})
+        //this.setTimer();
     }
 
     componentWillUnmount() {
         clearTimeout(this.totalTimer);
         this.totalTimer=null;
     }
+
+    renderTime = value => {
+        if (value == 0){
+            return <div>NOW</div>
+        }
+
+        return (
+            <div className="timer">
+                <div className="text">Game starts in</div>
+                <div className="value">{value}</div>
+                <div className="text">seconds</div>
+            </div>
+        );
+    };
     
 
     render() {
@@ -155,8 +170,21 @@ class IntermediaryCounter extends React.Component {
         return (
             <BaseContainer>
                 <Header height={140} top={33} />
-                <h1>Entered Intermediary Counter</h1>
+                <FormContainer>
+                <CountdownCircleTimer
+                    isPlaying
+                    durationSeconds={30}
+                    colors={[
+                        ['#004777', .33],
+                        ['#F7B801', .33],
+                        ['#A30000']
+                    ]}
+                    renderTime = {this.renderTime}
+                    trailColor= "transparent"
+                />
+                </FormContainer>
             </BaseContainer>
+
 
         );
     }

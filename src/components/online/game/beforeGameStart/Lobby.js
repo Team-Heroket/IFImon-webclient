@@ -7,7 +7,7 @@ import {Button, MenuButton, RoundContainer, TransparentButton} from "../../../..
 import {BackIcon} from "../../../../views/design/Icons";
 import {api, handleError} from "../../../../helpers/api";
 import {Spinner} from "../../../../views/design/Spinner";
-import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin, PlayerStatCard} from "../../../../views/Player";
+import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin} from "../../../../views/Player";
 
 
 const Row = styled.div`
@@ -323,9 +323,7 @@ class Lobby extends React.Component {
                                     return (
 
                                         <PlayerContainer onClick={() => {
-                                            console.log('Player Clicked:', player);
-                                            this.setState({displaySecondaryCard: player.user});
-                                            console.log(this.state.displaySecondaryCard);
+
                                         }}>
                                             {this.displayPlayer(player)}
 
@@ -355,6 +353,7 @@ class Lobby extends React.Component {
 
                     </Form>
                 </FormContainer>
+
                 </div>
                 }
             </BaseContainer>

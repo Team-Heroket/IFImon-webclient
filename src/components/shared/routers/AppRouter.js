@@ -10,9 +10,10 @@ import Settings from "../../online/profile/Settings";
 import Leaderboards from "../../online/leaderboards/Leaderboards";
 import SocialMode from "../../online/game/beforeGameStart/SocialMode";
 import Lobby from "../../online/game/beforeGameStart/Lobby";
-import CreateGame from "../../online/game/createGame/CreateGame"
+import CreateGame from "../../online/beforeGameStart/CreateGame"
 import Quickplay from "../../online/quickplay/Quickplay";
 import IntermediaryCounter from "../../online/game/beforeGameStart/IntermediaryCounter";
+import Game from "../../online/game/afterGameStart/Game";
 /**
  * Main router of your application.
  * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/offline"
@@ -28,14 +29,7 @@ class AppRouter extends React.Component {
       <BrowserRouter>
         <Switch>
           <div>
-            <Route
-              path="/game"
-              render={() => (
-                <GameGuard>
-                  <GameRouter base={"/game"} />
-                </GameGuard>
-              )}
-            />
+
 
               <Route
                   path="/menu"
@@ -87,10 +81,18 @@ class AppRouter extends React.Component {
                   )}
               />
               <Route
-                  path="/intermediary"
+                  path="/intermediary/:pokeCode"
                   render={() => (
                       <GameGuard>
                           <IntermediaryCounter/>
+                      </GameGuard>
+                  )}
+              />
+              <Route
+                  path="/game/:pokeCode"
+                  render={() => (
+                      <GameGuard>
+                          <Game/>
                       </GameGuard>
                   )}
               />
