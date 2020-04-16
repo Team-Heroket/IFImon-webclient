@@ -1,15 +1,18 @@
 import React from 'react';
 import {withRouter} from "react-router-dom";
-import {BaseContainer, ButtonContainer, FormContainer, PokeCodeContainer, PlayerContainer} from "../../../../helpers/layout";
-import Header from "../../../../views/Header";
+import {BaseContainer, ButtonContainer, FormContainer, PokeCodeContainer, PlayerContainer} from "../../../../../helpers/layout";
+import Header from "../../../../../views/Header";
 import styled from "styled-components";
-import {Button, MenuButton, RoundContainer, TransparentButton} from "../../../../views/design/Button";
-import {BackIcon} from "../../../../views/design/Icons";
-import {api, handleError} from "../../../../helpers/api";
-import {Spinner} from "../../../../views/design/Spinner";
-import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin, PlayerStatCard} from "../../../../views/Player";
+import {Button, MenuButton, RoundContainer, TransparentButton} from "../../../../../views/design/Button";
+import {BackIcon} from "../../../../../views/design/Icons";
+import {api, handleError} from "../../../../../helpers/api";
+import {Spinner} from "../../../../../views/design/Spinner";
+import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin, PlayerStatCard} from "../../../../../views/Player";
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
-
+import {ChooseCategory} from "../subScreens/ChooseCategory";
+import {Evolve} from "../subScreens/Evolve";
+import {Finished} from "../subScreens/Finished";
+import {Result} from "../subScreens/Result";
 
 class Game extends React.Component {
 
@@ -25,7 +28,8 @@ class Game extends React.Component {
         EVOLVE: "evolve",
         RESULT: "result",
         FINISHED: "finished",
-        WAIT: "wait"
+        WAIT: "wait",
+        INTERMEDIARY: "intermediary"
     }
 
     category = {
@@ -47,14 +51,13 @@ class Game extends React.Component {
             startTime: new Date().getTime()-30000,
             amITurnPlayer: true,
             amIAdmin: null,
-            period: this.period.CHOOSECATEGORY,
+            period: this.period.INTERMEDIARY,
             justInitialized: true,
             chosenCategory: null,
             evolved: 0,
             remainingTime: null,
             berries: null,
             evolveBerries: 0
-
         }
     }
 
@@ -131,13 +134,6 @@ class Game extends React.Component {
     }
 
 
-    promisedSetState = (newState) => {
-        return new Promise((resolve) => {
-            this.setState(newState, () => {
-                resolve()
-            });
-        });
-    }
 
     startClock() {
         if (!this.state.remainingTime) {
@@ -199,13 +195,6 @@ class Game extends React.Component {
 
     }
 
-    promisedSetState = (newState) => {
-        return new Promise((resolve) => {
-            this.setState(newState, () => {
-                resolve()
-            });
-        });
-    }
 
     startRound() {
         console.log("Got In here start round")
@@ -214,45 +203,26 @@ class Game extends React.Component {
         console.log(startTime+10000 - new Date().getTime());
 
 
-        if (this.state.amITurnPlayer) {
-            this.setState({remainingTime: startTime+10000 - new Date().getTime(), period: this.period.CHOOSECATEGORY});
-            this.timeout_chose = setTimeout(()=>{
-                //this.makeTurn();
-                this.setState({
-                    categoryChosen: null,
-                    remainingTime: startTime+15000 - new Date().getTime()
-                })
-                console.log("Now turnPlayer made a turn (after 10 seconds)")
-            }, startTime+10000 - new Date().getTime());
-            }
-        if (!this.state.amITurnPlayer) {this.setState({remainingTime: startTime+15000 - new Date().getTime(), period: this.period.CHOOSECATEGORY})};
+        this.setState({remainingTime: startTime+15000 - new Date().getTime(), period: this.period.CHOOSECATEGORY});
+
+        this.timeout_chose = setTimeout(()=>{
+            this.setState({
+                categoryChosen: null,
+                remainingTime: startTime+20000 - new Date().getTime(),
+                period: this.period.EVOLVE
+            })
+            console.log("Now turnPlayer made a turn or just waited (after 15 seconds)")
+        }, startTime+15000 - new Date().getTime());
+
+
         this.timeout_getMidInfo = setTimeout(()=>{
             this.getGameInfo()
             this.setState({
                 categoryChosen: null,
-                period: this.period.EVOLVE,
-                remainingTime: startTime+20000 - new Date().getTime()
-            })
-            console.log("Now every player gets info (after 15 seconds)")
-        }, startTime+15000 - new Date().getTime());
-
-        this.timeout_berry = setTimeout(()=>{
-            console.log("Now every player has or hasn't evolved berry (after 20 seconds)")
-            if (this.state.evolveBerries==0) {
-                //this.evolvePokemon();
-            }
-            this.setState({
-                period: this.period.WAIT,
+                period: this.period.RESULT,
                 remainingTime: startTime+25000 - new Date().getTime()
             })
-        }, startTime+20000 - new Date().getTime());
-
-        this.timeout_result =setTimeout(()=>{
-            console.log("Now every player gets end result (after 25 seconds)")
-            this.getGameInfo()
-            this.setState({
-                period: this.period.RESULT
-            })
+            console.log("Now every player gets info (after 15 seconds)")
         }, startTime+25000 - new Date().getTime());
 
     }
@@ -313,13 +283,26 @@ class Game extends React.Component {
         this.timeout_all=null;
     }
 
+    renderPeriod() {
+        if (this.state.period == this.period.CHOOSECATEGORY) {
+            return <ChooseCategory masterState = {this.state}/>
+        }
+        else if (this.state.period == this.period.EVOLVE) {
+            return <Evolve masterState = {this.state}/>
+        }
+        else if (this.state.period == this.period.RESULT) {
+            return <Result masterState = {this.state}/>
+        }
+    }
+
 
     render() {
         return (
             <BaseContainer>
                 <Header height={140} top={33} />
-                {this.state.justInitialized ? this.startClock() :
-                    <h1> {this.state.remainingTime}</h1>}
+                {this.state.justInitialized ?
+                    this.startClock() : this.renderPeriod()
+                }
 
             </BaseContainer>
         );
