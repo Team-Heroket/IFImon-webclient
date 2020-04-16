@@ -1,6 +1,13 @@
 import React from 'react';
 import {withRouter} from "react-router-dom";
-import {BaseContainer, ButtonContainer, FormContainer, PokeCodeContainer, PlayerContainer} from "../../../../../helpers/layout";
+import {
+    BaseContainer,
+    ButtonContainer,
+    FormContainer,
+    PokeCodeContainer,
+    PlayerContainer,
+    GameContainer, Row
+} from "../../../../../helpers/layout";
 import Header from "../../../../../views/Header";
 import styled from "styled-components";
 import {Button, MenuButton, RoundContainer, TransparentButton} from "../../../../../views/design/Button";
@@ -73,6 +80,7 @@ class Game extends React.Component {
             const response2 = await api.get('/games/'+this.props.match.params.pokeCode.toString(), { headers: {'Token': localStorage.getItem('token')}});
             const resp2 = response2.data;
             let usersList = resp2.players;
+            usersList.sort((a, b) => (a.deck.length > b.deck.length) ? 1 : -1)
             let user_me = null;
             for (let i=0; i<resp2.players.length; i++) {
                 if (resp2.players[i].user.id == localStorage.getItem('id')) {
@@ -94,6 +102,7 @@ class Game extends React.Component {
             if (user_me.user.username == resp2.turnPlayer.user.username) {
                 amITurnPlayer1 = true;
             }
+
 
 
             this.setState({
@@ -298,13 +307,20 @@ class Game extends React.Component {
 
     render() {
         return (
-            <BaseContainer>
+            <GameContainer>
                 <Header height={140} top={33} />
+                <Row>
+                    <RoundContainer onClick={() => {
+                        this.goBack()
+                    }}>
+                        <BackIcon/>
+                    </RoundContainer>
+                </Row>
                 {this.state.justInitialized ?
                     this.startClock() : this.renderPeriod()
                 }
 
-            </BaseContainer>
+            </GameContainer>
         );
     }
 }
