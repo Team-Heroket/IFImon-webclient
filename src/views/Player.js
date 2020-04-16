@@ -14,7 +14,7 @@ const Container = styled.button`
   border-radius: 25px;
   display: flex;
   align-items: center;
-  border: 1px solid #ffffff;
+  border: 1px solid ${props => props.borderColor || "#ffffff"};
   transition: all 0.3s ease;
   background: rgb(255, 255, 255, 0%);
 `;
@@ -126,21 +126,34 @@ export let PlayerMe = ({ user }) => {
     );
 };
 
-export let PlayerGame = ({ player }) => {
-    return (
-        <Container>
-            <Rank>{player.ranking}</Rank> <UserName>{player.user.username}</UserName>
-            <Id>{player.deck.cards.length}</Id>
-        </Container>
-    );
+
+
+export let PlayerGame = ({ player, addOn}) => {
+
+    if (player.turnPlayer) {
+        return (
+            <Container>
+                <Rank>{player.ranking}.</Rank> <UserName>{player.user.username} {addOn}</UserName>
+                <Id>{player.deck.cards.length}</Id>
+            </Container>
+        )
+    }
+    else {
+        return (
+            <Container borderColor ="transparent">
+                <Rank>{player.ranking}.</Rank> <UserName>{player.user.username} {addOn}</UserName>
+                <Id>{player.deck.cards.length}</Id>
+            </Container>
+        )
+    }
 };
 
 export let PlayerMeGame = ({ player }) => {
     return (
-        <ContainerMe>
-            <Rank>{player.ranking}.</Rank> <UserName>{player.user.username}</UserName>
+        <Container>
+            <Rank>{player.ranking}.</Rank> <UserName>{player.user.username} (Me)</UserName>
             <Id>{player.deck.cards.length}</Id>
-        </ContainerMe>
+        </Container>
     );
 };
 

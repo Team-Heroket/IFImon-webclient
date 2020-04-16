@@ -31,8 +31,8 @@ export let Result = ({masterState}) => {
 
                             <PlayerContainer>
                                 {player.user.id == localStorage.getItem('id') ?
-                                    (<PlayerMeGame player={player}  />) :
-                                    (<PlayerGame player={player}  />)
+                                    (<PlayerGame player={player} addOn = "(Me)"/>) :
+                                    (<PlayerGame player={player} addOn = ""/>)
                                 }
                             </PlayerContainer>
 

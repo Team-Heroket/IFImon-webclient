@@ -83,7 +83,21 @@ class Game extends React.Component {
             usersList.sort((a, b) => (a.deck.cards.length > b.deck.cards.length) ? 1 : -1)
 
             usersList[0].ranking = 1;
+            if (usersList[0].id == resp2.turnPlayer.id) {
+                usersList[0].turnPlayer = true;
+            }
+            else {
+                usersList[0].turnPlayer = false;
+            }
+            console.log(usersList[0].turnPlayer);
             for (let i=1; i<usersList.length; i++) {
+                if (usersList[i].id == resp2.turnPlayer.id) {
+                    usersList[i].turnPlayer = true;
+                }
+                else {
+                    usersList[i].turnPlayer = false;
+                }
+
                 if (usersList[i-1].deck.cards.length==usersList[i].deck.cards.length) {
                     usersList[i].ranking = usersList[i-1].ranking
                 }
