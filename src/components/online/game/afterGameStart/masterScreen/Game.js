@@ -80,7 +80,18 @@ class Game extends React.Component {
             const response2 = await api.get('/games/'+this.props.match.params.pokeCode.toString(), { headers: {'Token': localStorage.getItem('token')}});
             const resp2 = response2.data;
             let usersList = resp2.players;
-            usersList.sort((a, b) => (a.deck.length > b.deck.length) ? 1 : -1)
+            usersList.sort((a, b) => (a.deck.cards.length > b.deck.cards.length) ? 1 : -1)
+
+            usersList[0].ranking = 1;
+            for (let i=1; i<usersList.length; i++) {
+                if (usersList[i-1].deck.cards.length==usersList[i].deck.cards.length) {
+                    usersList[i].ranking = usersList[i-1].ranking
+                }
+                else {
+                    usersList[i].ranking = usersList[i-1].ranking+1;
+                }
+            }
+
             let user_me = null;
             for (let i=0; i<resp2.players.length; i++) {
                 if (resp2.players[i].user.id == localStorage.getItem('id')) {

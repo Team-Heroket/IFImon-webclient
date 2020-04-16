@@ -64,6 +64,7 @@ const StatCardContainer = styled.div`
   background: linear-gradient(66deg, #F53E28 1.67%, rgba(255, 255, 255, 0) 322.73%), #FCE93A;
 `;
 
+
 const Row = styled.div`
     &::after{
     content: "";
@@ -121,6 +122,24 @@ export let PlayerMe = ({ user }) => {
         <ContainerMe>
             <Rank>{user.statistics.rating}.</Rank> <UserName>{user.username}</UserName>
             <Id>{user.statistics.gamesWon}</Id>
+        </ContainerMe>
+    );
+};
+
+export let PlayerGame = ({ player }) => {
+    return (
+        <Container>
+            <Rank>{player.ranking}</Rank> <UserName>{player.user.username}</UserName>
+            <Id>{player.deck.cards.length}</Id>
+        </Container>
+    );
+};
+
+export let PlayerMeGame = ({ player }) => {
+    return (
+        <ContainerMe>
+            <Rank>{player.ranking}.</Rank> <UserName>{player.user.username}</UserName>
+            <Id>{player.deck.cards.length}</Id>
         </ContainerMe>
     );
 };
@@ -201,6 +220,63 @@ export let PlayerStatCard = ({ user }) => {
                         {console.log("user avatar id:"+user.avatarId)}
                         {user.avatarId < 10 ? <img alt="avatar" src={require('../components/shared/images/avatarSVG/00'+(user.avatarId)+'-avatar.svg')} height={"66px"} width={"66px"}/>
                         : <img alt="avatar" src={require('../components/shared/images/avatarSVG/0'+(user.avatarId)+'-avatar.svg')} height={"66px"} width={"66px"}/>}
+
+                        <br/>
+                        <RankCard>
+                            Rank:
+                        </RankCard>
+                        <br/>
+                        <RankValCard>
+                            {user.statistics.rating}
+                        </RankValCard>
+                    </StatCardContainer>
+                </Column>
+
+                <Column span={"80"}>
+                    <StatsContainer>
+                        <UserNameCard>
+                            {user.username}
+                        </UserNameCard>
+                        <UserSince>
+                            Since: {user.creationDate}
+                        </UserSince>
+                        <br/>
+                        <RankCard>
+                            Games played: {user.statistics.gamesPlayed}
+                        </RankCard>
+                        <br/>
+                        <RankCard>
+                            Wins: {user.statistics.gamesWon}
+                        </RankCard>
+                        <br/>
+                        <RankCard>
+                            Lost: {user.statistics.gamesLost}
+                        </RankCard>
+                        <br/>
+                        <RankCard>
+                            Pokemon discovered: {Math.round((user.statistics.pokemonDiscovered)/725*1000)/10}%
+                        </RankCard>
+                    </StatsContainer>
+
+                </Column>
+            </Row>
+        </ExternContainer>
+
+    );
+};
+
+export let PlayerStatCardLobby = ({ user }) => {
+    return (
+        <ExternContainer>
+
+            <Row>
+
+
+                <Column span={"20"}>
+                    <StatCardContainer>
+                        {console.log("user avatar id:"+user.avatarId)}
+                        {user.avatarId < 10 ? <img alt="avatar" src={require('../components/shared/images/avatarSVG/00'+(user.avatarId)+'-avatar.svg')} height={"66px"} width={"66px"}/>
+                            : <img alt="avatar" src={require('../components/shared/images/avatarSVG/0'+(user.avatarId)+'-avatar.svg')} height={"66px"} width={"66px"}/>}
 
                         <br/>
                         <RankCard>

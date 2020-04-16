@@ -11,7 +11,7 @@
 import React from "react";
 import {api, handleError} from "../../../../../helpers/api";
 import {PlayerContainer, Row} from "../../../../../helpers/layout";
-import {Player, PlayerMe} from "../../../../../views/Player";
+import {Player, PlayerGame, PlayerMe, PlayerMeGame} from "../../../../../views/Player";
 import styled from "styled-components";
 import {LogOutButton, RoundContainer} from "../../../../../views/design/Button";
 import {BackIcon} from "../../../../../views/design/Icons";
@@ -53,17 +53,17 @@ export let Evolve = ({masterState}) => {
 
                             <PlayerContainer>
                                 {player.user.id == localStorage.getItem('id') ?
-                                    (<PlayerMe user={player.user}  />) :
-                                    (<Player user={player.user}  />)
+                                    (<PlayerMeGame player={player}  />) :
+                                    (<PlayerGame player={player}  />)
                                 }
                             </PlayerContainer>
 
                         );
                     })}
+                    <LogOutButton width = "280px">
+                        Give Up
+                    </LogOutButton>
                 </Column>
-                <LogOutButton width = "280px">
-                    Give Up
-                </LogOutButton>
             </div>
         );
     }

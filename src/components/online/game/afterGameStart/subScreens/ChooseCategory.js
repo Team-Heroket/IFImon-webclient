@@ -11,7 +11,7 @@
 import React from "react";
 import {api, handleError} from "../../../../../helpers/api";
 import {GameContainer, PlayerContainer, Row} from "../../../../../helpers/layout";
-import {Player, PlayerMe} from "../../../../../views/Player";
+import {Player, PlayerGame, PlayerMe, PlayerMeGame} from "../../../../../views/Player";
 import styled from "styled-components";
 import Header from "../../../../../views/Header";
 import {LogOutButton, RoundContainer} from "../../../../../views/design/Button";
@@ -69,8 +69,8 @@ export let ChooseCategory = ({masterState}) => {
 
                             <PlayerContainer>
                                 {player.user.id == localStorage.getItem('id') ?
-                                    (<PlayerMe user={player.user}  />) :
-                                    (<Player user={player.user}  />)
+                                    (<PlayerMeGame player={player}  />) :
+                                    (<PlayerGame player={player}  />)
                                 }
                             </PlayerContainer>
 
