@@ -36,6 +36,12 @@ class Game extends React.Component {
     timeout_getMidInfo = null;
     timeout_berry = null;
     timeout_result = null;
+    timeout_newRoundTimer = null;
+
+    timeUntilEvolve = 15000;
+    timeUntilResult = 30000;
+    timeUntilNewRoundTimer = 35000;
+    timeUntilNewRound = 40000;
 
     period = {
         CHOOSECATEGORY: "choose",
@@ -43,7 +49,8 @@ class Game extends React.Component {
         RESULT: "result",
         FINISHED: "finished",
         WAIT: "wait",
-        INTERMEDIARY: "intermediary"
+        INTERMEDIARY: "intermediary",
+        NEWROUNDTIMER: "newroundtimer"
     }
 
     category = {
@@ -234,16 +241,16 @@ class Game extends React.Component {
         console.log("Got In here start round")
         let startTime = this.state.startTime;
 
-        this.setState({startTime: startTime+30000,remainingTime: startTime+15000 - new Date().getTime(), period: this.period.CHOOSECATEGORY});
+        this.setState({startTime: startTime+40000,remainingTime: startTime+15000 - new Date().getTime(), period: this.period.CHOOSECATEGORY});
 
         this.timeout_chose = setTimeout(()=>{
             this.setState({
                 categoryChosen: null,
-                remainingTime: startTime+20000 - new Date().getTime(),
+                remainingTime: startTime+this.timeUntilResult - new Date().getTime(),
                 period: this.period.EVOLVE
             })
             console.log("Now turnPlayer made a turn or just waited (after 15 seconds)")
-        }, startTime+15000 - new Date().getTime());
+        }, startTime+this.timeUntilEvolve - new Date().getTime());
 
 
         this.timeout_getMidInfo = setTimeout(()=>{
@@ -251,10 +258,27 @@ class Game extends React.Component {
             this.setState({
                 categoryChosen: null,
                 period: this.period.RESULT,
-                remainingTime: startTime+25000 - new Date().getTime()
+                remainingTime: startTime+this.timeUntilNewRoundTimer - new Date().getTime()
             })
             console.log("Now every player gets info (after 15 seconds)")
-        }, startTime+25000 - new Date().getTime());
+        }, startTime+this.timeUntilResult - new Date().getTime());
+
+        this.timeout_result = setTimeout(()=>{
+            this.setState({
+                categoryChosen: null,
+                period: this.period.NEWROUNDTIMER,
+                remainingTime: startTime+this.timeUntilNewRound - new Date().getTime()
+            })
+            console.log("Now every player gets info (after 15 seconds)")
+        }, startTime+this.timeUntilNewRoundTimer - new Date().getTime());
+
+        this.timeout_newRoundTimer = setTimeout(()=>{
+            this.setState({
+                categoryChosen: null,
+                period: this.period.NEWROUNDTIMER,
+            })
+            console.log("Now every player gets info (after 15 seconds)")
+        }, startTime+this.timeUntilNewRound - new Date().getTime());
 
 
     }
@@ -262,7 +286,7 @@ class Game extends React.Component {
     recurrentRounds() {
         this.recurrentTimer = setInterval(()=>{
             this.startRound();
-        }, 30000);
+        }, 40000);
     }
 
     async giveUp() {
@@ -311,6 +335,9 @@ class Game extends React.Component {
         }
         else if (this.state.period == this.period.RESULT) {
             return <Result masterState = {this.state}/>
+        }
+        else if (this.state.period == this.period.NEWROUNDTIMER) {
+            return <Clock remainingTime = {this.state.remainingTime} totalTime = {5000}/>
         }
     }
 
