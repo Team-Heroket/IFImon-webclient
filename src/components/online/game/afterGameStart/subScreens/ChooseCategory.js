@@ -76,7 +76,7 @@ export let ChooseCategory = ({masterState}) => {
 
                         );
                     })}
-                    <LogOutButton width = "280px">
+                    <LogOutButton width = "100px">
                         Give Up
                     </LogOutButton>
                 </Column>

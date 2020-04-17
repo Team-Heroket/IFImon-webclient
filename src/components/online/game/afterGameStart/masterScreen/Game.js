@@ -20,6 +20,13 @@ import {ChooseCategory} from "../subScreens/ChooseCategory";
 import {Evolve} from "../subScreens/Evolve";
 import {Finished} from "../subScreens/Finished";
 import {Result} from "../subScreens/Result";
+import {Clock} from "../Clock";
+
+
+const Space = styled.div`
+  margin-bottom: 80px
+  width: 100%
+`;
 
 class Game extends React.Component {
 
@@ -170,21 +177,12 @@ class Game extends React.Component {
 
 
     startClock() {
+
         if (!this.state.remainingTime) {
             return <Spinner/>
         }
         else {
-            return <CountdownCircleTimer
-                isPlaying
-                durationSeconds={this.state.remainingTime/1000}
-                colors={[
-                    ['#004777', .33],
-                    ['#F7B801', .33],
-                    ['#A30000']
-                ]}
-                renderTime={this.renderTime}
-                trailColor="transparent"
-            />
+            return <Clock remainingTime = {this.state.remainingTime} totalTime = {30000}/>
         }
     }
 
@@ -282,19 +280,6 @@ class Game extends React.Component {
         }
     }
 
-    renderTime = value => {
-        if (value == 0){
-            return <div>NOW</div>
-        }
-
-        return (
-            <div className="timer">
-                <div className="text">Game starts in</div>
-                <div className="value">{value}</div>
-                <div className="text">seconds</div>
-            </div>
-        );
-    };
 
 
     componentDidMount() {
@@ -342,7 +327,8 @@ class Game extends React.Component {
                     </RoundContainer>
                 </Row>
                 {this.state.justInitialized ?
-                    this.startClock() : this.renderPeriod()
+
+                    <div><Space/>{this.startClock()}</div> : this.renderPeriod()
                 }
 
             </GameContainer>
