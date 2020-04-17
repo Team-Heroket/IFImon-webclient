@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const DESKTOP_WIDTH = 1160;
+export const DESKTOP_WIDTH = 1360;
 export const SMALL_LAPTOPS_WIDTH = 970;
 export const TABLETS_WIDTH = 750;
 export const SMALL_WIDTH = 768;

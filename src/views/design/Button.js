@@ -286,3 +286,31 @@ export let MenuButtonIcon = ( {type, onClicktoDo}) => {
 
     );
 };
+
+
+
+export let TestObject = ({stateTest}) => {
+    console.log("recived: ", stateTest);
+    return (
+        <ExternalContainer width={"55%"}>
+            <Row>
+                <Column width={"25%"} float={'left'}>
+                    <div>
+                        {stateTest.pokeCode}
+                    </div>
+                </Column>
+                <Column width={"50%"} float={'center'}>
+                    {stateTest.amountOfPlayers}
+                </Column>
+
+                <Column width={"25%"} float={'right'}>
+                    <div>
+                        {stateTest.amountOfNPC}
+                    </div>
+                </Column>
+
+            </Row>
+        </ExternalContainer>
+
+    );
+};
