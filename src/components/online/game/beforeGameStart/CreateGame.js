@@ -203,6 +203,7 @@ class CreateGame extends React.Component {
     }
 
     async startGame() {
+        console.log("entred startGame")
         try {
 
             const requestBody = JSON.stringify({

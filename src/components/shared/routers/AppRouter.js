@@ -11,7 +11,7 @@ import SocialMode from "../../online/game/beforeGameStart/SocialMode";
 import Lobby from "../../online/game/beforeGameStart/Lobby";
 import CreateGame from "../../online/game/beforeGameStart/CreateGame"
 import Quickplay from "../../online/quickplay/Quickplay";
-import Game from "../../online/game/afterGameStart/Game";
+import Game from "../../online/game/afterGameStart/masterScreen/Game";
 /**
  * Main router of your application.
  * In the following class, different routes are rendered. In our case, there is a Login Route with matches the path "/offline"
