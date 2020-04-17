@@ -14,7 +14,26 @@ const Statistics = styled.button`
   transition: all 0.3s ease;
   
   display: flex;
-  flex-directlion:row;
+  flex-direction:row;
+  
+  &:hover {
+    transform: ${props => (props.disabled ? "" : "translateX(1px)")};
+    
+    border: ${props => (props.disabled ? "" : "1px solid #FFFFFF")};
+    transition: all 0.3s ease;
+  }
+  
+  &:focus{
+   border: 2px solid #000000;
+   transform: ${props => (props.disabled ? "" : "translateX(-2px)")};
+  }
+  
+  &:disabled{
+    opacity: 100%;
+    color: #000000
+  }
+  
+  cursor: ${props => (props.disabled ? "default" : "pointer")};
   
   
 `;
@@ -161,7 +180,7 @@ let PokemonFormatter = ({pokemon}) => {
         case('water'):
             return {mainColor: "#70D3E0", secondaryColor: "#93F9EA", inverted: false, icon: require("../../components/shared/images/pokemonTypesSVG/"+element+".svg")};
         case('electric'):
-            return {mainColor: "#FFBD2B", secondaryColor: "#FFF45B", inverted: false, icon: require("../../components/shared/images/pokemonTypesSVG/"+element+".svg")};
+            return {mainColor: "#FFBD2B", secondaryColor: "#FFF45B", inverted: true, icon: require("../../components/shared/images/pokemonTypesSVG/"+element+".svg")};
         case('grass'):
             return {mainColor: "#47C67B", secondaryColor: "#80EDAC", inverted: false, icon: require("../../components/shared/images/pokemonTypesSVG/"+element+".svg")};
         case('ice'):
@@ -194,31 +213,9 @@ let PokemonFormatter = ({pokemon}) => {
     };
 
 }
-export let PokemonCard = () => {
-    let pokemon = {
-        id: 21,
-        pokemonId: 104,
-        categories: {
-            WEIGHT: 65,
-            ATK: 50,
-            CAPTURE_RATING: 190,
-            SPEED: 35,
-            DEF: 95,
-            HP: 50
-        },
-        name: "Cubone",
-        spriteURL: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/104.png",
-        cryURL: null,
-        elements: [
-            "GROUND"
-        ],
-        evolutionNames: [
-            "marowak"
-        ]
-    };
+export let PokemonCard = (pokemon, disabled) => {
     let formattedPokemon = {}
     formattedPokemon = PokemonFormatter({pokemon});
-    console.log('formatted: ', formattedPokemon);
     return (
         <CardContainer color={formattedPokemon.mainColor}>
             <CircleContainer color={formattedPokemon.secondaryColor}>
@@ -229,27 +226,27 @@ export let PokemonCard = () => {
                     <PokemonName reversed={formattedPokemon.inverted}>
                         {pokemon.name}
                     </PokemonName>
-                    <Statistics color={formattedPokemon.mainColor}>
+                    <Statistics color={formattedPokemon.mainColor} disabled={disabled} onClick={() => localStorage.setItem('SelectedCat','ATK')}>
                         <StatName>Attack</StatName>
                         <StatValue>{pokemon.categories.ATK}</StatValue>
                     </Statistics>
-                    <Statistics color={formattedPokemon.mainColor}>
+                    <Statistics color={formattedPokemon.mainColor} disabled={disabled} onClick={() => localStorage.setItem('SelectedCat','DEF')}>
                         <StatName>Defense</StatName>
                         <StatValue>{pokemon.categories.DEF}</StatValue>
                     </Statistics>
-                    <Statistics color={formattedPokemon.mainColor}>
+                    <Statistics color={formattedPokemon.mainColor} disabled={disabled} onClick={() => localStorage.setItem("SelectedCat",'SPEED')}>
                         <StatName>Speed</StatName>
                         <StatValue>{pokemon.categories.SPEED}</StatValue>
                     </Statistics>
-                    <Statistics color={formattedPokemon.mainColor}>
+                    <Statistics color={formattedPokemon.mainColor} disabled={disabled} onClick={() => localStorage.setItem("SelectedCat",'CAPTURE_RATING')}>
                         <StatName>Capture rate</StatName>
                         <StatValue>{pokemon.categories.CAPTURE_RATING}</StatValue>
                     </Statistics>
-                    <Statistics color={formattedPokemon.mainColor}>
+                    <Statistics color={formattedPokemon.mainColor} disabled={disabled} onClick={() => localStorage.setItem("SelectedCat",'HP')}>
                         <StatName>HP</StatName>
                         <StatValue>{pokemon.categories.HP}</StatValue>
                     </Statistics>
-                    <Statistics color={formattedPokemon.mainColor}>
+                    <Statistics color={formattedPokemon.mainColor} disabled={disabled} onClick={() => localStorage.setItem("SelectedCat",'WEIGHT')}>
                         <StatName>Weight</StatName>
                         <StatValue>{pokemon.categories.WEIGHT} kg</StatValue>
                     </Statistics>

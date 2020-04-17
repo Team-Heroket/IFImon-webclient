@@ -7,11 +7,13 @@
  */
 
 import React from "react";
-import {PlayerContainer, Row} from "../../../../../helpers/layout";
+import {ButtonContainer, PlayerContainer, Row} from "../../../../../helpers/layout";
 import {Player, PlayerGame, PlayerMe, PlayerMeGame} from "../../../../../views/Player";
 import styled from "styled-components";
 import {LogOutButton, RoundContainer} from "../../../../../views/design/Button";
 import {BackIcon} from "../../../../../views/design/Icons";
+import {PokemonCard} from "../../../../../views/design/PokemonCard";
+import Grid from "@material-ui/core/Grid";
 
 const Column = styled.div`
     position: absolute
@@ -24,33 +26,42 @@ export let Result = ({masterState}) => {
 
     function showLeaderboard() {
         return (
-            <div>
-                <Column>
-                    {masterState.players.map(player => {
-                        return (
+            <ButtonContainer>
+                <h1> Result </h1>
+                {masterState.players.map(player => {
+                    return (
 
-                            <PlayerContainer>
-                                {player.user.id == localStorage.getItem('id') ?
-                                    (<PlayerGame player={player} addOn = "(Me)"/>) :
-                                    (<PlayerGame player={player} addOn = ""/>)
-                                }
-                            </PlayerContainer>
+                        <PlayerContainer>
+                            {player.user.id == localStorage.getItem('id') ?
+                                (<PlayerGame player={player} addOn = "(Me)"/>) :
+                                (<PlayerGame player={player} addOn = ""/>)
+                            }
+                        </PlayerContainer>
 
-                        );
-                    })}
-                    <LogOutButton width = "280px">
-                        Give Up
-                    </LogOutButton>
-                </Column>
-            </div>
+                    );
+                })}
+                <LogOutButton width = "50%">
+                    Give Up
+                </LogOutButton>
+                <h1>{masterState.berries} berries</h1>
+            </ButtonContainer>
         );
     }
 
     return (
-        <div>
-            <h1>Result</h1>
+        <Grid
+            container
+            direction="row"
+            justify="space-between"
+            alignItems="center"
+        >
             {showLeaderboard()}
-        </div>
+
+            {PokemonCard(masterState.deck.cards[0], masterState.amITurnPlayer)}
+
+            {PokemonCard(masterState.deck.cards[1], !masterState.amITurnPlayer)}
+
+        </Grid>
 
     );
 };

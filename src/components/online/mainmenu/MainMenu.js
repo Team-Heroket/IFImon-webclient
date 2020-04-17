@@ -89,7 +89,6 @@ class MainMenu extends React.Component {
                 {console.log(localStorage.getItem('id'))}
                 <Header height={140} top={33}/>
                 <FormContainer>
-                    <PokemonCard/>
                     <Form>
                         <ButtonContainer>
 

@@ -10,11 +10,13 @@
 
 import React from "react";
 import {api, handleError} from "../../../../../helpers/api";
-import {PlayerContainer, Row} from "../../../../../helpers/layout";
+import {ButtonContainer, PlayerContainer, Row,} from "../../../../../helpers/layout";
 import {Player, PlayerGame, PlayerMe, PlayerMeGame} from "../../../../../views/Player";
 import styled from "styled-components";
-import {LogOutButton, RoundContainer} from "../../../../../views/design/Button";
+import {LogOutButton, RoundContainer, Button, AvatarButton} from "../../../../../views/design/Button";
 import {BackIcon} from "../../../../../views/design/Icons";
+import {PokemonCard} from "../../../../../views/design/PokemonCard";
+import Grid from "@material-ui/core/Grid";
 
 
 const Column = styled.div`
@@ -46,32 +48,69 @@ export let Evolve = ({masterState}) => {
 
     function showLeaderboard() {
         return (
-            <div>
-                <Column>
-                    {masterState.players.map(player => {
-                        return (
+            <ButtonContainer>
+                <h1> Evolve </h1>
+                {masterState.players.map(player => {
+                    return (
 
-                            <PlayerContainer>
-                                {player.user.id == localStorage.getItem('id') ?
-                                    (<PlayerGame player={player} addOn = "(Me)"/>) :
-                                    (<PlayerGame player={player} addOn = ""/>)
-                                }
-                            </PlayerContainer>
+                        <PlayerContainer>
+                            {player.user.id == localStorage.getItem('id') ?
+                                (<PlayerGame player={player} addOn = "(Me)"/>) :
+                                (<PlayerGame player={player} addOn = ""/>)
+                            }
+                        </PlayerContainer>
 
-                        );
-                    })}
-                    <LogOutButton width = "280px">
-                        Give Up
-                    </LogOutButton>
-                </Column>
-            </div>
+                    );
+                })}
+                <LogOutButton width = "50%">
+                    Give Up
+                </LogOutButton>
+                <h1>{masterState.berries} berries</h1>
+            </ButtonContainer>
         );
     }
 
+    function evolveButtons() {
+        let evolutions = [];
+        localStorage.setItem('evolveTo', null)
+        for (let i=0; i< masterState.deck.cards[0].evolutionNames.length; i++) {
+            evolutions.push(
+
+                <Button
+                    id = {i}
+                    onClick={() => localStorage.setItem("evolveTo", i+1)}
+                >
+                    {masterState.deck.cards[0].evolutionNames[i]} Cost: {i+1}
+                </Button>
+            )
+        }
+
+        return evolutions;
+    }
+
+
+
     return (
         <div>
-            <h1>Evolve</h1>
-            {showLeaderboard()}
+            <Grid
+                container
+                direction="row"
+                justify="space-between"
+                alignItems="center"
+            >
+                {showLeaderboard()}
+
+                {PokemonCard(masterState.deck.cards[0], masterState.amITurnPlayer)}
+
+                <ButtonContainer>
+                    Do you want to evolve?
+                    <br/>
+                    {evolveButtons()}
+                </ButtonContainer>
+
+                {PokemonCard(masterState.deck.cards[1], !masterState.amITurnPlayer)}
+
+            </Grid>
         </div>
 
     );
