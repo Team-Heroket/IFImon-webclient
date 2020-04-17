@@ -76,7 +76,7 @@ const PokemonName = styled.div`
   font-weight: 700;
   text-transform: uppercase;
   font-size: 16px;
-  color: ${props => props.reversed ? "#000000": "#FFFFFF"};
+  color: ${props => props.reversed ? "#3D3D3D": "#FFFFFF"};
 `
 
 const PokemonImageContainer = styled.img`

@@ -151,6 +151,7 @@ class Game extends React.Component {
             })
 
             if (this.state.justInitialized) {
+                console.log("startTime before substring", resp2.startTime);
                 let startTime = resp2.startTime.substring(0, 10) + 'T' + resp2.startTime.substring(11);
                 console.log("Start Time is equal to: "+startTime)
                 console.log("Now the time is equal to: "+new Date())
