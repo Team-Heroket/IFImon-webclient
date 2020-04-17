@@ -151,7 +151,9 @@ class Game extends React.Component {
             })
 
             if (this.state.justInitialized) {
-                let startTime = resp2.creationTime.substring(0, 10) + 'T' + resp2.creationTime.substring(11);
+                let startTime = resp2.startTime.substring(0, 10) + 'T' + resp2.startTime.substring(11);
+                console.log("Start Time is equal to: "+startTime)
+                console.log("Now the time is equal to: "+new Date())
                 startTime = parseInt(new Date(startTime).getTime(), 10);
                 this.setState({'startTime' : startTime}, this.startGame);
             }
@@ -164,7 +166,7 @@ class Game extends React.Component {
     }
 
     startGame() {
-        let remainingTime = this.state.startTime+30000 - new Date().getTime();
+        let remainingTime = this.state.startTime - new Date().getTime();
         this.setState({remainingTime: remainingTime})
         this.timeout_all = setTimeout(()=>{
             this.setState({justInitialized: false})
@@ -182,7 +184,7 @@ class Game extends React.Component {
             return <Spinner/>
         }
         else {
-            return <Clock remainingTime = {this.state.remainingTime} totalTime = {30000}/>
+            return <Clock remainingTime = {this.state.remainingTime} totalTime = {35000}/>
         }
     }
 
@@ -230,12 +232,9 @@ class Game extends React.Component {
 
     startRound() {
         console.log("Got In here start round")
-        let startTime = this.state.startTime+30000;
-        this.setState({'startTime': startTime});
-        console.log(startTime+10000 - new Date().getTime());
+        let startTime = this.state.startTime;
 
-
-        this.setState({remainingTime: startTime+15000 - new Date().getTime(), period: this.period.CHOOSECATEGORY});
+        this.setState({startTime: startTime+30000,remainingTime: startTime+15000 - new Date().getTime(), period: this.period.CHOOSECATEGORY});
 
         this.timeout_chose = setTimeout(()=>{
             this.setState({
@@ -256,6 +255,7 @@ class Game extends React.Component {
             })
             console.log("Now every player gets info (after 15 seconds)")
         }, startTime+25000 - new Date().getTime());
+
 
     }
 
