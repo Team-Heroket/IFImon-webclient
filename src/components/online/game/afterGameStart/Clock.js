@@ -5,7 +5,7 @@ import "./StylesheetGame.css";
 
 const renderTime = value => {
     if (value === 0) {
-        return <div className="timer">Too lale...</div>;
+        return <div className="timer">Too late...</div>;
     }
 
     return (

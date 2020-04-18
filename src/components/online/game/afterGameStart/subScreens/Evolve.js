@@ -72,7 +72,7 @@ export let Evolve = ({masterState}) => {
 
     function evolveButtons() {
         let evolutions = [];
-        localStorage.setItem('evolveTo', null)
+        localStorage.setItem('evolveTo', "0")
         for (let i=0; i< masterState.deck.cards[0].evolutionNames.length; i++) {
             evolutions.push(
 

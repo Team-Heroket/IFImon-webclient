@@ -204,6 +204,8 @@ class Game extends React.Component {
 
     async evolvePokemon() {
         try {
+
+            console.log("Amount in evolve is: "+localStorage.getItem('evolveTo'))
             const requestBody = JSON.stringify({
                 amount: localStorage.getItem('evolveTo'),
                 id: this.state.player_me.user.id
@@ -293,10 +295,8 @@ class Game extends React.Component {
                 remainingTime: startTime + this.timeUntilNewRoundTimer - new Date().getTime()
             })
 
-            if (localStorage.getItem('evolveTo')) {
-                console.log("evolving")
-                this.evolvePokemon();
-            }
+            this.evolvePokemon();
+
             setTimeout(()=>this.getGameInfo(), 3000)
 
             console.log("Ending Berry time and Going to Results")
@@ -311,16 +311,11 @@ class Game extends React.Component {
             console.log("Set New Round Timer")
         }, startTime + this.timeUntilNewRoundTimer - new Date().getTime());
 
-        //6) turnPlayer: put nextTurn
-        // MAKING TURN 5 SECONDS BEFORE timeUntilResult
-        if (this.state.amITurnPlayer) {
-            setTimeout(() => {
-                this.makeFinalTurn()
-                console.log("Made PUT request for /next")
-            }, startTime + this.timeUntilResult - 2000 - new Date().getTime());
-        }
 
         this.timeout_newRoundTimer = setTimeout(() => {
+            if (this.state.amITurnPlayer) {
+                this.makeFinalTurn()
+            }
             this.setState({
                 categoryChosen: null,
                 period: this.period.NEWROUNDTIMER,
