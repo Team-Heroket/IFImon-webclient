@@ -20,7 +20,7 @@ import {
 import {Player, PlayerGame, PlayerMe, PlayerMeGame} from "../../../../../views/Player";
 import styled from "styled-components";
 import {LogOutButton, RoundContainer} from "../../../../../views/design/Button";
-import {PokemonCard} from "../../../../../views/design/PokemonCard";
+import {PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
 
 import Grid from '@material-ui/core/Grid';
 
@@ -75,7 +75,7 @@ export let ChooseCategory = ({masterState}) => {
 
                 {PokemonCard(masterState.deck.cards[0], !masterState.amITurnPlayer)}
 
-                {PokemonCard(masterState.deck.cards[1], masterState.amITurnPlayer)}
+                {PlaceholderCard()}
 
             </Grid>
     );

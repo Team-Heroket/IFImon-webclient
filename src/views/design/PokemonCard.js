@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import {LeaderboardIcon, QuickplayIcon, SettingsIcon, SocialIcon} from "./Icons";
+import {LeaderboardIcon, PlaceholderIcon, QuickplayIcon, SettingsIcon, SocialIcon} from "./Icons";
+import {ButtonContainer, SimpleContainer} from "../../helpers/layout";
 
 const Statistics = styled.button`
   width: 230px;
@@ -259,6 +260,17 @@ export let PokemonCard = (pokemon, disabled) => {
                 </PokemonNumber>
 
             </IconContainer>
+        </CardContainer>
+
+    );
+};
+
+export let PlaceholderCard = () => {
+    return (
+        <CardContainer color={"linear-gradient(227.89deg, #F53E28 1.67%, rgba(255, 255, 255, 0) 322.73%), #FCE93A"}>
+            <SimpleContainer float={"left" } width={"100%"}>
+                <PlaceholderIcon/>
+            </SimpleContainer>
         </CardContainer>
 
     );

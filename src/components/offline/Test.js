@@ -359,7 +359,7 @@ class Test extends React.Component {
                         <BackIcon/>
                     </RoundContainer>
                 </Row>
-                <Evolve masterState = {this.state}/>
+                <ChooseCategory masterState = {this.state}/>
             </GameContainer>
         );
     }

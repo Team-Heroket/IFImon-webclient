@@ -15,7 +15,7 @@ import {Player, PlayerGame, PlayerMe, PlayerMeGame} from "../../../../../views/P
 import styled from "styled-components";
 import {LogOutButton, RoundContainer, Button, AvatarButton} from "../../../../../views/design/Button";
 import {BackIcon} from "../../../../../views/design/Icons";
-import {PokemonCard} from "../../../../../views/design/PokemonCard";
+import {PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
 import Grid from "@material-ui/core/Grid";
 
 
@@ -108,7 +108,7 @@ export let Evolve = ({masterState}) => {
                     {evolveButtons()}
                 </ButtonContainer>
 
-                {PokemonCard(masterState.deck.cards[1], !masterState.amITurnPlayer)}
+                {PlaceholderCard()}
 
             </Grid>
         </div>
