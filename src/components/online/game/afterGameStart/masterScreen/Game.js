@@ -63,11 +63,12 @@ class Game extends React.Component {
     }
 
     category = {
-        HEIGHT: "HEIGHT",
+        HP: "HP",
         WEIGHT: "WEIGHT",
-        CAPTURERATE: "CAPTURERATE",
-        ATTACKPOINTS: "ATTACKPOINTS",
-        DEFENSEPOINTS: "DEFENSEPOINTS"
+        CAPTURERATE: "CAPTURE_RATING",
+        ATTACKPOINTS: "ATK",
+        DEFENSEPOINTS: "DEF",
+        SPEED: "SPEED"
     }
 
     constructor() {
@@ -223,7 +224,7 @@ class Game extends React.Component {
         let category = localStorage.getItem('SelectedCat');
         localStorage.setItem('SelectedCat', null);
         if (!category) {
-            let categories = [this.category.HEIGHT, this.category.WEIGHT, this.category.CAPTURERATE, this.category.ATTACKPOINTS, this.category.DEFENSEPOINTS];
+            let categories = [this.category.HP, this.category.SPEED, this.category.WEIGHT, this.category.CAPTURERATE, this.category.ATTACKPOINTS, this.category.DEFENSEPOINTS];
             let randomIndex = Math.floor(Math.random() * Math.floor(categories.length));
             category = categories[randomIndex]
             console.log("Random Category: " + category);
@@ -291,12 +292,12 @@ class Game extends React.Component {
                 period: this.period.RESULT,
                 remainingTime: startTime + this.timeUntilNewRoundTimer - new Date().getTime()
             })
+
             if (localStorage.getItem('evolveTo')) {
                 console.log("evolving")
                 this.evolvePokemon();
             }
             setTimeout(()=>this.getGameInfo(), 3000)
-
 
             console.log("Ending Berry time and Going to Results")
         }, startTime + this.timeUntilResult -5000- new Date().getTime());

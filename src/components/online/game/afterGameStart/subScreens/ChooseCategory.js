@@ -26,11 +26,12 @@ import Grid from '@material-ui/core/Grid';
 
 let category;
 category = {
-    HEIGHT: "HEIGHT",
+    HP: "HP",
     WEIGHT: "WEIGHT",
-    CAPTURERATE: "CAPTURERATE",
-    ATTACKPOINTS: "ATTACKPOINTS",
-    DEFENSEPOINTS: "DEFENSEPOINTS"
+    CAPTURERATE: "CAPTURE_RATING",
+    ATTACKPOINTS: "ATK",
+    DEFENSEPOINTS: "DEF",
+    SPEED: "SPEED"
 }
 
 
