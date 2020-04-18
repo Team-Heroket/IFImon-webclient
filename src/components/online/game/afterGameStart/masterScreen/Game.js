@@ -71,6 +71,11 @@ class Game extends React.Component {
         SPEED: "SPEED"
     }
 
+    clock = {
+        GAMESTART: "gamestart",
+        NEWROUND: "newround"
+    }
+
     constructor() {
         super();
         this.state = {
@@ -80,7 +85,7 @@ class Game extends React.Component {
             admin: null,
             turnPlayer: null,
             startTime: new Date().getTime() - 30000,
-            amITurnPlayer: true,
+            amITurnPlayer: null,
             amIAdmin: null,
             period: this.period.INTERMEDIARY,
             justInitialized: true,
@@ -170,7 +175,7 @@ class Game extends React.Component {
                 console.log("startTime before substring", resp2.startTime);
                 let startTime = resp2.startTime.substring(0, 10) + 'T' + resp2.startTime.substring(11);
                 console.log("Start Time is equal to: " + startTime)
-                startTime = parseInt(new Date(startTime).getTime(), 10) - 30000;
+                startTime = parseInt(new Date(startTime).getTime(), 10);
 
                 this.setState({'startTime': startTime}, this.startGame);
             }
@@ -198,7 +203,7 @@ class Game extends React.Component {
         if (!this.state.remainingTime) {
             return <Spinner/>
         } else {
-            return <Clock remainingTime={this.state.remainingTime} totalTime={35000}/>
+            return <Clock remainingTime={this.state.remainingTime} totalTime={35000} type={this.clock.GAMESTART} />
         }
     }
 
@@ -294,8 +299,9 @@ class Game extends React.Component {
                 period: this.period.RESULT,
                 remainingTime: startTime + this.timeUntilNewRoundTimer - new Date().getTime()
             })
-
-            this.evolvePokemon();
+            if (localStorage.getItem('evolveTo') != 0) {
+                this.evolvePokemon();
+            }
 
             setTimeout(()=>this.getGameInfo(), 3000)
 
@@ -376,7 +382,7 @@ class Game extends React.Component {
         } else if (this.state.period == this.period.RESULT) {
             return <Result masterState={this.state}/>
         } else if (this.state.period == this.period.NEWROUNDTIMER) {
-            return <Clock remainingTime={this.state.remainingTime} totalTime={5000}/>
+            return <Clock remainingTime={this.state.remainingTime} totalTime={5000} type={this.clock.NEWROUND}/>
         }
     }
 
