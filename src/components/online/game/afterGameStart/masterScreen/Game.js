@@ -291,6 +291,9 @@ class Game extends React.Component {
         }, startTime + this.timeUntilResult -5000- new Date().getTime());
 
         this.timeout_result = setTimeout(() => {
+            if (this.state.amITurnPlayer) {
+                this.makeFinalTurn()
+            }
             this.setState({
                 categoryChosen: null,
                 period: this.period.NEWROUNDTIMER,
@@ -302,9 +305,7 @@ class Game extends React.Component {
 
         this.timeout_newRoundTimer = setTimeout(() => {
             console.log("AmITurnPlayer is: "+this.state.amITurnPlayer)
-            if (this.state.amITurnPlayer) {
-                this.makeFinalTurn()
-            }
+
             this.setState({
                 categoryChosen: null,
                 period: this.period.NEWROUNDTIMER,
