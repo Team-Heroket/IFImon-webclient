@@ -163,13 +163,13 @@ class Lobby extends React.Component {
             try {
                 console.log("tried after 30 seconds");
 
-                this.getAndSetUserInformation()
+                this.getAndSetUserInformation();
 
 
             } catch (error) {
                 alert(`Something went wrong: \n${handleError(error)}`);
             }
-        }, 1000)
+        }, 30000)
     }
 
     async leaveGame() {
