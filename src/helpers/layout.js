@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
-export const DESKTOP_WIDTH = 1160;
+export const DESKTOP_WIDTH = 1360;
 export const SMALL_LAPTOPS_WIDTH = 970;
 export const TABLETS_WIDTH = 750;
 export const SMALL_WIDTH = 768;
 
-const Row = styled.div`
+export const Row = styled.div`
     &::after{
     content: "";
     clear: "";
@@ -29,6 +29,14 @@ export const BaseContainer = styled.div`
   margin-right: auto;
   padding-right: 15px;
   max-width: ${DESKTOP_WIDTH}px;
+`;
+
+export const GameContainer = styled.div`
+  margin-left: auto;
+  padding-left: 15px;
+  margin-right: auto;
+  padding-right: 15px;
+  max-width: 1366px;
 `;
 
 export const  ButtonContainer = styled.div`
@@ -99,3 +107,4 @@ export const PlayerContainer = styled.li`
   justify-content: center;
   
 `;
+

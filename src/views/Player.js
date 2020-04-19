@@ -14,7 +14,7 @@ const Container = styled.button`
   border-radius: 25px;
   display: flex;
   align-items: center;
-  border: 1px solid #ffffff;
+  border: 1px solid ${props => props.borderColor || "#ffffff"};
   transition: all 0.3s ease;
   background: rgb(255, 255, 255, 0%);
 `;
@@ -63,6 +63,7 @@ const StatCardContainer = styled.div`
   transition: all 0.3s ease;
   background: linear-gradient(66deg, #F53E28 1.67%, rgba(255, 255, 255, 0) 322.73%), #FCE93A;
 `;
+
 
 const Row = styled.div`
     &::after{
@@ -122,6 +123,37 @@ export let PlayerMe = ({ user }) => {
             <Rank>{user.statistics.rating}.</Rank> <UserName>{user.username}</UserName>
             <Id>{user.statistics.gamesWon}</Id>
         </ContainerMe>
+    );
+};
+
+
+
+export let PlayerGame = ({ player, addOn}) => {
+
+    if (player.turnPlayer) {
+        return (
+            <Container>
+                <Rank>{player.ranking}.</Rank> <UserName>{player.user.username} {addOn}</UserName>
+                <Id>{player.deck.cards.length}</Id>
+            </Container>
+        )
+    }
+    else {
+        return (
+            <Container borderColor ="transparent">
+                <Rank>{player.ranking}.</Rank> <UserName>{player.user.username} {addOn}</UserName>
+                <Id>{player.deck.cards.length}</Id>
+            </Container>
+        )
+    }
+};
+
+export let PlayerMeGame = ({ player }) => {
+    return (
+        <Container>
+            <Rank>{player.ranking}.</Rank> <UserName>{player.user.username} (Me)</UserName>
+            <Id>{player.deck.cards.length}</Id>
+        </Container>
     );
 };
 
@@ -245,3 +277,4 @@ export let PlayerStatCard = ({ user }) => {
 
     );
 };
+

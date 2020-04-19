@@ -7,7 +7,7 @@ import {Button, MenuButton, RoundContainer, TransparentButton} from "../../../..
 import {BackIcon} from "../../../../views/design/Icons";
 import {api, handleError} from "../../../../helpers/api";
 import {Spinner} from "../../../../views/design/Spinner";
-import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin, PlayerStatCard} from "../../../../views/Player";
+import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin} from "../../../../views/Player";
 
 
 const Row = styled.div`
@@ -138,7 +138,7 @@ class Lobby extends React.Component {
             }
 
             if (resp2.state == "RUNNING") {
-                this.goToIntermediary()
+                this.goToGame()
             }
 
             await this.setState({
@@ -163,7 +163,7 @@ class Lobby extends React.Component {
             try {
                 console.log("tried after 30 seconds");
 
-                this.getAndSetUserInformation()
+                this.getAndSetUserInformation();
 
 
             } catch (error) {
@@ -191,13 +191,10 @@ class Lobby extends React.Component {
     }
 
 
-    goToIntermediary() {
-        this.props.history.push('/intermediary')
+    goToGame() {
+        this.props.history.push('/game/'+this.state.pokeCode)
     }
 
-    goToGame() {
-        this.props.history.push('/game/'+this.props.match.params.pokeCode)
-    }
 
     async setTimerUntilStart() {
         console.log("CreationTime: "+this.state.creationTime)
@@ -211,7 +208,7 @@ class Lobby extends React.Component {
                 let remainingTime = 240000-timePassed;
                 console.log("Remaining Time: "+ remainingTime)
                 this.totalTimer = setTimeout(() => {
-                    this.goToIntermediary()
+                    this.goToGame()
                 }, remainingTime)
             }
         }, 100)
@@ -323,9 +320,7 @@ class Lobby extends React.Component {
                                     return (
 
                                         <PlayerContainer onClick={() => {
-                                            console.log('Player Clicked:', player);
-                                            this.setState({displaySecondaryCard: player.user});
-                                            console.log(this.state.displaySecondaryCard);
+
                                         }}>
                                             {this.displayPlayer(player)}
 
@@ -355,6 +350,7 @@ class Lobby extends React.Component {
 
                     </Form>
                 </FormContainer>
+
                 </div>
                 }
             </BaseContainer>

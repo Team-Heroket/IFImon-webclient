@@ -10,10 +10,13 @@ import {
     MenuButton,
     MenuButtonIcon,
     MenuIcon,
-    TransparentButton
+    TransparentButton,
+    TestObject,
 } from '../../../views/design/Button';
 import Header from "../../../views/Header";
 import {BackIcon} from "../../../views/design/Icons";
+import {PlayerMe} from "../../../views/Player";
+import {PokemonCard} from "../../../views/design/PokemonCard";
 
 
 const Label = styled.label`
@@ -37,6 +40,15 @@ const Form = styled.div`
 `;
 
 class MainMenu extends React.Component {
+
+    constructor() {
+        super();
+        this.state = {
+            pokeCode: "asdasas",
+            amountOfPlayers: 6,
+            amountOfNPC: 0,
+        };
+    }
 
     goToSettings() {
         this.props.history.push('/settings/'+localStorage.getItem('id'))
