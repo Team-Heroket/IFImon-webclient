@@ -112,10 +112,10 @@ class Game extends React.Component {
             usersList.sort((a, b) => (a.deck.cards.length > b.deck.cards.length) ? 1 : -1)
 
             usersList[0].ranking = 1;
-            if (resp2.turnPlayer.user.statistics.id == localStorage.getItem("id")) {
+            if (resp2.turnPlayer.user.id == localStorage.getItem("id")) {
                 usersList[0].turnPlayer = true;
                 this.setState({'amITurnPlayer': true})
-                console.log("IamTurnplayer")
+                console.log("IamTurnplayer: id", resp2.turnPlayer.user.id)
             } else {
                 usersList[0].turnPlayer = false;
                 this.setState({'amITurnPlayer': false})
@@ -168,7 +168,8 @@ class Game extends React.Component {
                 amITurnPlayer: amITurnPlayer1,
                 pokeCode: this.props.match.params.pokeCode,
                 berries: user_me.berries,
-                deck: user_me.deck
+                deck: user_me.deck,
+                winners: resp2.winners,
             })
 
             if (this.state.justInitialized) {
@@ -230,8 +231,8 @@ class Game extends React.Component {
         //Insert Put Function for turnPlayer to choose
         let category = localStorage.getItem('SelectedCat');
         localStorage.setItem('SelectedCat', null);
-        if (!category) {
-            let categories = [this.category.HP, this.category.SPEED, this.category.WEIGHT, this.category.CAPTURERATE, this.category.ATTACKPOINTS, this.category.DEFENSEPOINTS];
+        if (category) {
+            let categories = ['HP', 'SPEED', "WEIGHT", 'CAPTURE_RATING', 'ATK', 'DEF'];
             let randomIndex = Math.floor(Math.random() * Math.floor(categories.length));
             category = categories[randomIndex]
             console.log("Random Category: " + category);
