@@ -148,7 +148,7 @@ class Lobby extends React.Component {
                 creationTime: resp2.creationTime.toString()
             })
 
-            this.setState({'creationTime' : this.state.creationTime.substring(0, 10) + 'T' + this.state.creationTime.substring(11)});
+            this.setState({'creationTime' : this.state.creationTime.substring(0, 10) + 'T' + this.state.creationTime.substring(11)}, this.setTimerUntilStart);
 
 
 
@@ -222,7 +222,6 @@ class Lobby extends React.Component {
         this.setState({pokeCode: this.props.match.params.pokeCode});
         this.getAndSetUserInformation();
         this.getUpdate();
-        this.setTimerUntilStart();
     }
 
     componentDidUpdate() {
