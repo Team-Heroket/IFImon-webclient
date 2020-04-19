@@ -59,7 +59,8 @@ export let Result = ({masterState}) => {
 
             {PokemonCard(masterState.deck.cards[0], masterState.amITurnPlayer)}
 
-            {PlaceholderCard()}
+            {PokemonCard((masterState.winners[0]).deck.cards[0], false)}
+
 
         </Grid>
 
