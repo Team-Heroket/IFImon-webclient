@@ -257,12 +257,12 @@ class Game extends React.Component {
 
         //2) turnPlayer: put category
         // MAKING TURN 2 SECONDS BEFORE TIMEUNTILEVOLVE
+        setTimeout(() => {
         if (this.state.amITurnPlayer) {
-            setTimeout(() => {
                 this.makeTurn()
                 console.log("PUT request with category done")
-            }, startTime + this.timeUntilEvolve - 2000 - new Date().getTime());
-        }
+            }
+        }, startTime + this.timeUntilEvolve - 2000 - new Date().getTime());
 
         //3) all clients: get game
         this.timeout_chose = setTimeout(() => {
