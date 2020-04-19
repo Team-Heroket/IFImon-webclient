@@ -150,7 +150,8 @@ class Game extends React.Component {
                 turnPlayer: resp2.turnPlayer,
                 pokeCode: this.props.match.params.pokeCode,
                 berries: user_me.berries,
-                deck: user_me.deck
+                deck: user_me.deck,
+                winners: resp2.winners,
             })
 
             if (this.state.justInitialized) {
@@ -212,7 +213,7 @@ class Game extends React.Component {
         //Insert Put Function for turnPlayer to choose
         let category = localStorage.getItem('SelectedCat');
         localStorage.setItem('SelectedCat', null);
-        if (!category) {
+        if (category) {
             let categories = [this.category.HP, this.category.SPEED, this.category.WEIGHT, this.category.CAPTURERATE, this.category.ATTACKPOINTS, this.category.DEFENSEPOINTS];
             let randomIndex = Math.floor(Math.random() * Math.floor(categories.length));
             category = categories[randomIndex]
