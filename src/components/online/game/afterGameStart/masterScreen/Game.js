@@ -111,23 +111,10 @@ class Game extends React.Component {
             let usersList = resp2.players;
             usersList.sort((a, b) => (a.deck.cards.length > b.deck.cards.length) ? 1 : -1)
 
-            usersList[0].ranking = 1;
-            if (resp2.turnPlayer.user.statistics.id == localStorage.getItem("id")) {
-                usersList[0].turnPlayer = true;
-                this.setState({'amITurnPlayer': true})
-                console.log("IamTurnplayer")
-            } else {
-                usersList[0].turnPlayer = false;
-                this.setState({'amITurnPlayer': false})
-            }
-            console.log(usersList[0].turnPlayer);
-            for (let i = 1; i < usersList.length; i++) {
-                if (usersList[i].id == resp2.turnPlayer.id) {
-                    usersList[i].turnPlayer = true;
-                } else {
-                    usersList[i].turnPlayer = false;
-                }
 
+            //This here does the ranking:
+            usersList[0].ranking = 1;
+            for (let i=1; i<usersList.length; i++) {
                 if (usersList[i - 1].deck.cards.length == usersList[i].deck.cards.length) {
                     usersList[i].ranking = usersList[i - 1].ranking
                 } else {
@@ -135,27 +122,24 @@ class Game extends React.Component {
                 }
             }
 
+            this.setState({'amITurnPlayer': false});
+            if (resp2.turnPlayer.user.id == localStorage.getItem('id')) {
+                this.setState({'amITurnPlayer': true});
+            }
             let user_me = null;
-            for (let i = 0; i < resp2.players.length; i++) {
-                if (resp2.players[i].user.id == localStorage.getItem('id')) {
-                    user_me = resp2.players[i]
+            //For every user sets turnplayer to true or false
+            for (let i=0; i<usersList.length; i++) {
+                if (usersList[i].user.id == resp2.turnPlayer.user.id) {
+                    usersList[i].turnPlayer = true;
+                }
+                else {
+                    usersList[i].turnPlayer = false;
+                }
+                if (usersList[i].user.id == localStorage.getItem('id')) {
+                    user_me = usersList[i];
                 }
             }
 
-            if (resp2.state == "LOBBY") {
-                this.goToLobby();
-            }
-
-
-            let amIAdmin1 = false;
-            if (user_me.user.username == resp2.creator.user.username) {
-                amIAdmin1 = true;
-            }
-
-            let amITurnPlayer1 = false;
-            if (user_me.user.username == resp2.turnPlayer.user.username) {
-                amITurnPlayer1 = true;
-            }
 
 
             this.setState({
@@ -164,8 +148,6 @@ class Game extends React.Component {
                 player_me: user_me,
                 state: resp2.state,
                 turnPlayer: resp2.turnPlayer,
-                amIAdmin: amIAdmin1,
-                amITurnPlayer: amITurnPlayer1,
                 pokeCode: this.props.match.params.pokeCode,
                 berries: user_me.berries,
                 deck: user_me.deck
@@ -319,6 +301,7 @@ class Game extends React.Component {
 
 
         this.timeout_newRoundTimer = setTimeout(() => {
+            console.log("AmITurnPlayer is: "+this.state.amITurnPlayer)
             if (this.state.amITurnPlayer) {
                 this.makeFinalTurn()
             }
