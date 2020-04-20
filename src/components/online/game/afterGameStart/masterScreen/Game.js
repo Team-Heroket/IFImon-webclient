@@ -109,7 +109,7 @@ class Game extends React.Component {
             const response2 = await api.get('/games/' + this.props.match.params.pokeCode.toString(), {headers: {'Token': localStorage.getItem('token')}});
             const resp2 = response2.data;
             let usersList = resp2.players;
-            usersList.sort((a, b) => (a.deck.cards.length > b.deck.cards.length) ? 1 : -1)
+            usersList.sort((a, b) => (a.deck.cards.length > b.deck.cards.length) ? -1 : 1)
 
 
             //This here does the ranking:
@@ -126,6 +126,7 @@ class Game extends React.Component {
             if (resp2.turnPlayer.user.id == localStorage.getItem('id')) {
                 this.setState({'amITurnPlayer': true});
             }
+
             let user_me = null;
             //For every user sets turnplayer to true or false
             for (let i=0; i<usersList.length; i++) {
@@ -155,9 +156,9 @@ class Game extends React.Component {
             })
 
             if (this.state.justInitialized) {
-                console.log("startTime before substring", resp2.startTime);
+
                 let startTime = resp2.startTime.substring(0, 10) + 'T' + resp2.startTime.substring(11);
-                console.log("Start Time is equal to: " + startTime)
+
                 startTime = parseInt(new Date(startTime).getTime(), 10);
 
                 this.setState({'startTime': startTime}, this.startGame);
@@ -170,7 +171,9 @@ class Game extends React.Component {
     }
 
     startGame() {
+        console.log("Starttime is: "+this.state.startTime);
         let remainingTime = this.state.startTime - new Date().getTime();
+        console.log("Remaining time is: "+remainingTime);
         this.setState({remainingTime: remainingTime})
         this.timeout_all = setTimeout(() => {
             this.setState({justInitialized: false})
@@ -212,11 +215,11 @@ class Game extends React.Component {
     async makeTurn() {
         //Insert Put Function for turnPlayer to choose
         let category = localStorage.getItem('SelectedCat');
-        localStorage.setItem('SelectedCat', null);
-        if (category) {
+        if (category == 0) {
             let categories = [this.category.HP, this.category.SPEED, this.category.WEIGHT, this.category.CAPTURERATE, this.category.ATTACKPOINTS, this.category.DEFENSEPOINTS];
             let randomIndex = Math.floor(Math.random() * Math.floor(categories.length));
             category = categories[randomIndex]
+            localStorage.setItem('SelectedCat', category);
             console.log("Random Category: " + category);
         }
 
@@ -244,6 +247,7 @@ class Game extends React.Component {
      */
 
     startRound() {
+        localStorage.setItem('SelectedCat', 0);
         console.log("Got In here start round")
         let startTime = this.state.startTime;
 

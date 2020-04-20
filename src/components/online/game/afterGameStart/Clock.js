@@ -31,7 +31,7 @@ const renderTimeNewRound = value => {
 
     return (
         <div className="timer">
-            <div className="textTimer">New Round starts in</div>
+            <div className="textTimer">Next Round starts in</div>
             <div className="valueTimer">{value}</div>
             <div className="textTimer">seconds</div>
         </div>
@@ -67,7 +67,6 @@ export function Clock({remainingTime, totalTime, type}) {
                 onComplete={() => [true, 1000]}
                 trailColor = "transparent"
             />
-
         );
     }
 }

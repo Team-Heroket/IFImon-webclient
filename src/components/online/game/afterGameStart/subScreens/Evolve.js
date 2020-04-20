@@ -1,5 +1,5 @@
-/*
-    This component is displayed from 15 to 25 seconds
+/**
+    This component is displayed from 15 to 30 seconds
 
     I can click on evolve. If I do so a put request is sent to the server. I save it to the local storage
     If by the end of this I haven't clicked on evolve, the Game component sends a put request with evolveBerries = 0
@@ -107,6 +107,7 @@ export let Evolve = ({masterState}) => {
                     <br/>
                     {evolveButtons()}
                 </ButtonContainer>
+                <h3>Category chosen was: {localStorage.getItem('SelectedCat')}</h3>
 
                 {PlaceholderCard()}
 

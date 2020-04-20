@@ -1,4 +1,4 @@
-/*
+/**
     This component is displayed from 0 to 15 seconds
 
     If TurnPlayer is me, I get to be able to choose a category and call the put request
@@ -42,7 +42,6 @@ export let ChooseCategory = ({masterState}) => {
                 <h1> Select Category </h1>
                     {masterState.players.map(player => {
                         return (
-
                             <PlayerContainer>
                                 {player.user.id == localStorage.getItem('id') ?
                                     (<PlayerGame player={player} addOn = "(Me)"/>) :
@@ -64,6 +63,7 @@ export let ChooseCategory = ({masterState}) => {
 
     }
 
+
     return (
         <Grid
             container
@@ -72,9 +72,7 @@ export let ChooseCategory = ({masterState}) => {
             alignItems="center"
         >
                 {showLeaderboard()}
-
                 {PokemonCard(masterState.deck.cards[0], !masterState.amITurnPlayer)}
-
                 {PlaceholderCard()}
 
             </Grid>

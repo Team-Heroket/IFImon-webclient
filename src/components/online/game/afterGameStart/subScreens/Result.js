@@ -1,9 +1,9 @@
-/*
-    This component is displayed from 25 to 30 seconds
+/**
+    This component is displayed from 30 to 35 seconds
 
     I get the end result of that round (who won, etc.)
 
-    Next screen displayed is "ChooseCategory"
+    After the 35 second mark a 5 second clock is displayed (in the Game component)
  */
 
 import React from "react";
