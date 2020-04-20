@@ -140,6 +140,12 @@ class Game extends React.Component {
                     user_me = usersList[i];
                 }
             }
+            let amIAdmin = false;
+            if (user_me.id == resp2.creator.id) {
+                amIAdmin = true;
+            }
+
+
 
 
 
@@ -153,7 +159,9 @@ class Game extends React.Component {
                 berries: user_me.berries,
                 deck: user_me.deck,
                 winners: resp2.winners,
+                amIAdmin: amIAdmin
             })
+
 
             if (this.state.justInitialized) {
 
@@ -296,7 +304,7 @@ class Game extends React.Component {
         }, startTime + this.timeUntilResult -5000- new Date().getTime());
 
         this.timeout_result = setTimeout(() => {
-            if (this.state.amITurnPlayer) {
+            if (this.state.amIAdmin) {
                 this.makeFinalTurn()
             }
             this.setState({
