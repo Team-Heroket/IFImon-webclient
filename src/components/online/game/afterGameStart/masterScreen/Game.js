@@ -262,13 +262,14 @@ class Game extends React.Component {
         });
         //1 - all clients get game
         this.getGameInfo()
+        console.log("getGameInfo at:", new Date().getTime())
 
         //2) turnPlayer: put category
         // MAKING TURN 2 SECONDS BEFORE TIMEUNTILEVOLVE
         setTimeout(() => {
         if (this.state.amITurnPlayer) {
                 this.makeTurn()
-                console.log("PUT request with category done")
+                console.log("PUT request with category done at:", new Date().getTime())
             }
         }, startTime + this.timeUntilEvolve - 2000 - new Date().getTime());
 
@@ -280,7 +281,7 @@ class Game extends React.Component {
                 period: this.period.EVOLVE
             })
             this.getGameInfo()
-            console.log("Ending Selection and going to EVOLVE component")
+            console.log("Ending Selection and going to EVOLVE component at: ", new Date().getTime())
         }, startTime + this.timeUntilEvolve - new Date().getTime());
 
         //4) those clients who want to: put berry + 5) all clients get game
@@ -296,7 +297,7 @@ class Game extends React.Component {
 
             setTimeout(()=>this.getGameInfo(), 3000)
 
-            console.log("Ending Berry time and Going to Results")
+            console.log("Ending Berry time and Going to Results at: ", new Date().getTime())
         }, startTime + this.timeUntilResult -5000- new Date().getTime());
 
         this.timeout_result = setTimeout(() => {
