@@ -93,7 +93,8 @@ class Game extends React.Component {
             evolved: 0,
             remainingTime: null,
             berries: null,
-            evolveBerries: 0
+            evolveBerries: 0,
+            nowTemporaryTimer: false
         }
     }
 
@@ -163,7 +164,7 @@ class Game extends React.Component {
             })
 
 
-            if (this.state.justInitialized) {
+            if (this.state.justInitialized && !this.state.nowTemporaryTimer) {
 
                 let startTime = resp2.startTime.substring(0, 10) + 'T' + resp2.startTime.substring(11);
 
@@ -189,6 +190,14 @@ class Game extends React.Component {
             this.recurrentRounds();
         }, remainingTime)
 
+        this.setState({nowTemporaryTimer: true}, this.temporaryTimer)
+
+    }
+
+    temporaryTimer() {
+        setInterval(() => {
+            this.getGameInfo();
+        }, 2000);
     }
 
 
