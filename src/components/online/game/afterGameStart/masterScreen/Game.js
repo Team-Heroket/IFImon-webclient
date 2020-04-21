@@ -165,7 +165,7 @@ class Game extends React.Component {
 
 
             if (this.state.justInitialized && !this.state.nowTemporaryTimer) {
-                let startTime = resp2.startTime;
+                let startTime = Number.parseInt(resp2.startTime,10);
                 this.setState({'startTime': startTime}, this.startGame);
             }
 
@@ -261,9 +261,19 @@ class Game extends React.Component {
      */
 
     startRound() {
+        let startTime = this.state.startTime;
+        console.log("Starttime in startRound is: "+startTime)
+        console.log("Time now in startRound is: "+new Date().getTime())
+        let rem0 = startTime - new Date().getTime();
+        console.log("So time delay in startRound is: "+rem0)
+        let rem1 = rem0+13000
+        let rem2 = rem0+this.timeUntilEvolve
+        console.log("Time until you make put request for category: "+rem1)
+        console.log("Time until you make get request to get intermediary result: "+rem2)
+
         localStorage.setItem('SelectedCat', 0);
         console.log("Got In here start round")
-        let startTime = this.state.startTime;
+
 
         this.setState({
             startTime: startTime + 40000,
