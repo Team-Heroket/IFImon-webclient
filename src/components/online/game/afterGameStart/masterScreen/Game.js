@@ -84,7 +84,7 @@ class Game extends React.Component {
             player_me: null,
             admin: null,
             turnPlayer: null,
-            startTime: new Date().getTime() - 30000,
+            startTime: null,
             amITurnPlayer: null,
             amIAdmin: null,
             period: this.period.INTERMEDIARY,
@@ -165,11 +165,7 @@ class Game extends React.Component {
 
 
             if (this.state.justInitialized && !this.state.nowTemporaryTimer) {
-
-                let startTime = resp2.startTime.substring(0, 10) + 'T' + resp2.startTime.substring(11);
-
-                startTime = parseInt(new Date(startTime).getTime(), 10);
-
+                let startTime = resp2.startTime;
                 this.setState({'startTime': startTime}, this.startGame);
             }
 
