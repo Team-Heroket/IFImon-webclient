@@ -170,8 +170,7 @@ class CreateGame extends React.Component {
                 creationTime: resp2.creationTime
             })
             console.log("creationTime in here: "+ resp2.creationTime)
-            this.setState({'creationTime' : this.state.creationTime.substring(0, 10) + 'T' + this.state.creationTime.substring(11)});
-            console.log("creationTime in here: "+ resp2.creationTime)
+            this.setState({'creationTime' : this.state.creationTime});
 
 
             if (this.state.amountOfNPC+this.state.users.length > 6) {

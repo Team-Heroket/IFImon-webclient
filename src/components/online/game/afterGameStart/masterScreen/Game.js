@@ -164,8 +164,7 @@ class Game extends React.Component {
             })
 
 
-            if (this.state.justInitialized && !this.state.nowTemporaryTimer) {
-                let startTime = resp2.startTime;
+            if (this.state.justInitialized) {
                 this.setState({'startTime': startTime}, this.startGame);
             }
 
@@ -186,14 +185,6 @@ class Game extends React.Component {
             this.recurrentRounds();
         }, remainingTime)
 
-        this.setState({nowTemporaryTimer: true}, this.temporaryTimer)
-
-    }
-
-    temporaryTimer() {
-        setInterval(() => {
-            this.getGameInfo();
-        }, 2000);
     }
 
 
