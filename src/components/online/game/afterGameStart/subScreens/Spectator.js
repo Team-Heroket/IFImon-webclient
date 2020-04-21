@@ -1,11 +1,3 @@
-/**
-    This component is displayed from 30 to 35 seconds
-
-    I get the end result of that round (who won, etc.)
-
-    After the 35 second mark a 5 second clock is displayed (in the Game component)
- */
-
 import React from "react";
 import {ButtonContainer, PlayerContainer, Row} from "../../../../../helpers/layout";
 import {Player, PlayerGame, PlayerMe, PlayerMeGame} from "../../../../../views/Player";
@@ -15,19 +7,14 @@ import {BackIcon} from "../../../../../views/design/Icons";
 import {PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
 import Grid from "@material-ui/core/Grid";
 
-const Column = styled.div`
-    position: absolute
-    left: auto
-    }
-`
 
-export let Result = ({masterState}) => {
+export let Spectator = ({masterState}) => {
 
 
     function showLeaderboard() {
         return (
             <ButtonContainer>
-                <h1> Result </h1>
+                <h1> Spectating - You Lost! </h1>
                 {masterState.players.map(player => {
                     return (
                         <PlayerContainer>
@@ -36,15 +23,21 @@ export let Result = ({masterState}) => {
                                 (<PlayerGame player={player} addOn = ""/>)
                             }
                         </PlayerContainer>
-
                     );
                 })}
-                <LogOutButton width = "50%">
-                    Give Up
-                </LogOutButton>
-                <h1>{masterState.berries} berries</h1>
+
             </ButtonContainer>
         );
+    }
+
+    function pokemonCardsUsers() {
+        let firstCards = [];
+        for (let i=0; i<masterState.players.length; i++) {
+            if (!masterState.players[i].deck.empty) {
+                firstCards.push(PokemonCard(masterState.players[i].deck.cards[0], false));
+            }
+        }
+        return firstCards;
     }
 
     return (
@@ -56,9 +49,7 @@ export let Result = ({masterState}) => {
         >
             {showLeaderboard()}
 
-            {PokemonCard(masterState.deck.cards[0], masterState.amITurnPlayer)}
-
-            {PokemonCard((masterState.winners[0]).deck.cards[0], false)}
+            {pokemonCardsUsers()}
 
 
         </Grid>

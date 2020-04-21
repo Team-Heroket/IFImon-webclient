@@ -21,6 +21,7 @@ import {Evolve} from "../subScreens/Evolve";
 import {Finished} from "../subScreens/Finished";
 import {Result} from "../subScreens/Result";
 import {Clock} from "../Clock";
+import {Spectator} from "../subScreens/Spectator";
 
 
 const Space = styled.div`
@@ -46,6 +47,7 @@ class Game extends React.Component {
     timeout_berry = null;
     timeout_result = null;
     timeout_newRoundTimer = null;
+    timeout_spectator1 = null;
 
     timeUntilEvolve = 15000;
     timeUntilResult = 30000;
@@ -59,7 +61,8 @@ class Game extends React.Component {
         FINISHED: "finished",
         WAIT: "wait",
         INTERMEDIARY: "intermediary",
-        NEWROUNDTIMER: "newroundtimer"
+        NEWROUNDTIMER: "newroundtimer",
+        SPECTATOR: "spectator"
     }
 
     category = {
@@ -164,7 +167,7 @@ class Game extends React.Component {
             })
 
 
-            if (this.state.justInitialized && !this.state.nowTemporaryTimer) {
+            if (this.state.justInitialized) {
                 let startTime = Number.parseInt(resp2.startTime,10);
                 this.setState({'startTime': startTime}, this.startGame);
             }
@@ -186,14 +189,6 @@ class Game extends React.Component {
             this.recurrentRounds();
         }, remainingTime)
 
-        this.setState({nowTemporaryTimer: true}, this.temporaryTimer)
-
-    }
-
-    temporaryTimer() {
-        setInterval(() => {
-            this.getGameInfo();
-        }, 2000);
     }
 
 
@@ -260,7 +255,7 @@ class Game extends React.Component {
      6) turnPlayer: put nextTurn - DONE
      */
 
-    startRound() {
+    startNormalRound() {
         let startTime = this.state.startTime;
         console.log("Starttime in startRound is: "+startTime)
         console.log("Time now in startRound is: "+new Date().getTime())
@@ -287,7 +282,7 @@ class Game extends React.Component {
         //2) turnPlayer: put category
         // MAKING TURN 2 SECONDS BEFORE TIMEUNTILEVOLVE
         setTimeout(() => {
-        if (this.state.amITurnPlayer) {
+            if (this.state.amITurnPlayer) {
                 this.makeTurn()
                 console.log("PUT request with category done at:", new Date().getTime())
             }
@@ -314,7 +309,6 @@ class Game extends React.Component {
             if (localStorage.getItem('evolveTo') != 0) {
                 this.evolvePokemon();
             }
-
             setTimeout(()=>this.getGameInfo(), 3000)
 
             console.log("Ending Berry time and Going to Results at: ", new Date().getTime())
@@ -344,6 +338,52 @@ class Game extends React.Component {
         }, startTime + this.timeUntilNewRound - new Date().getTime());
 
 
+    }
+
+    startSpectatorRound() {
+        let startTime = this.state.startTime;
+        this.setState({period: this.period.SPECTATOR, startTime: startTime + 40000});
+
+        this.getGameInfo();
+
+        this.timeout_spectator1  = setTimeout(() => {
+            this.getGameInfo();
+        }, startTime + 15000 - new Date().getTime())
+
+        this.timeout_spectator1  = setTimeout(() => {
+            this.getGameInfo();
+        }, startTime + 30000 - new Date().getTime())
+
+
+        this.timeout_result  = setTimeout(() => {
+            this.setState({startOfRound: true})
+            if (this.state.amIAdmin) {
+                this.makeFinalTurn();
+            }
+        }, startTime + 35000 - new Date().getTime())
+    }
+
+    startFinishedRound() {
+        this.setState({period: this.period.FINISHED});
+
+        clearInterval(this.recurrentTimer);
+        this.recurrentTimer = null;
+
+    }
+
+    async startRound() {
+        await this.getGameInfo();
+        if (this.state.state == 'FINISHED') {
+            this.startFinishedRound()
+        }
+        else {
+            if (this.state.player_me.deck.empty) {
+                this.startSpectatorRound()
+            }
+            else {
+                this.startNormalRound();
+            }
+        }
     }
 
     recurrentRounds() {
@@ -395,6 +435,10 @@ class Game extends React.Component {
             return <Evolve masterState={this.state}/>
         } else if (this.state.period == this.period.RESULT) {
             return <Result masterState={this.state}/>
+        } else if (this.state.period == this.period.SPECTATOR) {
+            return <Spectator masterState={this.state}/>
+        } else if (this.state.period == this.period.FINISHED) {
+            return <Finished masterState={this.state}/>
         } else if (this.state.period == this.period.NEWROUNDTIMER) {
             return <Clock remainingTime={this.state.remainingTime} totalTime={5000} type={this.clock.NEWROUND}/>
         }
