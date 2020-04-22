@@ -203,10 +203,11 @@ class CreateGame extends React.Component {
 
     async startGame() {
         console.log("entred startGame")
+        console.log("Amount of NPC's: "+this.state.amountOfNPC)
         try {
 
             const requestBody = JSON.stringify({
-                npc: this.state.npcs
+                npc: this.state.amountOfNPC
             });
             this.setState({startingGame: true})
             await api.put('/games/' + this.state.pokeCode.toString(), requestBody, {headers: {'Token': localStorage.getItem('token')}});
