@@ -38,21 +38,18 @@ const Space = styled.div`
  6)turnPlayer: put nextTurn
  */
 
-class Game extends React.Component {
+class NewGame extends React.Component {
 
-    recurrentTimer = null;
-    timeout_all = null;
-    timeout_chose = null;
-    timeout_getMidInfo = null;
-    timeout_berry = null;
-    timeout_result = null;
-    timeout_newRoundTimer = null;
-    timeout_spectator1 = null;
+    timeout_makeTurn = null;
+    timeout_waitForCategoryResult = null;
+    timeout_evolve = null;
+    timeout_callNext = null;
 
-    timeUntilEvolve = 15000;
-    timeUntilResult = 30000;
-    timeUntilNewRoundTimer = 35000;
-    timeUntilNewRound = 40000;
+    timer_waitForNextTurn = null;
+    timer_waitForCategory = null;
+    timer_periodCheck = null;
+
+
 
     period = {
         CHOOSECATEGORY: "choose",
@@ -90,14 +87,16 @@ class Game extends React.Component {
             startTime: null,
             amITurnPlayer: null,
             amIAdmin: null,
-            period: this.period.INTERMEDIARY,
             justInitialized: true,
             chosenCategory: null,
             evolved: 0,
             remainingTime: null,
             berries: null,
             evolveBerries: 0,
-            nowTemporaryTimer: false
+            nowTemporaryTimer: false,
+            goToEvolve: true,
+            currentPeriod: this.period.INTERMEDIARY,
+            oldPeriod: this.period.INTERMEDIARY
         }
     }
 
@@ -149,7 +148,22 @@ class Game extends React.Component {
                 amIAdmin = true;
             }
 
-
+            let currentPeriod = null;
+            if (resp2.winners.length == 0 && resp2.category == null) {
+                currentPeriod = this.period.CHOOSECATEGORY;
+                clearInterval(this.timer_waitForNextTurn);
+                this.timer_waitForNextTurn= null;
+            }
+            else {
+                if (this.state.goToEvolve) {
+                    currentPeriod = this.period.EVOLVE;
+                    clearInterval(this.timer_waitForCategory);
+                    this.timer_waitForCategory=null;
+                }
+                else {
+                    currentPeriod = this.period.RESULT;
+                }
+            }
 
 
 
@@ -163,7 +177,9 @@ class Game extends React.Component {
                 berries: user_me.berries,
                 deck: user_me.deck,
                 winners: resp2.winners,
-                amIAdmin: amIAdmin
+                amIAdmin: amIAdmin,
+                chosenCategory: resp2.category,
+                currentPeriod: currentPeriod
             })
 
 
@@ -183,12 +199,15 @@ class Game extends React.Component {
         let remainingTime = this.state.startTime - new Date().getTime();
         console.log("Remaining time is: "+remainingTime);
         this.setState({remainingTime: remainingTime})
-        this.timeout_all = setTimeout(() => {
-            this.setState({justInitialized: false})
-            this.startRound();
-            this.recurrentRounds();
-        }, remainingTime)
-
+        if (remainingTime < 0) {
+            this.setState({justInitialized: false}, this.startRound)
+        }
+        else {
+            this.timeout_all = setTimeout(() => {
+                this.setState({justInitialized: false})
+                this.startRound();
+            }, remainingTime)
+        }
     }
 
 
@@ -203,6 +222,7 @@ class Game extends React.Component {
     }
 
     async evolvePokemon() {
+        console.log("Make evolve put request")
         try {
 
             console.log("Amount in evolve is: "+localStorage.getItem('evolveTo'))
@@ -222,6 +242,7 @@ class Game extends React.Component {
 
 
     async makeTurn() {
+        console.log("Make category put request")
         //Insert Put Function for turnPlayer to choose
         let category = localStorage.getItem('SelectedCat');
         if (category == 0) {
@@ -255,87 +276,48 @@ class Game extends React.Component {
      6) turnPlayer: put nextTurn - DONE
      */
 
-    startNormalRound() {
+    async startNormalRound() {
         let startTime = this.state.startTime;
-        console.log("Starttime in startRound is: "+startTime)
-        console.log("Time now in startRound is: "+new Date().getTime())
-        let rem0 = startTime - new Date().getTime();
-        console.log("So time delay in startRound is: "+rem0)
-        let rem1 = rem0+13000
-        let rem2 = rem0+this.timeUntilEvolve
-        console.log("Time until you make put request for category: "+rem1)
-        console.log("Time until you make get request to get intermediary result: "+rem2)
+        console.log("entered startNormalRound now")
+        console.log("currentPeriod now is: "+this.state.currentPeriod);
+        console.log("oldPeriod now is: "+this.state.oldPeriod)
 
-        localStorage.setItem('SelectedCat', 0);
-        console.log("Got In here start round")
-
-
-        this.setState({
-            startTime: startTime + 40000,
-            remainingTime: startTime + 15000 - new Date().getTime(),
-            period: this.period.CHOOSECATEGORY
-        });
-        //1 - all clients get game
-        this.getGameInfo()
-        console.log("getGameInfo at:", new Date().getTime())
-
-        //2) turnPlayer: put category
-        // MAKING TURN 2 SECONDS BEFORE TIMEUNTILEVOLVE
-        setTimeout(() => {
+        if (this.state.currentPeriod == this.period.CHOOSECATEGORY) {
             if (this.state.amITurnPlayer) {
-                this.makeTurn()
-                console.log("PUT request with category done at:", new Date().getTime())
+                this.timeout_makeTurn = setTimeout(() => {
+                    this.makeTurn();
+                }, 13000)
+                this.timeout_waitForCategoryResult = setTimeout(() => {
+                    this.getGameInfo();
+                }, 15000)
             }
-        }, startTime + this.timeUntilEvolve - 2000 - new Date().getTime());
-
-        //3) all clients: get game
-        this.timeout_chose = setTimeout(() => {
-            this.setState({
-                categoryChosen: null,
-                remainingTime: startTime + this.timeUntilResult - new Date().getTime(),
-                period: this.period.EVOLVE
-            })
-            this.getGameInfo()
-            console.log("Ending Selection and going to EVOLVE component at: ", new Date().getTime())
-        }, startTime + this.timeUntilEvolve - new Date().getTime());
-
-        //4) those clients who want to: put berry + 5) all clients get game
-        this.timeout_getMidInfo = setTimeout(() => {
-            this.setState({
-                categoryChosen: null,
-                period: this.period.RESULT,
-                remainingTime: startTime + this.timeUntilNewRoundTimer - new Date().getTime()
-            })
-            if (localStorage.getItem('evolveTo') != 0) {
-                this.evolvePokemon();
+            else {
+                this.timer_waitForCategory= setInterval(() => {
+                    this.getGameInfo()
+                }, 2000)
             }
-            setTimeout(()=>this.getGameInfo(), 3000)
+        }
+        else if (this.state.currentPeriod == this.period.EVOLVE) {
+            this.timeout_evolve = setTimeout(() => {
+                if (localStorage.getItem('evolveTo') != 0) {
+                    this.evolvePokemon();
+                }
+                this.setState({goToEvolve: false},  this.getGameInfo)
+            }, 10000)
+        }
+        else if (this.state.currentPeriod == this.period.RESULT) {
+            this.timer_waitForNextTurn= setTimeout(() => {
+                this.getGameInfo()
+            }, 2000)
 
-            console.log("Ending Berry time and Going to Results at: ", new Date().getTime())
-        }, startTime + this.timeUntilResult -5000- new Date().getTime());
-
-        this.timeout_result = setTimeout(() => {
             if (this.state.amIAdmin) {
-                this.makeFinalTurn()
+                this.timeout_callNext = setTimeout(() => {
+                    this.makeFinalTurn();
+                    this.setState({goToEvolve: true},  this.getGameInfo)
+                }, 10000)
             }
-            this.setState({
-                categoryChosen: null,
-                period: this.period.NEWROUNDTIMER,
-                remainingTime: startTime + this.timeUntilNewRound - new Date().getTime()
-            })
-            console.log("Set New Round Timer")
-        }, startTime + this.timeUntilNewRoundTimer - new Date().getTime());
+        }
 
-
-        this.timeout_newRoundTimer = setTimeout(() => {
-            console.log("AmITurnPlayer is: "+this.state.amITurnPlayer)
-
-            this.setState({
-                categoryChosen: null,
-                period: this.period.NEWROUNDTIMER,
-            })
-            console.log("Timer New Round ended")
-        }, startTime + this.timeUntilNewRound - new Date().getTime());
 
 
     }
@@ -386,6 +368,15 @@ class Game extends React.Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        console.log("prevState is: "+prevState.currentPeriod)
+        console.log("currentState is: "+this.state.currentPeriod)
+
+        if (prevState.currentPeriod != this.state.currentPeriod && !this.state.justInitialized && prevState.currentPeriod) {
+            this.startRound();
+        }
+    }
+
     recurrentRounds() {
         this.recurrentTimer = setInterval(() => {
             this.startRound();
@@ -429,17 +420,17 @@ class Game extends React.Component {
     }
 
     renderPeriod() {
-        if (this.state.period == this.period.CHOOSECATEGORY) {
+        if (this.state.currentPeriod == this.period.CHOOSECATEGORY) {
             return <ChooseCategory masterState={this.state}/>
-        } else if (this.state.period == this.period.EVOLVE) {
+        } else if (this.state.currentPeriod == this.period.EVOLVE) {
             return <Evolve masterState={this.state}/>
-        } else if (this.state.period == this.period.RESULT) {
+        } else if (this.state.currentPeriod == this.period.RESULT) {
             return <Result masterState={this.state}/>
-        } else if (this.state.period == this.period.SPECTATOR) {
+        } else if (this.state.currentPeriod == this.period.SPECTATOR) {
             return <Spectator masterState={this.state}/>
-        } else if (this.state.period == this.period.FINISHED) {
+        } else if (this.state.currentPeriod == this.period.FINISHED) {
             return <Finished masterState={this.state}/>
-        } else if (this.state.period == this.period.NEWROUNDTIMER) {
+        } else if (this.state.currentPeriod == this.period.NEWROUNDTIMER) {
             return <Clock remainingTime={this.state.remainingTime} totalTime={5000} type={this.clock.NEWROUND}/>
         }
     }
@@ -449,9 +440,6 @@ class Game extends React.Component {
         return (
             <GameContainer>
                 <Header height={140} top={33}/>
-                <h1>Start Time is: {this.state.startTime}</h1>
-                <h1>Now Time is: {new Date().getTime()}</h1>
-                <h1>Remaining Time is: {this.state.remainingTime}</h1>
                 <Row>
                     <RoundContainer onClick={() => {
                         this.goBack()
@@ -469,6 +457,7 @@ class Game extends React.Component {
     }
 
     async makeFinalTurn() {
+        console.log("Tried to make final turn")
         try {
             const response = await api.put('/games/' + this.state.pokeCode + '/next', {}, {headers: {'Token': localStorage.getItem('token')}});
 
@@ -478,4 +467,4 @@ class Game extends React.Component {
     }
 }
 
-export default withRouter(Game);
+export default withRouter(NewGame);
