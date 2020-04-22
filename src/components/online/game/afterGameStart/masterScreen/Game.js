@@ -456,6 +456,7 @@ class Game extends React.Component {
                         <BackIcon/>
                     </RoundContainer>
                 </Row>
+
                 {this.state.justInitialized ?
 
                     <div><Space/>{this.startClock()}</div> : this.renderPeriod()

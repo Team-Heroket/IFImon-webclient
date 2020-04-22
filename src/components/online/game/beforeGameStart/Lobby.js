@@ -111,7 +111,7 @@ class Lobby extends React.Component {
 
 
     getTimePassed(start) {
-        let startmili = parseInt(new Date(start).getTime(),10);
+        let startmili = parseInt(start,10);
         console.log("startmili: "+ startmili)
         let nowmili = parseInt(new Date().getTime(), 10)
         console.log(startmili);

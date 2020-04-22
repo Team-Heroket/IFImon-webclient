@@ -107,7 +107,6 @@ export let Evolve = ({masterState}) => {
                     <br/>
                     {evolveButtons()}
                 </ButtonContainer>
-                <h3>Category chosen was: {localStorage.getItem('SelectedCat')}</h3>
 
                 {PlaceholderCard()}
 
