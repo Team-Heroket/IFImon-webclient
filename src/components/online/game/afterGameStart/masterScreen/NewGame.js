@@ -149,7 +149,16 @@ class NewGame extends React.Component {
             }
 
             let currentPeriod = null;
-            if (resp2.winners.length == 0 && resp2.category == null) {
+            if (resp2.state == 'FINISHED') {
+                currentPeriod = this.period.FINISHED;
+                clearInterval(this.timer_waitForNextTurn);
+                this.timer_waitForNextTurn= null;
+            }
+
+            else if (user_me.deck.empty) {
+                currentPeriod = this.period.SPECTATOR;
+            }
+            else if (resp2.winners.length == 0 && resp2.category == null) {
                 currentPeriod = this.period.CHOOSECATEGORY;
                 clearInterval(this.timer_waitForNextTurn);
                 this.timer_waitForNextTurn= null;
@@ -279,12 +288,19 @@ class NewGame extends React.Component {
     async startNormalRound() {
         let startTime = this.state.startTime;
         console.log("entered startNormalRound now")
-        console.log("currentPeriod now is: "+this.state.currentPeriod);
-        console.log("oldPeriod now is: "+this.state.oldPeriod)
 
-        if (this.state.currentPeriod == this.period.CHOOSECATEGORY) {
+        if (this.state.currentPeriod == this.period.FINISHED) {
+            this.startFinishedRound();
+        }
+
+        else if (this.state.currentPeriod == this.period.SPECTATOR) {
+            this.startSpectatorRound();
+        }
+
+        else if (this.state.currentPeriod == this.period.CHOOSECATEGORY) {
+            this.setState({goToEvolve: true});
             if (this.state.amITurnPlayer) {
-                this.timeout_makeTurn = setTimeout(() => {
+                this.timeout_makeTurn = await setTimeout(() => {
                     this.makeTurn();
                 }, 13000)
                 this.timeout_waitForCategoryResult = setTimeout(() => {
@@ -306,14 +322,16 @@ class NewGame extends React.Component {
             }, 10000)
         }
         else if (this.state.currentPeriod == this.period.RESULT) {
-            this.timer_waitForNextTurn= setTimeout(() => {
+            this.timer_waitForNextTurn= setInterval(() => {
                 this.getGameInfo()
             }, 2000)
 
             if (this.state.amIAdmin) {
                 this.timeout_callNext = setTimeout(() => {
                     this.makeFinalTurn();
-                    this.setState({goToEvolve: true},  this.getGameInfo)
+                    setTimeout(() => {
+                        this.setState({goToEvolve: true},  this.getGameInfo)
+                    }, 2000)
                 }, 10000)
             }
         }
@@ -355,6 +373,8 @@ class NewGame extends React.Component {
 
     async startRound() {
         await this.getGameInfo();
+        this.startNormalRound();
+        /*
         if (this.state.state == 'FINISHED') {
             this.startFinishedRound()
         }
@@ -366,13 +386,15 @@ class NewGame extends React.Component {
                 this.startNormalRound();
             }
         }
+
+         */
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log("prevState is: "+prevState.currentPeriod)
-        console.log("currentState is: "+this.state.currentPeriod)
 
         if (prevState.currentPeriod != this.state.currentPeriod && !this.state.justInitialized && prevState.currentPeriod) {
+            console.log("prevState is: "+prevState.currentPeriod)
+            console.log("currentState is: "+this.state.currentPeriod)
             this.startRound();
         }
     }
