@@ -199,7 +199,7 @@ class NewGame extends React.Component {
 
 
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            alert(`Something went wrong: \n${handleError(error)}`);
         }
     }
 
@@ -372,22 +372,9 @@ class NewGame extends React.Component {
     }
 
     async startRound() {
-        await this.getGameInfo();
-        this.startNormalRound();
-        /*
-        if (this.state.state == 'FINISHED') {
-            this.startFinishedRound()
-        }
-        else {
-            if (this.state.player_me.deck.empty) {
-                this.startSpectatorRound()
-            }
-            else {
-                this.startNormalRound();
-            }
-        }
 
-         */
+        this.startNormalRound();
+
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -399,11 +386,6 @@ class NewGame extends React.Component {
         }
     }
 
-    recurrentRounds() {
-        this.recurrentTimer = setInterval(() => {
-            this.startRound();
-        }, 40000);
-    }
 
     async giveUp() {
         try {
@@ -442,6 +424,7 @@ class NewGame extends React.Component {
     }
 
     renderPeriod() {
+
         if (this.state.currentPeriod == this.period.CHOOSECATEGORY) {
             return <ChooseCategory masterState={this.state}/>
         } else if (this.state.currentPeriod == this.period.EVOLVE) {

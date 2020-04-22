@@ -82,8 +82,8 @@ class MainMenu extends React.Component {
         } catch (error) {
             alert(`Something went wrong during the login: \n${handleError(error)}`);
         }
-
     }
+
 
     render() {
         return (
