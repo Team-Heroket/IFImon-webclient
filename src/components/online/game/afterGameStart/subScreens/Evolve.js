@@ -26,7 +26,7 @@ const Column = styled.div`
 `
 
 
-export let Evolve = ({masterState}) => {
+export let Evolve = ({masterState, history}) => {
 
     //This function is evoked after 5 seconds (masterState.startTime+20000 - new Date().getTime()) FOR EVERYONE
     async function evolvePokemon() {
@@ -62,7 +62,13 @@ export let Evolve = ({masterState}) => {
 
                     );
                 })}
-                <LogOutButton width = "50%">
+                <LogOutButton
+                    width = "50%"
+                    disabled={masterState.amITurnPlayer}
+                    onClick={() => {
+                        history.push('/menu');
+                    }}
+                >
                     Give Up
                 </LogOutButton>
                 <h1>{masterState.berries} berries</h1>

@@ -198,7 +198,7 @@ class Game extends React.Component {
         if (!this.state.remainingTime) {
             return <Spinner/>
         } else {
-            return <Clock remainingTime={this.state.remainingTime} totalTime={35000} type={this.clock.GAMESTART} />
+            return <Clock remainingTime={this.state.remainingTime} totalTime={15000} type={this.clock.GAMESTART} />
         }
     }
 

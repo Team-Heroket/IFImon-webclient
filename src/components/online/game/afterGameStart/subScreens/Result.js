@@ -21,7 +21,7 @@ const Column = styled.div`
     }
 `
 
-export let Result = ({masterState}) => {
+export let Result = ({masterState, history}) => {
 
 
     function showLeaderboard() {
@@ -39,7 +39,13 @@ export let Result = ({masterState}) => {
 
                     );
                 })}
-                <LogOutButton width = "50%">
+                <LogOutButton
+                    width = "50%"
+                    disabled={masterState.amITurnPlayer}
+                    onClick={() => {
+                        history.push('/menu');
+                    }}
+                >
                     Give Up
                 </LogOutButton>
                 <h1>{masterState.berries} berries</h1>

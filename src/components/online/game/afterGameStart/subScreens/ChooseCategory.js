@@ -21,6 +21,7 @@ import {Player, PlayerGame, PlayerMe, PlayerMeGame} from "../../../../../views/P
 import styled from "styled-components";
 import {LogOutButton, RoundContainer} from "../../../../../views/design/Button";
 import {PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
+import { Redirect } from 'react-router-dom'
 
 import Grid from '@material-ui/core/Grid';
 
@@ -35,7 +36,7 @@ category = {
 }
 
 
-export let ChooseCategory = ({masterState}) => {
+export let ChooseCategory = ({masterState, history}) => {
 
     function showLeaderboard() {
         return (<ButtonContainer>
@@ -51,7 +52,13 @@ export let ChooseCategory = ({masterState}) => {
 
                         );
                     })}
-                    <LogOutButton width = "50%">
+                    <LogOutButton
+                        width = "50%"
+                        disabled={masterState.amITurnPlayer}
+                        onClick={() => {
+                            history.push('/menu');
+                        }}
+                    >
                         Give Up
                     </LogOutButton>
                 <h1>{masterState.berries} berries</h1>
@@ -62,6 +69,7 @@ export let ChooseCategory = ({masterState}) => {
     function goBack() {
 
     }
+
 
 
     return (

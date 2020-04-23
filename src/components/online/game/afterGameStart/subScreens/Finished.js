@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import {FormContainer} from "../../../../../helpers/layout";
+import {LogOutButton} from "../../../../../views/design/Button";
 
 /**
     This will be displayed when the whole Game is finished
@@ -30,7 +31,7 @@ const Label = styled.label`
 let linkToImage = '../../../../../components/shared/images/avatarSVG';
 
 
-export let Finished = ({masterState}) => {
+export let Finished = ({masterState, history}) => {
 
     function winnerText() {
         let text = '';
@@ -55,6 +56,16 @@ export let Finished = ({masterState}) => {
                     <Label>
                         {winnerText()}
                     </Label>
+                    <Space/>
+                    <LogOutButton
+                        width = "50%"
+                        disabled={masterState.amITurnPlayer}
+                        onClick={() => {
+                            history.push('/menu');
+                        }}
+                    >
+                        LEAVE
+                    </LogOutButton>
                 </div>
             </FormContainer>
         </div>

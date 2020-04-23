@@ -47,7 +47,6 @@ class NewGame extends React.Component {
 
     timer_waitForNextTurn = null;
     timer_waitForCategory = null;
-    timer_periodCheck = null;
 
 
 
@@ -226,7 +225,7 @@ class NewGame extends React.Component {
         if (!this.state.remainingTime) {
             return <Spinner/>
         } else {
-            return <Clock remainingTime={this.state.remainingTime} totalTime={35000} type={this.clock.GAMESTART} />
+            return <Clock remainingTime={this.state.remainingTime} totalTime={15000} type={this.clock.GAMESTART} />
         }
     }
 
@@ -409,32 +408,53 @@ class NewGame extends React.Component {
 
 
     componentWillUnmount() {
-        clearInterval(this.recurrentTimer);
-        this.recurrentTimer = null;
-        clearTimeout(this.timeout_chose);
-        this.timeout_chose = null;
-        clearTimeout(this.timeout_getMidInfo);
-        this.timeout_getMidInfo = null;
-        clearTimeout(this.timeout_berry);
-        this.timeout_berry = null;
-        clearTimeout(this.timeout_result);
-        this.timeout_result = null;
-        clearTimeout(this.timeout_all);
-        this.timeout_all = null;
+        clearTimeout(this.timeout_makeTurn);
+        this.timeout_makeTurn = null;
+
+        clearTimeout(this.timeout_waitForCategoryResult);
+        this.timeout_waitForCategoryResult = null;
+
+        clearTimeout(this.timeout_evolve);
+        this.timeout_evolve = null;
+
+        clearTimeout(this.timeout_callNext);
+        this.timeout_callNext = null;
+
+        clearInterval(this.timer_waitForNextTurn);
+        this.timer_waitForNextTurn = null;
+
+        clearInterval(this.timer_waitForCategory)
+        this.timer_waitForCategory = null;
+
+        this.leaveGame();
+    }
+
+    async leaveGame() {
+        try {
+            const requestBody = JSON.stringify({
+                id: this.state.player_me.user.id,
+                action: "LEAVE"
+            });
+            console.log(requestBody);
+            console.log(this.state.pokeCode)
+            await api.put('/games/'+this.state.pokeCode+'/players', requestBody,{ headers: {'Token': localStorage.getItem('token')}});
+        } catch (error) {
+            alert(`Something went wrong: \n${handleError(error)}`);
+        }
     }
 
     renderPeriod() {
 
         if (this.state.currentPeriod == this.period.CHOOSECATEGORY) {
-            return <ChooseCategory masterState={this.state}/>
+            return <ChooseCategory masterState={this.state} history={this.props.history}/>
         } else if (this.state.currentPeriod == this.period.EVOLVE) {
-            return <Evolve masterState={this.state}/>
+            return <Evolve masterState={this.state} history={this.props.history}/>
         } else if (this.state.currentPeriod == this.period.RESULT) {
-            return <Result masterState={this.state}/>
+            return <Result masterState={this.state} history={this.props.history}/>
         } else if (this.state.currentPeriod == this.period.SPECTATOR) {
-            return <Spectator masterState={this.state}/>
+            return <Spectator masterState={this.state} history={this.props.history}/>
         } else if (this.state.currentPeriod == this.period.FINISHED) {
-            return <Finished masterState={this.state}/>
+            return <Finished masterState={this.state} history={this.props.history}/>
         } else if (this.state.currentPeriod == this.period.NEWROUNDTIMER) {
             return <Clock remainingTime={this.state.remainingTime} totalTime={5000} type={this.clock.NEWROUND}/>
         }

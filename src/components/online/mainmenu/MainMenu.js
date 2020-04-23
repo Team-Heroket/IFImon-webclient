@@ -80,7 +80,7 @@ class MainMenu extends React.Component {
 
             this.props.history.push('/login')
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            this.props.history.push('/login');
         }
     }
 

@@ -8,7 +8,7 @@ import {PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonC
 import Grid from "@material-ui/core/Grid";
 
 
-export let Spectator = ({masterState}) => {
+export let Spectator = ({masterState, history}) => {
 
 
     function showLeaderboard() {
@@ -25,6 +25,15 @@ export let Spectator = ({masterState}) => {
                         </PlayerContainer>
                     );
                 })}
+                <LogOutButton
+                    width = "50%"
+                    disabled={masterState.amITurnPlayer}
+                    onClick={() => {
+                        history.push('/menu');
+                    }}
+                >
+                    LEAVE
+                </LogOutButton>
 
             </ButtonContainer>
         );
