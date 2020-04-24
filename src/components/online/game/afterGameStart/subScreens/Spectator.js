@@ -28,11 +28,7 @@ export let Spectator = ({masterState, history}) => {
                 <LogOutButton
                     width = "50%"
                     disabled={masterState.amITurnPlayer}
-                    onClick={() => {
-                        history.push('/menu');
-                    }}
-                >
-                    LEAVE
+                    onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) history.push('/menu') }} > Leave
                 </LogOutButton>
 
             </ButtonContainer>

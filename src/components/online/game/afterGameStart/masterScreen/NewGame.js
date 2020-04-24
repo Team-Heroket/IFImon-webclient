@@ -174,7 +174,7 @@ class NewGame extends React.Component {
             else if (user_me.deck.empty) {
                 currentPeriod = this.period.SPECTATOR;
             }
-            else if (resp2.winners.length == 0 && resp2.category == null) {
+            else if (resp2.winners.length == 0) {
                 currentPeriod = this.period.CHOOSECATEGORY;
                 clearInterval(this.timer_waitForNextTurn);
                 this.timer_waitForNextTurn= null;
@@ -182,6 +182,7 @@ class NewGame extends React.Component {
             else {
                 if (this.state.goToEvolve) {
                     currentPeriod = this.period.EVOLVE;
+                    clearInterval(this.timer_waitForNextTurn);
                     clearInterval(this.timer_waitForCategory);
                     this.timer_waitForCategory=null;
                 }
@@ -475,6 +476,10 @@ class NewGame extends React.Component {
         } else if (this.state.currentPeriod == this.period.NEWROUNDTIMER) {
             return <Clock remainingTime={this.state.remainingTime} totalTime={5000} type={this.clock.NEWROUND}/>
         }
+    }
+
+    goBack() {
+        if (window.confirm('Are you sure you want to leave the game?')) this.props.history.push('/menu')
     }
 
 

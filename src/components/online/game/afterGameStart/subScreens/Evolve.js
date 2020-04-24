@@ -100,10 +100,7 @@ export let Evolve = ({masterState, history}) => {
                 <LogOutButton
                     width = "50%"
                     disabled={masterState.amITurnPlayer}
-                    onClick={() => {
-                        history.push('/menu');
-                    }}
-                >Give Up
+                    onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) history.push('/menu') }} > Give Up
                 </LogOutButton>
             </ButtonContainer>
         );

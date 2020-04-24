@@ -96,19 +96,12 @@ export let ChooseCategory = ({masterState, history}) => {
                 <LogOutButton
                     width = "50%"
                     disabled={masterState.amITurnPlayer}
-                    onClick={() => {
-                        history.push('/menu');
-                    }}
-                >
-                        Give Up
-                    </LogOutButton>
+                    onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) history.push('/menu') }} > Give Up
+                </LogOutButton>
             </ButtonContainer>
         );
     }
 
-    function goBack() {
-
-    }
 
 
 
