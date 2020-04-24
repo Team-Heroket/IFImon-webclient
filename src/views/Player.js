@@ -267,7 +267,7 @@ export let PlayerStatCard = ({ user }) => {
                         </RankCard>
                         <br/>
                         <RankCard>
-                            Pokemon discovered: {Math.round((user.statistics.pokemonDiscovered)/725*1000)/10}%
+                            Pokemon discovered: {Math.round((user.statistics.encounteredPokemon.length)/151*1000)/10}%
                         </RankCard>
                     </StatsContainer>
 

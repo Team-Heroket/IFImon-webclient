@@ -21,13 +21,28 @@ import {Evolve} from "../subScreens/Evolve";
 import {Finished} from "../subScreens/Finished";
 import {Result} from "../subScreens/Result";
 import {Clock} from "../Clock";
-import {Spectator} from "../subScreens/Spectator";
+import {Spectator} from "../subScreens/Spectator";import PropTypes from 'prop-types';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
+import Stepper from '@material-ui/core/Stepper';
+import Step from '@material-ui/core/Step';
+import StepLabel from '@material-ui/core/StepLabel';
+import Check from '@material-ui/icons/Check';
+import SettingsIcon from '@material-ui/icons/Settings';
+import GroupAddIcon from '@material-ui/icons/GroupAdd';
+import VideoLabelIcon from '@material-ui/icons/VideoLabel';
+import StepConnector from '@material-ui/core/StepConnector';
+import ButtonUI from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import {ColorlibStepIcon, ColorlibConnector, useColorlibStepIconStyles, useStyles} from "../../../../../views/design/Stepper";
+
 
 
 const Space = styled.div`
   margin-bottom: 80px
   width: 100%
 `;
+
 
 /**
  1) all clients: get game
@@ -47,6 +62,7 @@ class NewGame extends React.Component {
 
     timer_waitForNextTurn = null;
     timer_waitForCategory = null;
+    timer_periodCheck = null;
 
 
 
@@ -72,7 +88,8 @@ class NewGame extends React.Component {
 
     clock = {
         GAMESTART: "gamestart",
-        NEWROUND: "newround"
+        NEWROUND: "newround",
+        PERIOD: "period"
     }
 
     constructor() {
@@ -475,7 +492,8 @@ class NewGame extends React.Component {
 
                 {this.state.justInitialized ?
 
-                    <div><Space/>{this.startClock()}</div> : this.renderPeriod()
+                    <div><Space/>{this.startClock()}</div> :
+                    this.renderPeriod()
                 }
             </GameContainer>
         );
@@ -489,6 +507,10 @@ class NewGame extends React.Component {
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
         }
+    }
+
+    getPeriodValue() {
+        return 0;
     }
 }
 

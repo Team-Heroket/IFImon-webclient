@@ -10,13 +10,18 @@
 
 import React from "react";
 import {api, handleError} from "../../../../../helpers/api";
-import {ButtonContainer, PlayerContainer, Row,} from "../../../../../helpers/layout";
+import {ButtonContainer, GameContainer, PlayerContainer, Row,} from "../../../../../helpers/layout";
 import {Player, PlayerGame, PlayerMe, PlayerMeGame} from "../../../../../views/Player";
 import styled from "styled-components";
-import {LogOutButton, RoundContainer, Button, AvatarButton} from "../../../../../views/design/Button";
-import {BackIcon} from "../../../../../views/design/Icons";
-import {PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
+import {LogOutButton, RoundContainer, Button, AvatarButton, EvolveButton} from "../../../../../views/design/Button";
+import {BackIcon, BerriesIcon, BerriesIconWithBadge} from "../../../../../views/design/Icons";
+import {FocusedPokemonCard, PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
 import Grid from "@material-ui/core/Grid";
+import {Clock} from "../Clock";
+import {ColorlibConnector, ColorlibStepIcon} from "../../../../../views/design/Stepper";
+import Step from "@material-ui/core/Step";
+import StepLabel from "@material-ui/core/StepLabel";
+import Stepper from "@material-ui/core/Stepper";
 
 
 const Column = styled.div`
@@ -24,7 +29,23 @@ const Column = styled.div`
     left: auto
     }
 `
+function getStepContent(step) {
+    switch (step) {
+        case 0:
+            return 'Select campaign settings...';
+        case 1:
+            return 'What is an ad group anyways?';
+        case 2:
+            return 'This is the bit I really care about!';
+        default:
+            return 'Unknown step';
+    }
+}
 
+function getSteps() {
+    return ['Select campaign settings', 'Create an ad group', 'Create an ad'];
+
+}
 
 export let Evolve = ({masterState, history}) => {
 
@@ -47,12 +68,15 @@ export let Evolve = ({masterState, history}) => {
 
 
     function showLeaderboard() {
-        return (
-            <ButtonContainer>
-                <h1> Evolve </h1>
+        let steps = ['Category selection', 'Evolve Pokémon', 'Results'];
+
+        if(masterState.amITurnPlayer){
+            steps[0] = 'Select category';
+        }
+        let amountOfBerries = masterState.berries;
+        return (<ButtonContainer>
                 {masterState.players.map(player => {
                     return (
-
                         <PlayerContainer>
                             {player.user.id == localStorage.getItem('id') ?
                                 (<PlayerGame player={player} addOn = "(Me)"/>) :
@@ -62,16 +86,25 @@ export let Evolve = ({masterState, history}) => {
 
                     );
                 })}
+                <Stepper alternativeLabel activeStep={1} connector={<ColorlibConnector />} style={{ backgroundColor: "transparent" }}>
+                    {steps.map((label) => (
+                        <Step key={label}>
+                            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+                        </Step>
+                    ))}
+                </Stepper>
+
+                {BerriesIconWithBadge(masterState.berries)}
+
+
                 <LogOutButton
                     width = "50%"
                     disabled={masterState.amITurnPlayer}
                     onClick={() => {
                         history.push('/menu');
                     }}
-                >
-                    Give Up
+                >Give Up
                 </LogOutButton>
-                <h1>{masterState.berries} berries</h1>
             </ButtonContainer>
         );
     }
@@ -80,20 +113,21 @@ export let Evolve = ({masterState, history}) => {
         let evolutions = [];
         localStorage.setItem('evolveTo', 0)
         for (let i=0; i< masterState.deck.cards[0].evolutionNames.length; i++) {
+            let disableButton = (masterState.berries<i+1);
+            console.log(masterState.berries+" and i "+i);
             evolutions.push(
-
-                <Button
+                <EvolveButton
                     id = {i}
-                    onClick={() => localStorage.setItem("evolveTo", i+1)}
+                    onClick={() => {localStorage.setItem("evolveTo", i+1)}}
+                    disabled={disableButton}
                 >
                     {masterState.deck.cards[0].evolutionNames[i]} Cost: {i+1}
-                </Button>
+                </EvolveButton>
             )
         }
 
         return evolutions;
     }
-
 
 
     return (
@@ -106,15 +140,23 @@ export let Evolve = ({masterState, history}) => {
             >
                 {showLeaderboard()}
 
-                {PokemonCard(masterState.deck.cards[0], masterState.amITurnPlayer)}
+                {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card')}
 
                 <ButtonContainer>
                     Do you want to evolve?
                     <br/>
                     {evolveButtons()}
+                    <LogOutButton
+                        onClick={() => {
+                            localStorage.setItem("evolveTo", 0)
+                        }}
+                    >
+                        undo
+                    </LogOutButton>
+
                 </ButtonContainer>
 
-                {PlaceholderCard()}
+                {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username)}
 
             </Grid>
         </div>

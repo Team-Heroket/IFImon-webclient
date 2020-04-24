@@ -1,14 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
-import {BaseContainer, ButtonContainer, FormContainer, GameContainer, Row} from '../../helpers/layout';
+import {BaseContainer, ButtonContainer, FormContainer, GameContainer, PlayerContainer, Row} from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
-import {Button, RoundContainer} from '../../views/design/Button';
+import {Button, LogOutButton, RoundContainer} from '../../views/design/Button';
 import Header from "../../views/Header";
-import {BackIcon} from "../../views/design/Icons";
+import {BackIcon, BerriesIconWithBadge} from "../../views/design/Icons";
 import {ChooseCategory} from "../online/game/afterGameStart/subScreens/ChooseCategory";
 import {Evolve} from "../online/game/afterGameStart/subScreens/Evolve";
+import {Clock} from "../online/game/afterGameStart/Clock";
+import {PlayerGame} from "../../views/Player";
+import {ColorlibConnector, ColorlibStepIcon} from "../../views/design/Stepper";
+import Step from "@material-ui/core/Step";
+import StepLabel from "@material-ui/core/StepLabel";
+import Stepper from "@material-ui/core/Stepper";
+import {PlaceholderCard} from "../../views/design/PokemonCard";
 
 
 const Form = styled.div`
@@ -348,18 +355,13 @@ class Test extends React.Component {
         };
     }
 
+
     render() {
+        let steps = ['Select category', 'Evolve Pokémon', 'Results'];
         return (
             <GameContainer>
                 <Header height={140} top={33} />
-                <Row>
-                    <RoundContainer onClick={() => {
-                        this.goBack()
-                    }}>
-                        <BackIcon/>
-                    </RoundContainer>
-                </Row>
-                <ChooseCategory masterState = {this.state}/>
+                <PlaceholderCard/>
             </GameContainer>
         );
     }

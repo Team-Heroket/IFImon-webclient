@@ -7,27 +7,53 @@
  */
 
 import React from "react";
-import {ButtonContainer, PlayerContainer, Row} from "../../../../../helpers/layout";
+import {ButtonContainer, GameContainer, PlayerContainer, Row} from "../../../../../helpers/layout";
 import {Player, PlayerGame, PlayerMe, PlayerMeGame} from "../../../../../views/Player";
 import styled from "styled-components";
 import {LogOutButton, RoundContainer} from "../../../../../views/design/Button";
-import {BackIcon} from "../../../../../views/design/Icons";
-import {PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
+import {BackIcon, BerriesIcon, BerriesIconWithBadge} from "../../../../../views/design/Icons";
+import {FocusedPokemonCard, PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
 import Grid from "@material-ui/core/Grid";
+import {Clock} from "../Clock";
+import {ColorlibConnector, ColorlibStepIcon} from "../../../../../views/design/Stepper";
+import Step from "@material-ui/core/Step";
+import StepLabel from "@material-ui/core/StepLabel";
+import Stepper from "@material-ui/core/Stepper";
+import Badge from "@material-ui/core/Badge";
 
 const Column = styled.div`
     position: absolute
     left: auto
     }
 `
+function getStepContent(step) {
+    switch (step) {
+        case 0:
+            return 'Select campaign settings...';
+        case 1:
+            return 'What is an ad group anyways?';
+        case 2:
+            return 'This is the bit I really care about!';
+        default:
+            return 'Unknown step';
+    }
+}
+
+function getSteps() {
+    return ['Select campaign settings', 'Create an ad group', 'Create an ad'];
+
+}
 
 export let Result = ({masterState, history}) => {
 
 
     function showLeaderboard() {
-        return (
-            <ButtonContainer>
-                <h1> Result </h1>
+        let steps = ['Category selection', 'Evolve Pokémon', 'Results'];
+
+        if(masterState.amITurnPlayer){
+            steps[0] = 'Select category';
+        }
+        return (<ButtonContainer>
                 {masterState.players.map(player => {
                     return (
                         <PlayerContainer>
@@ -39,6 +65,17 @@ export let Result = ({masterState, history}) => {
 
                     );
                 })}
+
+            <Stepper alternativeLabel activeStep={2} connector={<ColorlibConnector />} style={{ backgroundColor: "transparent" }}>
+                {steps.map((label) => (
+                    <Step key={label}>
+                        <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+                    </Step>
+                ))}
+            </Stepper>
+
+
+                {BerriesIconWithBadge(masterState.berries)}
                 <LogOutButton
                     width = "50%"
                     disabled={masterState.amITurnPlayer}
@@ -48,7 +85,7 @@ export let Result = ({masterState, history}) => {
                 >
                     Give Up
                 </LogOutButton>
-                <h1>{masterState.berries} berries</h1>
+
             </ButtonContainer>
         );
     }
@@ -61,11 +98,15 @@ export let Result = ({masterState, history}) => {
             alignItems="center"
         >
             {showLeaderboard()}
+            <div>
+            {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card')}
+            </div>
+        <div>
+            <Badge color={"secondary"} badgeContent={"winner"}>
+            {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username) }
+            </Badge>
 
-            {PokemonCard(masterState.deck.cards[0], masterState.amITurnPlayer)}
-
-            {PokemonCard((masterState.winners[0]).deck.cards[0], false)}
-
+            </div>
 
         </Grid>
 
