@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import {LeaderboardIcon, PlaceholderIcon, QuickplayIcon, SettingsIcon, SocialIcon} from "./Icons";
+import {LeaderboardIcon, LogoPokeball, PlaceholderIcon, QuickplayIcon, SettingsIcon, SocialIcon} from "./Icons";
 import {ButtonContainer, SimpleContainer} from "../../helpers/layout";
 
 const Statistics = styled.button`
@@ -121,6 +121,14 @@ const PokemonImageContainer = styled.img`
   height: 160px;
   left: 31px;
   top: 31px;
+  z-index: 4;
+`
+
+const PokemonGifContainer = styled.img`
+  position: absolute;
+  width: 90px;
+  left: 27%;
+  bottom: 23%;
   z-index: 4;
 `
 
@@ -291,7 +299,7 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer) => {
 
             <PlayerName>{Trainer}</PlayerName>
             <CircleContainer color={formattedPokemon.secondaryColor}>
-                <PokemonImageContainer src={pokemon.spriteURL} />
+                <PokemonGifContainer src={'https://play.pokemonshowdown.com/sprites/xyani/'+pokemon.name.toString().toLowerCase()+'.gif'} />
             </CircleContainer>
             <Rectangle>
                 <InternalContainer>
@@ -349,6 +357,7 @@ export let PlaceholderCard = () => {
                 <PlaceholderIcon/>
             </PokeballContainer>
         </CardContainer>
+
 
     );
 };

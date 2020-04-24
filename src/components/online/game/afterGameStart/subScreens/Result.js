@@ -95,7 +95,7 @@ export let Result = ({masterState, history}) => {
         >
             {showLeaderboard()}
             <div>
-            {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card')}
+                {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card')}
             </div>
         <div>
             <Badge color={"secondary"} badgeContent={"winner"}>

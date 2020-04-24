@@ -36,7 +36,7 @@ const LogoKick = styled.svg`
     transform : translate(-60%, 0%);
 `;
 
-const LogoPokeball = styled.svg` 
+export const LogoPokeball = styled.svg` 
     
     position: relative;
     z-index: 100;  

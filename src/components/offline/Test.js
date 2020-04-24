@@ -6,7 +6,7 @@ import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import {Button, LogOutButton, RoundContainer} from '../../views/design/Button';
 import Header from "../../views/Header";
-import {BackIcon, BerriesIconWithBadge} from "../../views/design/Icons";
+import {BackIcon, BerriesIconWithBadge, LogoPokeball} from "../../views/design/Icons";
 import {ChooseCategory} from "../online/game/afterGameStart/subScreens/ChooseCategory";
 import {Evolve} from "../online/game/afterGameStart/subScreens/Evolve";
 import {Clock} from "../online/game/afterGameStart/Clock";
@@ -15,7 +15,8 @@ import {ColorlibConnector, ColorlibStepIcon} from "../../views/design/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
-import {PlaceholderCard} from "../../views/design/PokemonCard";
+import {FocusedPokemonCard, PlaceholderCard} from "../../views/design/PokemonCard";
+import Badge from "@material-ui/core/Badge";
 
 
 const Form = styled.div`
@@ -102,6 +103,8 @@ class Test extends React.Component {
         super();
         this.state = {
             berries: 2,
+            avatarId: 13,
+            username: 'tim',
             deck: {
                 "id":28,
                 "cards":[
@@ -361,7 +364,15 @@ class Test extends React.Component {
         return (
             <GameContainer>
                 <Header height={140} top={33} />
-                <PlaceholderCard/>
+                <img src={'https://play.pokemonshowdown.com/sprites/xyani/pikachu-original.gif'}/>
+
+                {FocusedPokemonCard(this.state.deck.cards[0], true, 'ATK', this.state.username) }
+                {FocusedPokemonCard(this.state.deck.cards[1], true, 'ATK', this.state.username) }
+
+                {FocusedPokemonCard(this.state.deck.cards[2], true, 'ATK', this.state.username) }
+
+                {FocusedPokemonCard(this.state.deck.cards[3], true, 'ATK', this.state.username) }
+
             </GameContainer>
         );
     }
