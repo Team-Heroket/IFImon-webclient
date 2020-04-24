@@ -59,6 +59,9 @@ class NewGame extends React.Component {
     timeout_waitForCategoryResult = null;
     timeout_evolve = null;
     timeout_callNext = null;
+    timeout_spectator1 = null;
+    timeout_spectator2 = null;
+    timeout_result = null;
 
     timer_waitForNextTurn = null;
     timer_waitForCategory = null;
@@ -112,7 +115,9 @@ class NewGame extends React.Component {
             nowTemporaryTimer: false,
             goToEvolve: true,
             currentPeriod: this.period.INTERMEDIARY,
-            oldPeriod: this.period.INTERMEDIARY
+            oldPeriod: this.period.INTERMEDIARY,
+            currentCard: null,
+            oldCard: null
         }
     }
 
@@ -163,21 +168,30 @@ class NewGame extends React.Component {
             if (user_me.id == resp2.creator.id) {
                 amIAdmin = true;
             }
+            console.log("Am I Admin? "+amIAdmin)
 
             let currentPeriod = null;
+            let oldCard = null;
             if (resp2.state == 'FINISHED') {
                 currentPeriod = this.period.FINISHED;
                 clearInterval(this.timer_waitForNextTurn);
                 this.timer_waitForNextTurn= null;
+                oldCard = this.state.oldCard;
             }
 
             else if (user_me.deck.empty) {
                 currentPeriod = this.period.SPECTATOR;
+                oldCard = this.state.oldCard;
             }
+
+
+
             else if (resp2.winners.length == 0) {
                 currentPeriod = this.period.CHOOSECATEGORY;
                 clearInterval(this.timer_waitForNextTurn);
                 this.timer_waitForNextTurn= null;
+
+                oldCard = user_me.deck.cards[0];
             }
             else {
                 if (this.state.goToEvolve) {
@@ -185,9 +199,11 @@ class NewGame extends React.Component {
                     clearInterval(this.timer_waitForNextTurn);
                     clearInterval(this.timer_waitForCategory);
                     this.timer_waitForCategory=null;
+                    oldCard = this.state.oldCard;
                 }
                 else {
                     currentPeriod = this.period.RESULT;
+                    oldCard = this.state.oldCard;
                 }
             }
 
@@ -205,8 +221,10 @@ class NewGame extends React.Component {
                 winners: resp2.winners,
                 amIAdmin: amIAdmin,
                 chosenCategory: resp2.category,
-                currentPeriod: currentPeriod
+                currentPeriod: currentPeriod,
+                currentCard: user_me.deck.cards[0]
             })
+
 
 
             if (this.state.justInitialized) {
@@ -341,6 +359,7 @@ class NewGame extends React.Component {
         else if (this.state.currentPeriod == this.period.RESULT) {
             this.timer_waitForNextTurn= setInterval(() => {
                 this.getGameInfo()
+
             }, 2000)
 
             if (this.state.amIAdmin) {
@@ -359,7 +378,26 @@ class NewGame extends React.Component {
 
     startSpectatorRound() {
         let startTime = this.state.startTime;
+
         this.setState({period: this.period.SPECTATOR, startTime: startTime + 40000});
+
+        clearTimeout(this.timeout_makeTurn);
+        this.timeout_makeTurn = null;
+
+        clearTimeout(this.timeout_waitForCategoryResult);
+        this.timeout_waitForCategoryResult = null;
+
+        clearTimeout(this.timeout_evolve);
+        this.timeout_evolve = null;
+
+        clearTimeout(this.timeout_callNext);
+        this.timeout_callNext = null;
+
+        clearInterval(this.timer_waitForNextTurn);
+        this.timer_waitForNextTurn = null;
+
+        clearInterval(this.timer_waitForCategory)
+        this.timer_waitForCategory = null;
 
         this.getGameInfo();
 
@@ -367,17 +405,12 @@ class NewGame extends React.Component {
             this.getGameInfo();
         }, startTime + 15000 - new Date().getTime())
 
-        this.timeout_spectator1  = setTimeout(() => {
+        this.timeout_spectator2  = setTimeout(() => {
             this.getGameInfo();
         }, startTime + 30000 - new Date().getTime())
 
 
-        this.timeout_result  = setTimeout(() => {
-            this.setState({startOfRound: true})
-            if (this.state.amIAdmin) {
-                this.makeFinalTurn();
-            }
-        }, startTime + 35000 - new Date().getTime())
+        
     }
 
     startFinishedRound() {
@@ -401,26 +434,23 @@ class NewGame extends React.Component {
             console.log("currentState is: "+this.state.currentPeriod)
             this.startRound();
         }
-    }
 
+        if (prevState.currentPeriod && prevState.currentCard &&  prevState.currentCard.id != this.state.currentCard.id && !this.state.justInitialized && this.state.currentPeriod == this.period.RESULT) {
+            this.setState({goToEvolve: true});
+        }
 
-    async giveUp() {
-        try {
-            const requestBody = JSON.stringify({
-                id: this.state.user.id,
-                action: "LEAVE"
-            });
-            console.log(requestBody);
-            console.log(this.state.pokeCode)
-            await api.put('/games/' + this.state.pokeCode + '/players', requestBody, {headers: {'Token': localStorage.getItem('token')}});
-            this.goToSocialMode();
-        } catch (error) {
-            alert(`Something went wrong: \n${handleError(error)}`);
+        if (prevState.currentPeriod &&  prevState.amIAdmin != this.state.amIAdmin && !this.state.justInitialized && this.state.currentPeriod == this.period.RESULT) {
+            console.log("Entered componentDidUpdate for amIAdmin change")
+            clearInterval(this.timer_waitForNextTurn);
+            this.timer_waitForNextTurn = null;
+            this.startRound();
         }
     }
 
 
+
     componentDidMount() {
+        this.setupBeforeUnloadListener();
         this.getGameInfo();
     }
 
@@ -481,6 +511,17 @@ class NewGame extends React.Component {
     goBack() {
         if (window.confirm('Are you sure you want to leave the game?')) this.props.history.push('/menu')
     }
+
+
+
+    setupBeforeUnloadListener = () => {
+        window.addEventListener("beforeunload", (ev) => {
+            return this.leaveGame();
+        });
+    };
+
+
+
 
 
     render() {
