@@ -410,7 +410,7 @@ class NewGame extends React.Component {
         }, startTime + 30000 - new Date().getTime())
 
 
-        
+
     }
 
     startFinishedRound() {
@@ -435,7 +435,7 @@ class NewGame extends React.Component {
             this.startRound();
         }
 
-        if (prevState.currentPeriod && prevState.currentCard &&  prevState.currentCard.id != this.state.currentCard.id && !this.state.justInitialized && this.state.currentPeriod == this.period.RESULT) {
+        if (prevState.currentPeriod && prevState.currentCard &&  prevState.currentCard.id != this.state.currentCard.id && !this.state.justInitialized && this.state.currentPeriod == this.period.RESULT && localStorage.getItem('evolveTo') == 0) {
             this.setState({goToEvolve: true});
         }
 
