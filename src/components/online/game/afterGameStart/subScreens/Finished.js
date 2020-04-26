@@ -47,23 +47,44 @@ export let Finished = ({masterState, history}) => {
 
     return (
         <div>
-            <FormContainer>
-                {(masterState.winners[0].id === masterState.player_me.id) ? <Confetti/> : null}
-                <Space/>
-                {masterState.winners[0].user.avatarId.valueOf() < 10 ? <img alt="avatar" src={require('../../../../../components/shared/images/avatarSVG/00'+(masterState.winners[0].user.avatarId)+'-avatar.svg')} height={"150px"} width={"150px"}/>
-                    : <img alt="avatar" src={require('../../../../../components/shared/images/avatarSVG/0'+(masterState.winners[0].user.avatarId)+'-avatar.svg')} height={"150px"} width={"150px"}/>}
-                <div>
+            { masterState.winners.length==0 ? (<FormContainer>
+                        <Space/>
+                        <Label>
+                            You Lost!
+                        </Label>
+                        <Space/>
+                        <LogOutButton
+                            width="50%"
+                            onClick={() => {
+                                if (window.confirm('Are you sure you want to leave the game?')) history.push('/menu')
+                            }}> Leave
+                        </LogOutButton>
+                </FormContainer>)
+                :
+                (<FormContainer>
+                    {(masterState.winners[0].id === masterState.player_me.id) ? <Confetti/> : null}
                     <Space/>
-                    <Label>
-                        {winnerText()}
-                    </Label>
-                    <Space/>
-                    <LogOutButton
-                        width = "50%"
-                        onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) history.push('/menu') }} > Leave
-                    </LogOutButton>
-                </div>
-            </FormContainer>
+                    {masterState.winners[0].user.avatarId.valueOf() < 10 ? <img alt="avatar"
+                                                                                src={require('../../../../../components/shared/images/avatarSVG/00' + (masterState.winners[0].user.avatarId) + '-avatar.svg')}
+                                                                                height={"150px"} width={"150px"}/>
+                        : <img alt="avatar"
+                               src={require('../../../../../components/shared/images/avatarSVG/0' + (masterState.winners[0].user.avatarId) + '-avatar.svg')}
+                               height={"150px"} width={"150px"}/>}
+                    <div>
+                        <Space/>
+                        <Label>
+                            {winnerText()}
+                        </Label>
+                        <Space/>
+                        <LogOutButton
+                            width="50%"
+                            onClick={() => {
+                                if (window.confirm('Are you sure you want to leave the game?')) history.push('/menu')
+                            }}> Leave
+                        </LogOutButton>
+                    </div>
+                </FormContainer>)
+            }
         </div>
 
 

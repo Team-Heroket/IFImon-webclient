@@ -53,13 +53,13 @@ export let Result = ({masterState, history}) => {
             {
                 masterState.players.map(player => {
                     if(!(player.user.id == localStorage.getItem('id'))){
-                        if(masterState.winners>1){
+                        if(masterState.winners.length>1){
                             let printed = false;
                             for (let c = 0; c < masterState.winners.length; c++) {
                                 if (masterState.winners[c].user.username == player.user.username) {
                                     printed = true;
                                     return (
-                                        <Badge color={"secondary"} badgeContent={"Winner"}>
+                                        <Badge color={"secondary"} badgeContent={"Draw"}>
                                             <PlayerContainer>
                                                 <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
                                             </PlayerContainer>
