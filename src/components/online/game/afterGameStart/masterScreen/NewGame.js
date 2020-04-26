@@ -108,7 +108,7 @@ class NewGame extends React.Component {
             amIAdmin: null,
             justInitialized: true,
             chosenCategory: null,
-            evolved: 0,
+            evolved: false,
             remainingTime: null,
             berries: null,
             evolveBerries: 0,
@@ -268,7 +268,6 @@ class NewGame extends React.Component {
     async evolvePokemon() {
         console.log("Make evolve put request")
         try {
-
             console.log("Amount in evolve is: "+localStorage.getItem('evolveTo'))
             const requestBody = JSON.stringify({
                 amount: localStorage.getItem('evolveTo'),
@@ -276,8 +275,7 @@ class NewGame extends React.Component {
             });
             const response = await api.put('/games/' + this.state.pokeCode + '/berries', requestBody, {headers: {'Token': localStorage.getItem('token')}});
             let currentBerries = this.state.berries;
-            this.setState({berries: currentBerries - this.state.evolveBerries})
-
+            this.setState({berries: currentBerries - this.state.evolveBerries, evolved: true})
 
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
@@ -333,7 +331,7 @@ class NewGame extends React.Component {
         }
 
         else if (this.state.currentPeriod == this.period.CHOOSECATEGORY) {
-            this.setState({goToEvolve: true});
+            this.setState({goToEvolve: true, evolved: false});
             if (this.state.amITurnPlayer) {
                 this.timeout_makeTurn = await setTimeout(() => {
                     this.makeTurn();
@@ -435,7 +433,7 @@ class NewGame extends React.Component {
             this.startRound();
         }
 
-        if (prevState.currentPeriod && prevState.currentCard &&  prevState.currentCard.id != this.state.currentCard.id && !this.state.justInitialized && this.state.currentPeriod == this.period.RESULT && localStorage.getItem('evolveTo') == 0) {
+        if (prevState.currentPeriod && prevState.currentCard &&  prevState.currentCard.id != this.state.currentCard.id && !this.state.justInitialized && this.state.currentPeriod == this.period.RESULT && !this.state.evolved) {
             this.setState({goToEvolve: true});
         }
 
