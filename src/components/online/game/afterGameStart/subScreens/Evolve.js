@@ -137,7 +137,7 @@ export let Evolve = ({masterState, history}) => {
             >
                 {showLeaderboard()}
 
-                {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card')}
+                {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', false)}
 
                 <ButtonContainer>
                     Do you want to evolve?
@@ -153,7 +153,7 @@ export let Evolve = ({masterState, history}) => {
 
                 </ButtonContainer>
 
-                {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username)}
+                {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username, false)}
 
             </Grid>
         </div>

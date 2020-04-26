@@ -1,14 +1,14 @@
 /**
-    This component is displayed from 30 to 35 seconds
+ This component is displayed from 30 to 35 seconds
 
-    I get the end result of that round (who won, etc.)
+ I get the end result of that round (who won, etc.)
 
-    After the 35 second mark a 5 second clock is displayed (in the Game component)
+ After the 35 second mark a 5 second clock is displayed (in the Game component)
  */
 
 import React from "react";
 import {ButtonContainer, GameContainer, PlayerContainer, Row} from "../../../../../helpers/layout";
-import {Player, PlayerGame, PlayerMe, PlayerMeGame} from "../../../../../views/Player";
+import {Player, PlayerGame, PlayerMe, PlayerMeGame, PlayersCard} from "../../../../../views/Player";
 import styled from "styled-components";
 import {LogOutButton, RoundContainer} from "../../../../../views/design/Button";
 import {BackIcon, BerriesIcon, BerriesIconWithBadge} from "../../../../../views/design/Icons";
@@ -44,8 +44,37 @@ function getSteps() {
 
 }
 
+
 export let Result = ({masterState, history}) => {
 
+
+    function showCards() {
+        return(<ButtonContainer>
+            {
+                masterState.players.map(player => {
+                    if(!(player.user.id == localStorage.getItem('id'))){
+                        if(masterState.winners[0].user.id === player.user.id){
+                            return (
+                                <Badge color={"secondary"} badgeContent={"winner"}>
+                                <PlayerContainer>
+                                    <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
+                                </PlayerContainer>
+                                </Badge>
+                            )
+                        }
+                        else{
+                            return(
+                                    <PlayerContainer>
+                                        <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
+                                    </PlayerContainer>
+                            )
+                        }
+                    }
+
+                })
+            }
+        </ButtonContainer>);
+    }
 
     function showLeaderboard() {
         let steps = ['Category selection', 'Evolve Pokémon', 'Results'];
@@ -66,13 +95,13 @@ export let Result = ({masterState, history}) => {
                     );
                 })}
 
-            <Stepper alternativeLabel activeStep={2} connector={<ColorlibConnector />} style={{ backgroundColor: "transparent" }}>
-                {steps.map((label) => (
-                    <Step key={label}>
-                        <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
-                    </Step>
-                ))}
-            </Stepper>
+                <Stepper alternativeLabel activeStep={2} connector={<ColorlibConnector />} style={{ backgroundColor: "transparent" }}>
+                    {steps.map((label) => (
+                        <Step key={label}>
+                            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+                        </Step>
+                    ))}
+                </Stepper>
 
 
                 {BerriesIconWithBadge(masterState.berries)}
@@ -95,12 +124,16 @@ export let Result = ({masterState, history}) => {
         >
             {showLeaderboard()}
             <div>
-                {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card')}
+                {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', false)}
             </div>
-        <div>
-            <Badge color={"secondary"} badgeContent={"winner"}>
-            {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username) }
-            </Badge>
+            <div>
+                {masterState.winners.length >1 ? <h1> Draw </h1>: null}
+                {showCards()}
+            </div>
+            <div>
+                <Badge color={"secondary"} badgeContent={"winner"}>
+                    {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username, true) }
+                </Badge>
 
             </div>
 

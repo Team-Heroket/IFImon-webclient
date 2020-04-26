@@ -291,7 +291,7 @@ export let PokemonCard = (pokemon, disabled, Trainer) => {
     );
 };
 
-export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer) => {
+export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, Winner) => {
     let formattedPokemon = {}
     formattedPokemon = PokemonFormatter({pokemon});
     return (
@@ -299,7 +299,10 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer) => {
 
             <PlayerName>{Trainer}</PlayerName>
             <CircleContainer color={formattedPokemon.secondaryColor}>
-                <PokemonGifContainer src={'https://play.pokemonshowdown.com/sprites/xyani/'+pokemon.name.toString().toLowerCase()+'.gif'} />
+                {Winner ?
+                    <PokemonGifContainer src={'https://play.pokemonshowdown.com/sprites/xyani/'+pokemon.name.toString().toLowerCase()+'.gif'} />
+                    :
+                    <PokemonImageContainer src={pokemon.spriteURL} />}
             </CircleContainer>
             <Rectangle>
                 <InternalContainer>

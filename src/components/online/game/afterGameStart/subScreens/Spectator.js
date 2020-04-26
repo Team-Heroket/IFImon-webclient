@@ -4,7 +4,7 @@ import {Player, PlayerGame, PlayerMe, PlayerMeGame} from "../../../../../views/P
 import styled from "styled-components";
 import {LogOutButton, RoundContainer} from "../../../../../views/design/Button";
 import {BackIcon} from "../../../../../views/design/Icons";
-import {PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
+import {FocusedPokemonCard, PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
 import Grid from "@material-ui/core/Grid";
 
 
@@ -39,7 +39,7 @@ export let Spectator = ({masterState, history}) => {
         let firstCards = [];
         for (let i=0; i<masterState.players.length; i++) {
             if (!masterState.players[i].deck.empty) {
-                firstCards.push(PokemonCard(masterState.players[i].deck.cards[0], false));
+                firstCards.push(FocusedPokemonCard(masterState.players[i].deck.cards[0], true,  masterState.chosenCategory, masterState.players[i].user.username, masterState.winners[0].user.username == masterState.players[i].user.username ? true : false));
             }
         }
         return firstCards;
