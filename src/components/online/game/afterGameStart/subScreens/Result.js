@@ -55,7 +55,7 @@ export let Result = ({masterState, history}) => {
                     if(!(player.user.id == localStorage.getItem('id'))){
                         if(masterState.winners[0].user.id === player.user.id){
                             return (
-                                <Badge color={"secondary"} badgeContent={"winner"}>
+                                <Badge color={"secondary"} badgeContent={"Winner"}>
                                 <PlayerContainer>
                                     <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
                                 </PlayerContainer>

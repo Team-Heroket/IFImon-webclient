@@ -6,6 +6,7 @@ import {LogOutButton, RoundContainer} from "../../../../../views/design/Button";
 import {BackIcon} from "../../../../../views/design/Icons";
 import {FocusedPokemonCard, PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
 import Grid from "@material-ui/core/Grid";
+import Badge from "@material-ui/core/Badge";
 
 
 export let Spectator = ({masterState, history}) => {
@@ -39,7 +40,18 @@ export let Spectator = ({masterState, history}) => {
         let firstCards = [];
         for (let i=0; i<masterState.players.length; i++) {
             if (!masterState.players[i].deck.empty) {
-                firstCards.push(FocusedPokemonCard(masterState.players[i].deck.cards[0], true,  masterState.chosenCategory, masterState.players[i].user.username, masterState.winners[0].user.username == masterState.players[i].user.username ? true : false));
+                if(masterState.winners.length >0) {
+                    if(masterState.winners[0].user.username == masterState.players.user.username){
+                    firstCards.push(
+                        <Badge color={"secondary"} badgeContent={"Winner"}>
+                            {FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false)}
+                        </Badge>
+                    );}
+                }else{
+                    firstCards.push(
+                            FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false)
+                    );
+                }
             }
         }
         return firstCards;
