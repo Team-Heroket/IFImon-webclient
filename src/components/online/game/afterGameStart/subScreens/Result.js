@@ -53,6 +53,28 @@ export let Result = ({masterState, history}) => {
             {
                 masterState.players.map(player => {
                     if(!(player.user.id == localStorage.getItem('id'))){
+                        if(masterState.winners>1){
+                            let printed = false;
+                            for (let c = 0; c < masterState.winners.length; c++) {
+                                if (masterState.winners[c].user.username == player.user.username) {
+                                    printed = true;
+                                    return (
+                                        <Badge color={"secondary"} badgeContent={"Winner"}>
+                                            <PlayerContainer>
+                                                <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
+                                            </PlayerContainer>
+                                        </Badge>
+                                    )
+                                }
+                            }
+                            if(!printed){
+                                return (
+                                    <PlayerContainer>
+                                        <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
+                                    </PlayerContainer>
+                                );
+                            }
+                        }else{
                         if(masterState.winners[0].user.id === player.user.id){
                             return (
                                 <Badge color={"secondary"} badgeContent={"Winner"}>
@@ -68,7 +90,7 @@ export let Result = ({masterState, history}) => {
                                         <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
                                     </PlayerContainer>
                             )
-                        }
+                        }}
                     }
 
                 })

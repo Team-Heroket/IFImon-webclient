@@ -38,22 +38,30 @@ export let Spectator = ({masterState, history}) => {
 
     function pokemonCardsUsers() {
         let firstCards = [];
-        for (let i=0; i<masterState.players.length; i++) {
-            if (!masterState.players[i].deck.empty) {
-                if(masterState.winners.length >0) {
-                    if(masterState.winners[0].user.username == masterState.players.user.username){
-                    firstCards.push(
-                        <Badge color={"secondary"} badgeContent={"Winner"}>
-                            {FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false)}
-                        </Badge>
-                    );}
-                }else{
-                    firstCards.push(
+            for (let i=0; i < masterState.players.length; i++) {
+                let printed = false;
+                if(masterState.winners.length > 0) {
+                    for (let c = 0; c < masterState.winners.length; c++) {
+                        if (masterState.winners[c].user.username == masterState.players[i].user.username) {
+                            firstCards.push(
+                                <Badge color={"secondary"} badgeContent={"Winner"}>
+                                    {FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false)}
+                                </Badge>
+                            );
+                            printed = true;
+                        }
+                    }
+                    if(!printed){
+                        firstCards.push(
                             FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false)
+                        );
+                    }
+                } else{
+                    firstCards.push(
+                        FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false)
                     );
                 }
             }
-        }
         return firstCards;
     }
 
