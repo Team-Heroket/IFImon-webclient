@@ -63,6 +63,7 @@ class NewGame extends React.Component {
     timeout_spectator2 = null;
     timeout_result = null;
 
+    timer_spectator = null;
     timer_waitForNextTurn = null;
     timer_waitForCategory = null;
     timer_periodCheck = null;
@@ -121,9 +122,6 @@ class NewGame extends React.Component {
         }
     }
 
-    goToSocialMode() {
-        this.props.history.push('/socialmode');
-    }
 
 
     async getGameInfo() {
@@ -399,14 +397,9 @@ class NewGame extends React.Component {
 
         this.getGameInfo();
 
-        this.timeout_spectator1  = setTimeout(() => {
+        this.timer_spectator = setInterval( () => {
             this.getGameInfo();
-        }, startTime + 15000 - new Date().getTime())
-
-        this.timeout_spectator2  = setTimeout(() => {
-            this.getGameInfo();
-        }, startTime + 30000 - new Date().getTime())
-
+        }, 10000)
 
 
     }
@@ -472,6 +465,8 @@ class NewGame extends React.Component {
         clearInterval(this.timer_waitForCategory)
         this.timer_waitForCategory = null;
 
+        clearInterval(this.timer_spectator);
+        this.timer_spectator = null;
         this.leaveGame();
     }
 
@@ -553,9 +548,6 @@ class NewGame extends React.Component {
         }
     }
 
-    getPeriodValue() {
-        return 0;
-    }
 }
 
 export default withRouter(NewGame);
