@@ -426,18 +426,18 @@ class NewGame extends React.Component {
             this.startRound();
         }
 
-        if (prevState.currentPeriod && prevState.currentCard &&  prevState.currentCard.id != this.state.currentCard.id && !this.state.justInitialized && this.state.currentPeriod == this.period.RESULT && !this.state.evolved) {
+        if (prevState.currentPeriod && prevState.currentCard  && this.state.currentCard &&  prevState.currentCard.id != this.state.currentCard.id && !this.state.justInitialized && this.state.currentPeriod == this.period.RESULT && !this.state.evolved) {
+
+            console.log(" Entered ComponentDidUpdate Period with: "+localStorage.getItem('evolveTo'));
             this.setState({goToEvolve: true});
         }
 
         if (prevState.currentPeriod &&  prevState.amIAdmin != this.state.amIAdmin && !this.state.justInitialized && this.state.currentPeriod == this.period.RESULT) {
-            console.log("Entered componentDidUpdate for amIAdmin change")
             clearInterval(this.timer_waitForNextTurn);
             this.timer_waitForNextTurn = null;
             this.startRound();
         }
     }
-
 
 
     componentDidMount() {
@@ -489,8 +489,10 @@ class NewGame extends React.Component {
         if (this.state.currentPeriod == this.period.CHOOSECATEGORY) {
             return <ChooseCategory masterState={this.state} history={this.props.history}/>
         } else if (this.state.currentPeriod == this.period.EVOLVE) {
+            console.log(" Entered EVOLVE Period with: "+localStorage.getItem('evolveTo'));
             return <Evolve masterState={this.state} history={this.props.history}/>
         } else if (this.state.currentPeriod == this.period.RESULT) {
+            console.log(" Entered RESULT Period with: "+localStorage.getItem('evolveTo'));
             return <Result masterState={this.state} history={this.props.history}/>
         } else if (this.state.currentPeriod == this.period.SPECTATOR) {
             return <Spectator masterState={this.state} history={this.props.history}/>
