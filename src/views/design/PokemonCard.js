@@ -318,7 +318,7 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer) => {
                         <StatName>Speed</StatName>
                         <StatValue>{pokemon.categories.SPEED}</StatValue>
                     </Statistics>
-                    <Statistics toBeFocused={toFocus=='CAPTURE_RATE'}color={formattedPokemon.mainColor} disabled={disabled} onClick={() => localStorage.setItem("SelectedCat",'CAPTURE_RATING')}>
+                    <Statistics toBeFocused={toFocus=='CAPTURE_RATING'}color={formattedPokemon.mainColor} disabled={disabled} onClick={() => localStorage.setItem("SelectedCat",'CAPTURE_RATING')}>
                         <StatName>Capture rate</StatName>
                         <StatValue>{pokemon.categories.CAPTURE_RATING}</StatValue>
                     </Statistics>

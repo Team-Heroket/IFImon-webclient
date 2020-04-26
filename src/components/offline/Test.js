@@ -17,6 +17,7 @@ import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import {FocusedPokemonCard, PlaceholderCard} from "../../views/design/PokemonCard";
 import Badge from "@material-ui/core/Badge";
+import Confetti from "../shared/Confetti";
 
 
 const Form = styled.div`
@@ -92,13 +93,35 @@ const Label = styled.label`
  * https://reactjs.org/docs/react-component.html
  * @Class
  */
+
+
+
 class Test extends React.Component {
+
+    doSomethingBeforeUnload = () => {
+    }
+
+    // Setup the `beforeunload` event listener
+    setupBeforeUnloadListener = () => {
+        window.addEventListener("beforeunload", (ev) => {
+            return this.doSomethingBeforeUnload()
+        });
+    };
+
+    componentDidMount() {
+        // Activate the event listener
+        window.addEventListener('beforeunload', (event) => {
+            event.returnValue = `Are you sure you want to leave?`;
+        });
+    }
     /**
      * If you don’t initialize the state and you don’t bind methods, you don’t need to implement a constructor for your React component.
      * The constructor for a React component is called before it is mounted (rendered).
      * In this case the initial state is defined in the constructor. The state is a JS object containing two fields: name and username
      * These fields are then handled in the onChange() methods in the resp. InputFields
      */
+
+
     constructor() {
         super();
         this.state = {
@@ -363,6 +386,7 @@ class Test extends React.Component {
         let steps = ['Select category', 'Evolve Pokémon', 'Results'];
         return (
             <GameContainer>
+                <Confetti/>
                 <Header height={140} top={33} />
                 <img src={'https://play.pokemonshowdown.com/sprites/xyani/pikachu-original.gif'}/>
 

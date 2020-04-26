@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import {FormContainer} from "../../../../../helpers/layout";
 import {LogOutButton} from "../../../../../views/design/Button";
+import Confetti from "../../../../shared/Confetti";
 
 /**
     This will be displayed when the whole Game is finished
@@ -47,6 +48,7 @@ export let Finished = ({masterState, history}) => {
     return (
         <div>
             <FormContainer>
+                {(masterState.winners[0].id === masterState.player_me.id) ? <Confetti/> : null}
                 <Space/>
                 {masterState.winners[0].user.avatarId.valueOf() < 10 ? <img alt="avatar" src={require('../../../../../components/shared/images/avatarSVG/00'+(masterState.winners[0].user.avatarId)+'-avatar.svg')} height={"150px"} width={"150px"}/>
                     : <img alt="avatar" src={require('../../../../../components/shared/images/avatarSVG/0'+(masterState.winners[0].user.avatarId)+'-avatar.svg')} height={"150px"} width={"150px"}/>}
