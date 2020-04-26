@@ -170,8 +170,7 @@ class CreateGame extends React.Component {
                 creationTime: resp2.creationTime
             })
             console.log("creationTime in here: "+ resp2.creationTime)
-            this.setState({'creationTime' : this.state.creationTime.substring(0, 10) + 'T' + this.state.creationTime.substring(11)});
-            console.log("creationTime in here: "+ resp2.creationTime)
+            this.setState({'creationTime' : this.state.creationTime});
 
 
             if (this.state.amountOfNPC+this.state.users.length > 6) {
@@ -204,10 +203,11 @@ class CreateGame extends React.Component {
 
     async startGame() {
         console.log("entred startGame")
+        console.log("Amount of NPC's: "+this.state.amountOfNPC)
         try {
 
             const requestBody = JSON.stringify({
-                npc: this.state.npcs
+                npc: this.state.amountOfNPC
             });
             this.setState({startingGame: true})
             await api.put('/games/' + this.state.pokeCode.toString(), requestBody, {headers: {'Token': localStorage.getItem('token')}});
@@ -243,7 +243,7 @@ class CreateGame extends React.Component {
     }
 
     getTimePassed(start) {
-        let startmili = parseInt(new Date(start).getTime(), 10);
+        let startmili = parseInt(start, 10);
         let nowmili = parseInt(new Date().getTime(), 10)
         console.log('startMil', startmili);
         console.log('nowMili', nowmili);

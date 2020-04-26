@@ -111,7 +111,7 @@ class Lobby extends React.Component {
 
 
     getTimePassed(start) {
-        let startmili = parseInt(new Date(start).getTime(),10);
+        let startmili = parseInt(start,10);
         console.log("startmili: "+ startmili)
         let nowmili = parseInt(new Date().getTime(), 10)
         console.log(startmili);
@@ -145,10 +145,10 @@ class Lobby extends React.Component {
                 admin: resp2.creator.user,
                 users: usersList,
                 state: resp2.state,
-                creationTime: resp2.creationTime.toString()
+                creationTime: resp2.creationTime
             })
 
-            this.setState({'creationTime' : this.state.creationTime.substring(0, 10) + 'T' + this.state.creationTime.substring(11)}, this.setTimerUntilStart);
+            this.setState({'creationTime' : this.state.creationTime}, this.setTimerUntilStart);
 
 
 
@@ -169,7 +169,7 @@ class Lobby extends React.Component {
             } catch (error) {
                 alert(`Something went wrong: \n${handleError(error)}`);
             }
-        }, 30000)
+        }, 10000)
     }
 
     async leaveGame() {

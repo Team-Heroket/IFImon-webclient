@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import {LeaderboardIcon, PlaceholderIcon, QuickplayIcon, SettingsIcon, SocialIcon} from "./Icons";
+import {LeaderboardIcon, LogoPokeball, PlaceholderIcon, QuickplayIcon, SettingsIcon, SocialIcon} from "./Icons";
 import {ButtonContainer, SimpleContainer} from "../../helpers/layout";
 
 const Statistics = styled.button`
@@ -9,7 +9,7 @@ const Statistics = styled.button`
   
   margin-bottom:2px;
   
-  border: 1px solid ${props => props.color};
+  border: ${props => (props.toBeFocused ? "2px solid #000000" : '1px solid '+props.color)};
   background: #FFFFFF;
   border-radius: 10px;
   transition: all 0.3s ease;
@@ -52,12 +52,28 @@ text-align: left;
 
 `
 
+const PlayerName = styled.div`
+
+position: relative;
+text-align: right;
+top: 125px;
+right: -140px;
+
+  transform: rotate(-90deg);
+
+font-weight: 700;
+  
+font-size: 50px;
+color: rgba(255,255,255,0.66);
+
+`
+
 const StatValue = styled.div`
 
 position: relative;
-left: 20%;
+left: 15%;
 
-width: 20%;
+width: 25%;
 
 font-weight: 700;
   
@@ -108,6 +124,14 @@ const PokemonImageContainer = styled.img`
   z-index: 4;
 `
 
+const PokemonGifContainer = styled.img`
+  position: absolute;
+  width: 90px;
+  left: 27%;
+  bottom: 23%;
+  z-index: 4;
+`
+
 const CircleContainer = styled.div`
   position: absolute;
   border-radius:100%;
@@ -127,6 +151,7 @@ const CardContainer = styled.div`
   background: ${props => props.color};
   border-radius: 25px;
   overflow: hidden;
+  box-shadow: 4px 0px 6px rgba(0, 0, 0, 0.15);
 `
 
 const IconContainer = styled.div`
@@ -214,11 +239,12 @@ let PokemonFormatter = ({pokemon}) => {
     };
 
 }
-export let PokemonCard = (pokemon, disabled) => {
+export let PokemonCard = (pokemon, disabled, Trainer) => {
     let formattedPokemon = {}
     formattedPokemon = PokemonFormatter({pokemon});
     return (
         <CardContainer color={formattedPokemon.mainColor}>
+            <PlayerName>{Trainer}</PlayerName>
             <CircleContainer color={formattedPokemon.secondaryColor}>
                 <PokemonImageContainer src={pokemon.spriteURL} />
             </CircleContainer>
@@ -249,7 +275,7 @@ export let PokemonCard = (pokemon, disabled) => {
                     </Statistics>
                     <Statistics color={formattedPokemon.mainColor} disabled={disabled} onClick={() => localStorage.setItem("SelectedCat",'WEIGHT')}>
                         <StatName>Weight</StatName>
-                        <StatValue>{pokemon.categories.WEIGHT} kg</StatValue>
+                        <StatValue>{pokemon.categories.WEIGHT.valueOf()/10} kg</StatValue>
                     </Statistics>
                 </InternalContainer>
             </Rectangle>
@@ -265,13 +291,76 @@ export let PokemonCard = (pokemon, disabled) => {
     );
 };
 
+export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, Winner) => {
+    let formattedPokemon = {}
+    formattedPokemon = PokemonFormatter({pokemon});
+    return (
+        <CardContainer color={formattedPokemon.mainColor}>
+
+            <PlayerName>{Trainer}</PlayerName>
+            <CircleContainer color={formattedPokemon.secondaryColor}>
+                {Winner ?
+                    <PokemonGifContainer src={'https://play.pokemonshowdown.com/sprites/xyani/'+pokemon.name.toString().toLowerCase()+'.gif'} />
+                    :
+                    <PokemonImageContainer src={pokemon.spriteURL} />}
+            </CircleContainer>
+            <Rectangle>
+                <InternalContainer>
+                    <PokemonName reversed={formattedPokemon.inverted}>
+                        {pokemon.name}
+                    </PokemonName>
+                    <Statistics toBeFocused={toFocus=='ATK'} color={formattedPokemon.mainColor} disabled={disabled} onClick={() => localStorage.setItem('SelectedCat','ATK')}>
+                        <StatName>Attack</StatName>
+                        <StatValue>{pokemon.categories.ATK}</StatValue>
+                    </Statistics>
+                    <Statistics toBeFocused={toFocus=='DEF'} color={formattedPokemon.mainColor} disabled={disabled} onClick={() => localStorage.setItem('SelectedCat','DEF')}>
+                        <StatName>Defense</StatName>
+                        <StatValue>{pokemon.categories.DEF}</StatValue>
+                    </Statistics>
+                    <Statistics toBeFocused={toFocus=='SPEED'}color={formattedPokemon.mainColor} disabled={disabled} onClick={() => localStorage.setItem("SelectedCat",'SPEED')}>
+                        <StatName>Speed</StatName>
+                        <StatValue>{pokemon.categories.SPEED}</StatValue>
+                    </Statistics>
+                    <Statistics toBeFocused={toFocus=='CAPTURE_RATING'}color={formattedPokemon.mainColor} disabled={disabled} onClick={() => localStorage.setItem("SelectedCat",'CAPTURE_RATING')}>
+                        <StatName>Capture rate</StatName>
+                        <StatValue>{pokemon.categories.CAPTURE_RATING}</StatValue>
+                    </Statistics>
+                    <Statistics toBeFocused={toFocus=='HP'} color={formattedPokemon.mainColor} disabled={disabled} onClick={() => localStorage.setItem("SelectedCat",'HP')}>
+                        <StatName>HP</StatName>
+                        <StatValue>{pokemon.categories.HP}</StatValue>
+                    </Statistics>
+                    <Statistics toBeFocused={toFocus=='WEIGHT'} color={formattedPokemon.mainColor} disabled={disabled} onClick={() => localStorage.setItem("SelectedCat",'WEIGHT')}>
+                        <StatName>Weight</StatName>
+                        <StatValue>{pokemon.categories.WEIGHT.valueOf()/10} kg</StatValue>
+                    </Statistics>
+                </InternalContainer>
+            </Rectangle>
+            <IconContainer>
+                <PokemonType src={formattedPokemon.icon}/>
+                <PokemonNumber>
+                    #{pokemon.pokemonId}
+                </PokemonNumber>
+
+            </IconContainer>
+        </CardContainer>
+
+    );
+};
+
+const PokeballContainer = styled.div`
+position: absolute;
+left:6%;
+top: 23%;
+`
+
 export let PlaceholderCard = () => {
     return (
-        <CardContainer color={"linear-gradient(227.89deg, #F53E28 1.67%, rgba(255, 255, 255, 0) 322.73%), #FCE93A"}>
-            <SimpleContainer float={"left" } width={"100%"}>
+        <CardContainer color={"linear-gradient(198.22deg, #F53E28 0.61%, rgba(255, 255, 255, 0) 189.48%), #FCE93A"}>
+            <PokeballContainer>
                 <PlaceholderIcon/>
-            </SimpleContainer>
+            </PokeballContainer>
         </CardContainer>
+
 
     );
 };

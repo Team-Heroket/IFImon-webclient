@@ -21,6 +21,7 @@ import {Evolve} from "../subScreens/Evolve";
 import {Finished} from "../subScreens/Finished";
 import {Result} from "../subScreens/Result";
 import {Clock} from "../Clock";
+import {Spectator} from "../subScreens/Spectator";
 
 
 const Space = styled.div`
@@ -46,6 +47,7 @@ class Game extends React.Component {
     timeout_berry = null;
     timeout_result = null;
     timeout_newRoundTimer = null;
+    timeout_spectator1 = null;
 
     timeUntilEvolve = 15000;
     timeUntilResult = 30000;
@@ -59,7 +61,8 @@ class Game extends React.Component {
         FINISHED: "finished",
         WAIT: "wait",
         INTERMEDIARY: "intermediary",
-        NEWROUNDTIMER: "newroundtimer"
+        NEWROUNDTIMER: "newroundtimer",
+        SPECTATOR: "spectator"
     }
 
     category = {
@@ -84,7 +87,7 @@ class Game extends React.Component {
             player_me: null,
             admin: null,
             turnPlayer: null,
-            startTime: new Date().getTime() - 30000,
+            startTime: null,
             amITurnPlayer: null,
             amIAdmin: null,
             period: this.period.INTERMEDIARY,
@@ -93,7 +96,8 @@ class Game extends React.Component {
             evolved: 0,
             remainingTime: null,
             berries: null,
-            evolveBerries: 0
+            evolveBerries: 0,
+            nowTemporaryTimer: false
         }
     }
 
@@ -109,7 +113,7 @@ class Game extends React.Component {
             const response2 = await api.get('/games/' + this.props.match.params.pokeCode.toString(), {headers: {'Token': localStorage.getItem('token')}});
             const resp2 = response2.data;
             let usersList = resp2.players;
-            usersList.sort((a, b) => (a.deck.cards.length > b.deck.cards.length) ? 1 : -1)
+            usersList.sort((a, b) => (a.deck.cards.length > b.deck.cards.length) ? -1 : 1)
 
 
             //This here does the ranking:
@@ -126,6 +130,7 @@ class Game extends React.Component {
             if (resp2.turnPlayer.user.id == localStorage.getItem('id')) {
                 this.setState({'amITurnPlayer': true});
             }
+
             let user_me = null;
             //For every user sets turnplayer to true or false
             for (let i=0; i<usersList.length; i++) {
@@ -139,6 +144,12 @@ class Game extends React.Component {
                     user_me = usersList[i];
                 }
             }
+            let amIAdmin = false;
+            if (user_me.id == resp2.creator.id) {
+                amIAdmin = true;
+            }
+
+
 
 
 
@@ -152,14 +163,12 @@ class Game extends React.Component {
                 berries: user_me.berries,
                 deck: user_me.deck,
                 winners: resp2.winners,
+                amIAdmin: amIAdmin
             })
 
-            if (this.state.justInitialized) {
-                console.log("startTime before substring", resp2.startTime);
-                let startTime = resp2.startTime.substring(0, 10) + 'T' + resp2.startTime.substring(11);
-                console.log("Start Time is equal to: " + startTime)
-                startTime = parseInt(new Date(startTime).getTime(), 10);
 
+            if (this.state.justInitialized) {
+                let startTime = Number.parseInt(resp2.startTime,10);
                 this.setState({'startTime': startTime}, this.startGame);
             }
 
@@ -170,7 +179,9 @@ class Game extends React.Component {
     }
 
     startGame() {
+        console.log("Starttime is: "+this.state.startTime);
         let remainingTime = this.state.startTime - new Date().getTime();
+        console.log("Remaining time is: "+remainingTime);
         this.setState({remainingTime: remainingTime})
         this.timeout_all = setTimeout(() => {
             this.setState({justInitialized: false})
@@ -181,12 +192,13 @@ class Game extends React.Component {
     }
 
 
+
     startClock() {
 
         if (!this.state.remainingTime) {
             return <Spinner/>
         } else {
-            return <Clock remainingTime={this.state.remainingTime} totalTime={35000} type={this.clock.GAMESTART} />
+            return <Clock remainingTime={this.state.remainingTime} totalTime={15000} type={this.clock.GAMESTART} />
         }
     }
 
@@ -212,11 +224,11 @@ class Game extends React.Component {
     async makeTurn() {
         //Insert Put Function for turnPlayer to choose
         let category = localStorage.getItem('SelectedCat');
-        localStorage.setItem('SelectedCat', null);
-        if (category) {
+        if (category == 0) {
             let categories = [this.category.HP, this.category.SPEED, this.category.WEIGHT, this.category.CAPTURERATE, this.category.ATTACKPOINTS, this.category.DEFENSEPOINTS];
             let randomIndex = Math.floor(Math.random() * Math.floor(categories.length));
             category = categories[randomIndex]
+            localStorage.setItem('SelectedCat', category);
             console.log("Random Category: " + category);
         }
 
@@ -243,9 +255,20 @@ class Game extends React.Component {
      6) turnPlayer: put nextTurn - DONE
      */
 
-    startRound() {
-        console.log("Got In here start round")
+    startNormalRound() {
         let startTime = this.state.startTime;
+        console.log("Starttime in startRound is: "+startTime)
+        console.log("Time now in startRound is: "+new Date().getTime())
+        let rem0 = startTime - new Date().getTime();
+        console.log("So time delay in startRound is: "+rem0)
+        let rem1 = rem0+13000
+        let rem2 = rem0+this.timeUntilEvolve
+        console.log("Time until you make put request for category: "+rem1)
+        console.log("Time until you make get request to get intermediary result: "+rem2)
+
+        localStorage.setItem('SelectedCat', 0);
+        console.log("Got In here start round")
+
 
         this.setState({
             startTime: startTime + 40000,
@@ -254,13 +277,14 @@ class Game extends React.Component {
         });
         //1 - all clients get game
         this.getGameInfo()
+        console.log("getGameInfo at:", new Date().getTime())
 
         //2) turnPlayer: put category
         // MAKING TURN 2 SECONDS BEFORE TIMEUNTILEVOLVE
         setTimeout(() => {
-        if (this.state.amITurnPlayer) {
+            if (this.state.amITurnPlayer) {
                 this.makeTurn()
-                console.log("PUT request with category done")
+                console.log("PUT request with category done at:", new Date().getTime())
             }
         }, startTime + this.timeUntilEvolve - 2000 - new Date().getTime());
 
@@ -272,7 +296,7 @@ class Game extends React.Component {
                 period: this.period.EVOLVE
             })
             this.getGameInfo()
-            console.log("Ending Selection and going to EVOLVE component")
+            console.log("Ending Selection and going to EVOLVE component at: ", new Date().getTime())
         }, startTime + this.timeUntilEvolve - new Date().getTime());
 
         //4) those clients who want to: put berry + 5) all clients get game
@@ -285,14 +309,13 @@ class Game extends React.Component {
             if (localStorage.getItem('evolveTo') != 0) {
                 this.evolvePokemon();
             }
-
             setTimeout(()=>this.getGameInfo(), 3000)
 
-            console.log("Ending Berry time and Going to Results")
+            console.log("Ending Berry time and Going to Results at: ", new Date().getTime())
         }, startTime + this.timeUntilResult -5000- new Date().getTime());
 
         this.timeout_result = setTimeout(() => {
-            if (this.state.amITurnPlayer) {
+            if (this.state.amIAdmin) {
                 this.makeFinalTurn()
             }
             this.setState({
@@ -315,6 +338,52 @@ class Game extends React.Component {
         }, startTime + this.timeUntilNewRound - new Date().getTime());
 
 
+    }
+
+    startSpectatorRound() {
+        let startTime = this.state.startTime;
+        this.setState({period: this.period.SPECTATOR, startTime: startTime + 40000});
+
+        this.getGameInfo();
+
+        this.timeout_spectator1  = setTimeout(() => {
+            this.getGameInfo();
+        }, startTime + 15000 - new Date().getTime())
+
+        this.timeout_spectator1  = setTimeout(() => {
+            this.getGameInfo();
+        }, startTime + 30000 - new Date().getTime())
+
+
+        this.timeout_result  = setTimeout(() => {
+            this.setState({startOfRound: true})
+            if (this.state.amIAdmin) {
+                this.makeFinalTurn();
+            }
+        }, startTime + 35000 - new Date().getTime())
+    }
+
+    startFinishedRound() {
+        this.setState({period: this.period.FINISHED});
+
+        clearInterval(this.recurrentTimer);
+        this.recurrentTimer = null;
+
+    }
+
+    async startRound() {
+        await this.getGameInfo();
+        if (this.state.state == 'FINISHED') {
+            this.startFinishedRound()
+        }
+        else {
+            if (this.state.player_me.deck.empty) {
+                this.startSpectatorRound()
+            }
+            else {
+                this.startNormalRound();
+            }
+        }
     }
 
     recurrentRounds() {
@@ -366,6 +435,10 @@ class Game extends React.Component {
             return <Evolve masterState={this.state}/>
         } else if (this.state.period == this.period.RESULT) {
             return <Result masterState={this.state}/>
+        } else if (this.state.period == this.period.SPECTATOR) {
+            return <Spectator masterState={this.state}/>
+        } else if (this.state.period == this.period.FINISHED) {
+            return <Finished masterState={this.state}/>
         } else if (this.state.period == this.period.NEWROUNDTIMER) {
             return <Clock remainingTime={this.state.remainingTime} totalTime={5000} type={this.clock.NEWROUND}/>
         }
@@ -376,6 +449,9 @@ class Game extends React.Component {
         return (
             <GameContainer>
                 <Header height={140} top={33}/>
+                <h1>Start Time is: {this.state.startTime}</h1>
+                <h1>Now Time is: {new Date().getTime()}</h1>
+                <h1>Remaining Time is: {this.state.remainingTime}</h1>
                 <Row>
                     <RoundContainer onClick={() => {
                         this.goBack()
@@ -383,6 +459,7 @@ class Game extends React.Component {
                         <BackIcon/>
                     </RoundContainer>
                 </Row>
+
                 {this.state.justInitialized ?
 
                     <div><Space/>{this.startClock()}</div> : this.renderPeriod()

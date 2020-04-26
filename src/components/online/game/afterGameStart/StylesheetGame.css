@@ -12,7 +12,14 @@
 }
 
 .valueTimer {
-    font-size: 40px;
+     font-size: 40px;
+ }
+
+.valuePeriodTimer {
+
+    margin: auto;
+    text-align: center;
+    font-size: 20px;
 }
 
 .info {

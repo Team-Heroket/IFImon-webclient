@@ -148,6 +148,42 @@ export let PlayerGame = ({ player, addOn}) => {
     }
 };
 
+let category = {
+    HP: "HP",
+    WEIGHT: "WEIGHT",
+    CAPTURERATE: "CAPTURE_RATING",
+    ATTACKPOINTS: "ATK",
+    DEFENSEPOINTS: "DEF",
+    SPEED: "SPEED"
+}
+
+function categoryValue (card, selCategory ){
+    switch (selCategory) {
+        case category.ATTACKPOINTS:
+            return card.categories.ATK;
+        case category.DEFENSEPOINTS:
+            return card.categories.DEF;
+        case category.SPEED:
+            return card.categories.SPEED;
+        case category.CAPTURERATE:
+            return  card.categories.CAPTURE_RATING;
+        case category.HP:
+            return card.categories.HP;
+        case category.WEIGHT:
+            return card.categories.WEIGHT;
+    }
+
+}
+//categoryValue(player.deck.cards[0], selCategory)
+export let PlayersCard = ({ player, selCategory}) => {
+        return (
+            <Container>
+                <Rank>{player.user.username}</Rank>
+                <Id>{player.deck.cards.length != 0 ? player.deck.cards[0].name : null}</Id>
+            </Container>
+        )
+};
+
 export let PlayerMeGame = ({ player }) => {
     return (
         <Container>
@@ -267,7 +303,7 @@ export let PlayerStatCard = ({ user }) => {
                         </RankCard>
                         <br/>
                         <RankCard>
-                            Pokemon discovered: {Math.round((user.statistics.pokemonDiscovered)/725*1000)/10}%
+                            Pokemon discovered: {Math.round((user.statistics.encounteredPokemon.length)/151*1000)/10}%
                         </RankCard>
                     </StatsContainer>
 

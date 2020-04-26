@@ -1,14 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
-import {BaseContainer, ButtonContainer, FormContainer, GameContainer, Row} from '../../helpers/layout';
+import {BaseContainer, ButtonContainer, FormContainer, GameContainer, PlayerContainer, Row} from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
-import {Button, RoundContainer} from '../../views/design/Button';
+import {Button, LogOutButton, RoundContainer} from '../../views/design/Button';
 import Header from "../../views/Header";
-import {BackIcon} from "../../views/design/Icons";
+import {BackIcon, BerriesIconWithBadge, LogoPokeball} from "../../views/design/Icons";
 import {ChooseCategory} from "../online/game/afterGameStart/subScreens/ChooseCategory";
 import {Evolve} from "../online/game/afterGameStart/subScreens/Evolve";
+import {Clock} from "../online/game/afterGameStart/Clock";
+import {PlayerGame} from "../../views/Player";
+import {ColorlibConnector, ColorlibStepIcon} from "../../views/design/Stepper";
+import Step from "@material-ui/core/Step";
+import StepLabel from "@material-ui/core/StepLabel";
+import Stepper from "@material-ui/core/Stepper";
+import {FocusedPokemonCard, PlaceholderCard} from "../../views/design/PokemonCard";
+import Badge from "@material-ui/core/Badge";
+import Confetti from "../shared/Confetti";
 
 
 const Form = styled.div`
@@ -84,17 +93,41 @@ const Label = styled.label`
  * https://reactjs.org/docs/react-component.html
  * @Class
  */
+
+
+
 class Test extends React.Component {
+
+    doSomethingBeforeUnload = () => {
+    }
+
+    // Setup the `beforeunload` event listener
+    setupBeforeUnloadListener = () => {
+        window.addEventListener("beforeunload", (ev) => {
+            return this.doSomethingBeforeUnload()
+        });
+    };
+
+    componentDidMount() {
+        // Activate the event listener
+        window.addEventListener('beforeunload', (event) => {
+            event.returnValue = `Are you sure you want to leave?`;
+        });
+    }
     /**
      * If you don’t initialize the state and you don’t bind methods, you don’t need to implement a constructor for your React component.
      * The constructor for a React component is called before it is mounted (rendered).
      * In this case the initial state is defined in the constructor. The state is a JS object containing two fields: name and username
      * These fields are then handled in the onChange() methods in the resp. InputFields
      */
+
+
     constructor() {
         super();
         this.state = {
             berries: 2,
+            avatarId: 13,
+            username: 'tim',
             deck: {
                 "id":28,
                 "cards":[
@@ -348,18 +381,22 @@ class Test extends React.Component {
         };
     }
 
+
     render() {
+        let steps = ['Select category', 'Evolve Pokémon', 'Results'];
         return (
             <GameContainer>
+                <Confetti/>
                 <Header height={140} top={33} />
-                <Row>
-                    <RoundContainer onClick={() => {
-                        this.goBack()
-                    }}>
-                        <BackIcon/>
-                    </RoundContainer>
-                </Row>
-                <ChooseCategory masterState = {this.state}/>
+                <img src={'https://play.pokemonshowdown.com/sprites/xyani/pikachu-original.gif'}/>
+
+                {FocusedPokemonCard(this.state.deck.cards[0], true, 'ATK', this.state.username) }
+                {FocusedPokemonCard(this.state.deck.cards[1], true, 'ATK', this.state.username) }
+
+                {FocusedPokemonCard(this.state.deck.cards[2], true, 'ATK', this.state.username) }
+
+                {FocusedPokemonCard(this.state.deck.cards[3], true, 'ATK', this.state.username) }
+
             </GameContainer>
         );
     }
