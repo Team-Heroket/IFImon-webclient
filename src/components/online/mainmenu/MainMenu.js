@@ -66,6 +66,10 @@ class MainMenu extends React.Component {
         this.props.history.push('/socialmode')
     }
 
+    goToTutorial() {
+        this.props.history.push('/tutorial')
+    }
+
     async logOut(){
         try {
             const body = JSON.stringify({});
@@ -98,14 +102,17 @@ class MainMenu extends React.Component {
                             <MenuButtonIcon type={{text: "social mode"}}
                                             onClicktoDo = {() => {this.goToSocialMode()}}
                             />
-                            <MenuButtonIcon type={{text: "leaderboard"}}
-                                            onClicktoDo = {() => {this.goToLeaderBoard()}}
-                            />
                             <MenuButtonIcon type={{text: "quickplay"}}
                                             onClicktoDo = {() => {this.goToQuickplay()}}
                             />
+                            <MenuButtonIcon type={{text: "leaderboard"}}
+                                            onClicktoDo = {() => {this.goToLeaderBoard()}}
+                            />
                             <MenuButtonIcon type={{text: "settings"}}
                                             onClicktoDo = {() => {this.goToSettings()}}
+                            />
+                            <MenuButtonIcon type={{text: "tutorial"}}
+                                            onClicktoDo = {() => {this.goToTutorial()}}
                             />
 
                             <LogOutButton
