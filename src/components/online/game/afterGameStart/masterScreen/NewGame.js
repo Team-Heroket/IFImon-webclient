@@ -59,14 +59,12 @@ class NewGame extends React.Component {
     timeout_waitForCategoryResult = null;
     timeout_evolve = null;
     timeout_callNext = null;
-    timeout_spectator1 = null;
-    timeout_spectator2 = null;
-    timeout_result = null;
+    timeout_waitForAdmin = null;
 
     timer_spectator = null;
     timer_waitForNextTurn = null;
     timer_waitForCategory = null;
-    timer_periodCheck = null;
+    timer_listenToAdmin = null;
 
 
 
@@ -118,7 +116,8 @@ class NewGame extends React.Component {
             currentPeriod: this.period.INTERMEDIARY,
             oldPeriod: this.period.INTERMEDIARY,
             currentCard: null,
-            oldCard: null
+            oldCard: null,
+            state: null
         }
     }
 
@@ -403,12 +402,52 @@ class NewGame extends React.Component {
 
 
     }
+    async getGameWaitForAdmin() {
+        try {
+            console.log("Tried getting game info");
+
+            const response2 = await api.get('/games/' + this.props.match.params.pokeCode.toString(), {headers: {'Token': localStorage.getItem('token')}});
+            const resp2 = response2.data;
+            let startTime = parseInt(resp2.startTime,10);
+            let state = resp2.state;
+
+            this.setState({startTime: startTime, state: state})
+
+
+        } catch (error) {
+            if (error.response.status == 404) {
+                this.props.history.push('/menu')
+            }
+            else {
+                alert(`Something went wrong: \n${handleError(error)}`);
+            }
+        }
+    }
 
     startFinishedRound() {
         this.setState({period: this.period.FINISHED});
 
         clearInterval(this.recurrentTimer);
         this.recurrentTimer = null;
+
+        if (this.state.amIAdmin) {
+            this.timeout_waitForAdmin = setTimeout(() => {
+                this.props.history.push('/menu')
+            }, 10000)
+
+            this.timer_listenToAdmin = setInterval(() => {
+                this.getGameWaitForAdmin();
+            }, 2000)
+        }
+        else {
+            this.timeout_waitForAdmin = setTimeout(() => {
+                this.props.history.push('/menu')
+            }, 15000)
+
+            this.timer_listenToAdmin = setInterval(() => {
+                this.getGameWaitForAdmin();
+            }, 2000)
+        }
 
     }
 
@@ -436,6 +475,14 @@ class NewGame extends React.Component {
             clearInterval(this.timer_waitForNextTurn);
             this.timer_waitForNextTurn = null;
             this.startRound();
+        }
+
+        if (prevState.state && this.state.state && prevState.state == 'FINISHED' && this.state.state == 'RUNNING') {
+            this.setState({justInitialized: true}, this.getGameInfo)
+            clearInterval(this.timer_listenToAdmin);
+            this.timer_listenToAdmin = null;
+            clearTimeout(this.timeout_waitForAdmin);
+            this.timeout_waitForAdmin = null;
         }
     }
 
@@ -467,6 +514,12 @@ class NewGame extends React.Component {
 
         clearInterval(this.timer_spectator);
         this.timer_spectator = null;
+
+        clearInterval(this.timer_listenToAdmin);
+        this.timer_listenToAdmin = null;
+
+        clearTimeout(this.timeout_waitForAdmin);
+        this.timeout_waitForAdmin = null;
         this.leaveGame();
     }
 
@@ -480,9 +533,14 @@ class NewGame extends React.Component {
             console.log(this.state.pokeCode)
             await api.put('/games/'+this.state.pokeCode+'/players', requestBody,{ headers: {'Token': localStorage.getItem('token')}});
         } catch (error) {
-            alert(`Something went wrong: \n${handleError(error)}`);
+            if (error.response.status != 404) {
+                alert(`Something went wrong: \n${handleError(error)}`);
+            }
+
         }
     }
+
+
 
     renderPeriod() {
 
@@ -500,6 +558,7 @@ class NewGame extends React.Component {
             return <Finished masterState={this.state} history={this.props.history}/>
         } else if (this.state.currentPeriod == this.period.NEWROUNDTIMER) {
             return <Clock remainingTime={this.state.remainingTime} totalTime={5000} type={this.clock.NEWROUND}/>
+
         }
     }
 
