@@ -114,9 +114,15 @@ class MainMenu extends React.Component {
             // Get the returned user and update a new object.
 
 
-            this.props.history.push('/login')
+
         } catch (error) {
-            this.props.history.push('/login');
+            if (error.response.status == 401) {
+                this.props.history.push('/login')
+            }
+            else {
+                alert(`Something went wrong: \n${handleError(error)}`);
+            }
+
         }
     }
 
