@@ -51,12 +51,12 @@ export let Spectator = ({masterState, history}) => {
                             printed = true;
                         }
                     }
-                    if(!printed){
+                    if(!printed && !masterState.players[i].deck.empty){
                         firstCards.push(
                             FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false)
                         );
                     }
-                } else{
+                } else if (!masterState.players[i].deck.empty){
                     firstCards.push(
                         FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false)
                     );
