@@ -9,30 +9,15 @@ import {
     SimpleContainer
 } from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
-import User from '../../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import {
-    Button,
     LogOutButton,
-    MenuButton,
-    MenuButtonIcon,
-    MenuIcon,
-    TransparentButton,
-    TestObject, DotButton, PokedexGenerationButton, nextPage, PageButton,
+    MenuButtonIcon, DotButton, PokedexGenerationButton, PageButton,
 } from '../../../views/design/Button';
 import Header from "../../../views/Header";
 import {BackIcon, EncounteredPokemonSprite, ForwardIcon, NewPokemonSprite} from "../../../views/design/Icons";
-import {PlayerMe} from "../../../views/Player";
-import {PokemonCard} from "../../../views/design/PokemonCard";
 import {Spinner} from "../../../views/design/Spinner";
 import Grid from "@material-ui/core/Grid";
-
-
-const Label = styled.label`
-  color: white;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-`;
 
 const Form = styled.div`
   display: flex;
@@ -51,7 +36,6 @@ const Form = styled.div`
 
 
 class MainMenu extends React.Component {
-    prev = null;
 
     genPokemon = {
         I: [1,151],
