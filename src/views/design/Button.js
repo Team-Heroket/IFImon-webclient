@@ -57,6 +57,41 @@ export const EvolveButton = styled.button`
   transition: all 0.3s ease;
 `;
 
+export const PageButton = styled.button`
+  &:hover {
+    transform: ${props => (props.disabled ? 'scale(1)' : 'scale(2.5)')};
+    transition: all 0.3s ease;
+  }
+  &:active {
+    transform: ${props => (props.disabled ? 'scale(1)' : 'scale(2.6)')};
+    transition: all 0.3s ease;
+  }
+  position: absolute;
+  top: 50%;
+  margin-top = 50%;
+  ${props => props.alignment}: 2%;
+  border: 0px;
+  padding: 2px;
+  width: 28px;
+  height: 50px;
+  cursor: "pointer";
+  opacity: ${props => (props.disabled ? "50%" : "100%")};
+  transition: visibility 1s linear;
+  
+  background: transparent;
+  
+  z-index: 6;
+`
+
+export const nextPage = ({disabled}) =>{
+    return(
+        <PageButton disabled={disabled}>
+            <BackIcon/>
+        </PageButton>
+    )
+}
+
+
 export const TransparentButton = styled.button`
   &:hover {
     transform: translateY(${props => (props.disabled ? 0 : 2)}px);
@@ -155,14 +190,14 @@ export const LogOutButton = styled.button`
 `;
 
 export const RoundContainer = styled.button`
-    &:hover {
-    opacity: 90%;
-    border: 0px solid #FFFFFF;;
-    background: rgb(255, 255, 255, 25%);
+   &:hover {
+    opacity: ${props => (props.disabled ? "66%" : "90%")};
+    border: ${props => (props.disabled ? null : "0px solid #FFFFFF")};
+    background: ${props => (props.disabled ? "rgb(255, 255, 255, 0%)" : "rgb(255, 255, 255, 20%)")};
     transition: all 0.3s ease;
   }
   &:active{
-   transform: translateY(2px);
+   transform: ${props => (props.disabled ? null : "translateY(2px)")};
   }
   margin:10px;
   width: ${props => props.width || "35px"};
@@ -177,7 +212,49 @@ export const RoundContainer = styled.button`
   
   transition: all 0.3s ease;
   background: rgb(255, 255, 255, 0%);
+  
+  cursor: ${props => (props.disabled ? "default" : "pointer")};
+  opacity: ${props => (props.disabled ? "66%" : "100%")};
 `;
+
+export const DotButton = styled.button`
+  &:active{
+  transform: ${props => (props.disabled ? null : "translateY(1px)")};
+  transition: all 0.3s ease;
+  }
+  margin-top: 10px;
+  margin-left: 5px;
+  color: #FFFFFF;
+  margin-right: 5px;
+  font-weight: ${props => (props.disabled ? '700' : null)};
+  width: ${props => props.width || "10px"};
+  height: ${props => props.width || "10px"};
+  border-radius: ${props => props.width || "10px"};
+  border: ${props => (props.disabled ? '2' : "1")}px solid #ffffff;
+  transition: all 0.3s ease;
+  opacity: ${props => (props.disabled ? '100%' : "90%")};
+  background: ${props => (props.disabled ? "linear-gradient(102.87deg, #69CBD1 0%, rgba(255, 255, 255, 0) 188.68%), #89FBB8;" : "rgb(255, 255, 255, 33%)")};
+  cursor: ${props => (props.disabled ? "default" : "pointer")};
+`;
+
+export const PokedexGenerationButton = styled.button`
+  &:active{
+  transform: ${props => (props.disabled ? null : "translateY(1px)")};
+  transition: all 0.3s ease;
+  }
+  color: #FFFFFF;
+  margin-top: -10px;
+  height: ${props => (props.width*2/3) || 10}px;;
+  font-weight: ${props => (props.disabled ? '700' : null)};
+  width: ${props => props.width || 10}px;
+  border-top-left-radius: ${props => (props.gen == 'I' ? '25px' : "0px")};
+  border-top-right-radius: ${props => (props.gen == 'VIII' ? '25px' : "0px")};
+  border: ${props => (props.disabled ? '2px solid rgba(255,255,255,1)' : '2px solid rgba(255,255,255,0.3)')};
+  transition: all 0.3s ease;
+  opacity: ${props => (props.disabled ? '100%' : "90%")};
+  background: ${props => (props.disabled ? "linear-gradient(102.87deg, #69CBD1 0%, rgba(255, 255, 255, 0) 188.68%), #89FBB8;" : "rgb(255, 255, 255, 0%)")};
+  cursor: ${props => (props.disabled ? "default" : "pointer")};
+`
 
 export const KickContainer = styled.button`
     &:hover {
@@ -304,7 +381,7 @@ function buttonIcon(type) {
 
 export let MenuButtonIcon = ( {type, onClicktoDo}) => {
     return (
-        <ExternalContainer width={"55%"} onClick = {onClicktoDo}>
+        <ExternalContainer width={"160%"} onClick = {onClicktoDo}>
             <Row>
                 <Column width={"25%"} float={'left'}>
                     {buttonIcon(type)}

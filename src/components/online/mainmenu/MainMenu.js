@@ -1,6 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BaseContainer, ButtonContainer, FormContainer } from '../../../helpers/layout';
+import {
+    AvatarContainer,
+    BaseContainer,
+    ButtonContainer,
+    FormContainer, HorizontalButtonContainer,
+    InnerContainerPokedex,
+    SimpleContainer
+} from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
 import User from '../../shared/models/User';
 import { withRouter } from 'react-router-dom';
@@ -11,12 +18,14 @@ import {
     MenuButtonIcon,
     MenuIcon,
     TransparentButton,
-    TestObject,
+    TestObject, DotButton, PokedexGenerationButton, nextPage, PageButton,
 } from '../../../views/design/Button';
 import Header from "../../../views/Header";
-import {BackIcon} from "../../../views/design/Icons";
+import {BackIcon, EncounteredPokemonSprite, ForwardIcon, NewPokemonSprite} from "../../../views/design/Icons";
 import {PlayerMe} from "../../../views/Player";
 import {PokemonCard} from "../../../views/design/PokemonCard";
+import {Spinner} from "../../../views/design/Spinner";
+import Grid from "@material-ui/core/Grid";
 
 
 const Label = styled.label`
@@ -39,7 +48,21 @@ const Form = styled.div`
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
+
+
 class MainMenu extends React.Component {
+    prev = null;
+
+    genPokemon = {
+        I: [1,151],
+        II: [152,251],
+        III: [252,386],
+        IV: [387,493],
+        V: [494, 649],
+        VI: [650, 721],
+        VII: [722, 809],
+        VIII: [810,894]
+    }
 
     constructor() {
         super();
@@ -47,8 +70,33 @@ class MainMenu extends React.Component {
             pokeCode: "asdasas",
             amountOfPlayers: 6,
             amountOfNPC: 0,
+            user: null,
+            step: 0,
+            generation: this.genPokemon.I
         };
     }
+
+    async componentDidMount(){
+        try {
+            const resp = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
+
+            let response = resp.data;
+            await this.setState({user: response,
+                avatarClicked: response.avatarId});
+
+        }
+        catch (error) {
+            alert(`Something went wrong: \n${handleError(error)}`);
+        }
+    }
+
+    handleScroll = () => {
+
+     this.setState({
+            step: this.state.step+1,
+         });
+     setTimeout(null,1000);
+     }
 
     goToSettings() {
         this.props.history.push('/settings/'+localStorage.getItem('id'))
@@ -88,6 +136,161 @@ class MainMenu extends React.Component {
         }
     }
 
+    nextPage(){
+        let temp = this.state.step;
+                if(this.state.generation[1]>(this.state.generation[0]+24*(this.state.step+1)+1)){
+                    this.setState({step: temp+1});
+                }else{
+                    this.setState({step: 0,
+                    generation: this.getGeneration(true)});
+                }
+    };
+
+    previousPage(){
+        let temp = this.state.step;
+        if(this.state.step > 0){
+            this.setState({step: temp-1});
+        }else{
+            let next = this.getGeneration(false);
+            this.setState({
+                step: Math.ceil((next[1]-next[0])/25),
+                generation: next});
+        }
+    };
+
+    getGeneration(stepSize){
+        switch (this.state.generation) {
+            case(this.genPokemon.I):
+                if(stepSize){
+                    return this.genPokemon.II
+                }
+                else return this.genPokemon.I
+
+            case(this.genPokemon.II):
+                if(stepSize){
+                    return this.genPokemon.III
+                }
+                else return this.genPokemon.I
+
+            case(this.genPokemon.III):
+                if(stepSize){
+                    return this.genPokemon.IV
+                }
+                else return this.genPokemon.II
+
+            case(this.genPokemon.IV):
+                if(stepSize){
+                    return this.genPokemon.V
+                }
+                else return this.genPokemon.III
+
+            case(this.genPokemon.V):
+                if(stepSize){
+                    return this.genPokemon.VI
+                }
+                else return this.genPokemon.IV
+
+            case(this.genPokemon.VI):
+                if(stepSize){
+                    return this.genPokemon.VII
+                }
+                else return this.genPokemon.V
+
+            case(this.genPokemon.VII):
+                if(stepSize){
+                    return this.genPokemon.VIII
+                }
+                else return this.genPokemon.VI
+
+            case(this.genPokemon.VIII):
+                if(stepSize){
+                    return this.genPokemon.VIII
+                }
+                else return this.genPokemon.VII
+
+
+        }
+    }
+
+    SpritesGenerator () {
+        let windowButtons = [];
+        let pokemon_list = [];
+        let amountDisplayed = 24;
+        if(this.state.user.statistics.encounteredPokemon.length!=0){
+            let start = this.state.generation[0]+this.state.step*(amountDisplayed)+(this.state.step == 0 ? 0 : 1);
+            let end = Math.min(this.state.generation[0]+(this.state.step+1)*amountDisplayed+(this.state.step == 0 ? 0 : 1), this.state.generation[1])
+            for(let i = start; i<=end ; i++){
+                if(this.state.user.statistics.encounteredPokemon.includes(i)){
+                    pokemon_list.push(
+                        <EncounteredPokemonSprite alt="avatar" src={'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+i+'.png'} size={"92px"} index = {i}/>
+                    )
+                }
+                else{
+                    pokemon_list.push(
+                        <NewPokemonSprite src={require('../../shared/images/pokemonTypesSVG/unknown.svg')} size={"92px"} index = {i}/>
+                    )
+
+                }
+            }
+            for(let stepCounter = 0; this.state.generation[0]+(stepCounter)*amountDisplayed+(stepCounter == 0 ? 0 : 1) < this.state.generation[1]; stepCounter++) {
+                windowButtons.push(
+                    <DotButton width={'9px'} disabled={this.state.step == stepCounter} onClick={() => {
+                        this.goToStep(stepCounter)
+                    }}/>
+                )
+            }
+        }
+        else{
+            return(
+                <AvatarContainer height={'500px'} width={'500px'}>
+                    <SimpleContainer heigth={500} color={'#FFFFFF'} >
+                        Your Pokèdex will start working after your first game!
+                    </SimpleContainer>
+                </AvatarContainer>
+            )
+        }
+        return(
+            <AvatarContainer height={'550px'} width={'500px'} margin={"0px"} onScroll={this.handleScroll}>
+                {this.generationTabs()}
+                <PageButton disabled={this.state.step==0 && this.state.generation == this.genPokemon.I} alignment={'left'} onClick={()=>this.previousPage()}>
+                    <BackIcon size={'33%'}/>
+                </PageButton>
+                <PageButton disabled={this.state.step==3 && this.state.generation == this.genPokemon.VIII} alignment={'right'} onClick={()=>this.nextPage()}>
+                    <ForwardIcon size={'33%'}/>
+                </PageButton>
+                <InnerContainerPokedex>
+                    {pokemon_list}
+                </InnerContainerPokedex>
+                <HorizontalButtonContainer align={'bottom'}>
+                    {windowButtons}
+                </HorizontalButtonContainer>
+            </AvatarContainer>)
+
+    }
+
+    generationTabs() {
+        return (<HorizontalButtonContainer align={'top'}>
+            {Object.keys(this.genPokemon).map((key,index) => {
+                return (
+                    <PokedexGenerationButton gen={key} width={500/8} margin={"0px"} disabled={this.state.generation == (this.genPokemon[key])} onClick={() => {
+                        this.goToGeneration(this.genPokemon[key])
+                    }}>
+                        {key}
+                    </PokedexGenerationButton>
+                );
+            })}
+        </HorizontalButtonContainer>)
+
+    }
+
+    goToGeneration(newGeneration){
+        this.setState({step: 0})
+        this.setState({generation: (newGeneration)})
+    }
+
+    goToStep(newStep) {
+        this.setState({step: (newStep)} )
+    }
 
     render() {
         return (
@@ -95,7 +298,13 @@ class MainMenu extends React.Component {
                 {console.log(localStorage.getItem('token'))}
                 {console.log(localStorage.getItem('id'))}
                 <Header height={140} top={33}/>
-                <FormContainer>
+                <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                >
+                <FormContainer width={'500px'}>
                     <Form>
                         <ButtonContainer>
 
@@ -125,6 +334,13 @@ class MainMenu extends React.Component {
 
                     </Form>
                 </FormContainer>
+                    <div><br/><br/>
+                {
+                    this.state.user ?  this.SpritesGenerator() : <Spinner/>
+                }
+                    </div>
+                </Grid>
+
             </BaseContainer>
         );
     }

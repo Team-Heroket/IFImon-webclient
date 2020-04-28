@@ -1,12 +1,35 @@
 import React from 'react';
 import styled from 'styled-components';
-import {BaseContainer, ButtonContainer, FormContainer, GameContainer, PlayerContainer, Row} from '../../helpers/layout';
+import {
+    AvatarContainer,
+    BaseContainer,
+    ButtonContainer,
+    HorizontalButtonContainer,
+    FormContainer,
+    GameContainer,
+    PlayerContainer,
+    Row, SimpleContainer, InnerContainerPokedex
+} from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
-import {Button, LogOutButton, RoundContainer} from '../../views/design/Button';
+import {
+    AvatarButton,
+    Button,
+    DotButton,
+    LogOutButton,
+    PokedexGenerationButton,
+    RoundContainer
+} from '../../views/design/Button';
 import Header from "../../views/Header";
-import {BackIcon, BerriesIconWithBadge, LogoPokeball} from "../../views/design/Icons";
+import {
+    BackButton,
+    BackIcon,
+    BerriesIconWithBadge,
+    EncounteredPokemonSprite,
+    LogoPokeball,
+    NewPokemonSprite
+} from "../../views/design/Icons";
 import {ChooseCategory} from "../online/game/afterGameStart/subScreens/ChooseCategory";
 import {Evolve} from "../online/game/afterGameStart/subScreens/Evolve";
 import {Clock} from "../online/game/afterGameStart/Clock";
@@ -20,71 +43,8 @@ import Badge from "@material-ui/core/Badge";
 import Confetti from "../shared/Confetti";
 import {Spectator} from "../online/game/afterGameStart/subScreens/Spectator";
 import {Result} from "../online/game/afterGameStart/subScreens/Result";
+import {Spinner} from "../../views/design/Spinner";
 
-
-const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 60%;
-  height: 375px;
-  font-size: 16px;
-  font-weight: 300;
-  padding-left: 37px;
-  padding-right: 37px;
-  border-radius: 5px;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-`;
-
-const InputField = styled.input`
-  &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
-  }
-  position: relative;
-  transform : translate(-50%, 0%);
-  height: 35px;
-  width: 400px;
-  left: 50%;
-  border: none;
-  border-radius: 25px;
-  margin-bottom: 20px;
-  padding-left:10px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  
-`;
-
-const PasswordField = styled.input`
-  &::placeholder {
-    color: rgba(255, 255, 255, 1.0);
-  }
-  position: relative;
-  transform : translate(-50%, 0%);
-  height: 35px;
-  width: 400px;
-  left: 50%;
-  border: none;
-  border-radius: 25px;
-  margin-bottom: 20px;
-  padding-left:10px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  font-size: 16px;
-  font-weight: 300;
-  -Webkit-text-security: disc;
-  text-security: disc;
-`;
-
-const Label = styled.label`
-  position: relative;
-  transform : translate(-50%, 0%);
-  width: 400px;
-  left: 50%;
-  color: white;
-  margin-left: 4px;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-`;
 
 /**
  * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
@@ -100,21 +60,41 @@ const Label = styled.label`
 
 class Test extends React.Component {
 
-    doSomethingBeforeUnload = () => {
+
+    constructor() {
+        super();
+        this.state = {
+            user: null,
+            step: 0,
+            generation: this.genPokemon.I
+        };
+
     }
 
-    // Setup the `beforeunload` event listener
-    setupBeforeUnloadListener = () => {
-        window.addEventListener("beforeunload", (ev) => {
-            return this.doSomethingBeforeUnload()
-        });
-    };
+    genPokemon = {
+        I: [1,151],
+        II: [152,251],
+        III: [252,386],
+        IV: [387,493],
+        V: [494, 649],
+        VI: [650, 721],
+        VII: [722, 809],
+        VIII: [810,894]
+    }
 
-    componentDidMount() {
-        // Activate the event listener
-        window.addEventListener('beforeunload', (event) => {
-            event.returnValue = `Are you sure you want to leave?`;
-        });
+    async componentDidMount() {
+
+        try {
+            const resp = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
+
+            let response = resp.data;
+            await this.setState({user: response,
+                avatarClicked: response.avatarId});
+
+        }
+        catch (error) {
+            alert(`Something went wrong: \n${handleError(error)}`);
+        }
     }
     /**
      * If you don’t initialize the state and you don’t bind methods, you don’t need to implement a constructor for your React component.
@@ -1327,22 +1307,93 @@ class Test extends React.Component {
         }
     }
 
-    constructor() {
-        super();
+
+    SpritesGenerator () {
+        let windowButtons = [];
+        let pokemon_list = [];
+        let amountDisplayed = 24;
+        if(this.masterState.creator.user.statistics.encounteredPokemon.length!=0){
+            let start = this.state.generation[0]+this.state.step*(amountDisplayed)+(this.state.step == 0 ? 0 : 1);
+            let end = Math.min(this.state.generation[0]+(this.state.step+1)*amountDisplayed+(this.state.step == 0 ? 0 : 1), this.state.generation[1])
+            for(let i = start; i<=end ; i++){
+                if(this.masterState.creator.user.statistics.encounteredPokemon.includes(i)){
+                    pokemon_list.push(
+                            <EncounteredPokemonSprite alt="avatar" src={'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+i+'.png'} size={"92px"} index = {i}/>
+                    )
+                }
+                else{
+                    pokemon_list.push(
+                        <NewPokemonSprite src={require('../../components/shared/images/pokemonTypesSVG/unknown.svg')} size={"92px"} index = {i}/>
+                    )
+
+                }
+            }
+            for(let stepCounter = 0; this.state.generation[0]+(stepCounter)*amountDisplayed+(stepCounter == 0 ? 0 : 1) < this.state.generation[1]; stepCounter++) {
+                windowButtons.push(
+                    <DotButton width={'9px'} disabled={this.state.step == stepCounter} onClick={() => {
+                        this.goToStep(stepCounter)
+                    }}/>
+                )
+            }
+        }
+        else{
+            return(
+                <AvatarContainer height={'500px'} width={'500px'}>
+                    <SimpleContainer heigth={500} color={'#FFFFFF'} >
+                        Your Pokèdex will start working after your first game!
+                    </SimpleContainer>
+                </AvatarContainer>
+            )
+        }
+        return(
+        <AvatarContainer height={'600px'} width={'500px'} margin={"0px"}>
+            {this.generationTabs()}
+            <InnerContainerPokedex>
+            {pokemon_list}
+            </InnerContainerPokedex>
+            <HorizontalButtonContainer align={'bottom'}>
+            {windowButtons}
+            </HorizontalButtonContainer>
+        </AvatarContainer>)
+
+    }
+
+    generationTabs() {
+        return (<HorizontalButtonContainer align={'top'}>
+            {Object.keys(this.genPokemon).map((key,index) => {
+                return (
+                    <PokedexGenerationButton gen={key} width={500/8} margin={"0px"} disabled={this.state.generation == (this.genPokemon[key])} onClick={() => {
+                        this.goToGeneration(this.genPokemon[key])
+                    }}>
+                        {key}
+                    </PokedexGenerationButton>
+                );
+            })}
+        </HorizontalButtonContainer>)
+
+    }
+
+    goToGeneration(newGeneration){
+        this.setState({step: 0})
+        this.setState({generation: (newGeneration)})
+    }
+
+    goToStep(newStep) {
+        this.setState({step: (newStep)} )
     }
 
 
 
     render() {
-        let steps = ['Select category', 'Evolve Pokémon', 'Results'];
-        return (
-            <GameContainer>
-                <Spectator masterState={this.masterState} history={this.props.history}/>
 
-            </GameContainer>
+        return (
+            <BaseContainer>
+                    {
+                        this.state.user ?  this.SpritesGenerator() : <Spinner/>
+                    }
+            </BaseContainer>
         );
     }
-
 }
 
 /**

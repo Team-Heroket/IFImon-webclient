@@ -342,9 +342,6 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, Winner) =>
                 </PokemonNumber>
 
             </IconContainer>
-            <audio autoPlay>
-                <source src={pokemon.cryURL}></source>
-            </audio>
         </CardContainer>
 
     );
@@ -363,7 +360,5 @@ export let PlaceholderCard = () => {
                 <PlaceholderIcon/>
             </PokeballContainer>
         </CardContainer>
-
-
     );
 };

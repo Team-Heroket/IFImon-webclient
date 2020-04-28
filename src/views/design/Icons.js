@@ -7,11 +7,10 @@ const Logo = styled.svg`
     
     position: relative;
     z-index: 100;  
-    width: 10px;
+    width: ${props => props.size ? props.size : '10px'};
     top: 0%;
     justify-content: center;
     align-items: center;
-    
     transform : translate(-7%, 0%);
 `;
 
@@ -81,10 +80,51 @@ const Container = styled.button`
   background: rgb(255, 255, 255, 0%);
 `;
 
-export const BackIcon = () => {
-    return (
+export const EncounteredPokemonSprite = styled.img`
+&:hover {
+    transform: 'scale(2)')};
+    transition: all 0.3s ease;
+  }
+  position: relative;
+  width: ${props => props.size || "35px"};
+  height: ${props => props.size || "35px"};
+  justify-content: center;
+  align-items: center;
+  z-index: 4;
 
-        <Logo viewBox="0 0 14 25" >
+
+`
+
+
+export const NewPokemonSprite = styled.img`
+&:hover {
+    transform: 'scale(2)')};
+    transition: all 0.3s ease;
+  }
+ scroll-snap-align: start;
+  position: relative;
+  width: ${props => props.size || "35px"};
+  height: ${props => props.size || "35px"};
+  z-index: 4;
+
+`
+
+export const ForwardIcon = ({size = null}) => {
+    return (
+        <Logo viewBox="0 0 14 25" size={size}>
+            <svg width="14" height="25" viewBox="0 0 14 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2.3,0.6L2.3,0.6L2.3,0.6c-0.4-0.4-1-0.4-1.4,0l0,0l0,0c-0.4,0.4-0.4,1,0,1.4l0,0L11,12.5L0.8,23.1l0,0
+	c-0.4,0.4-0.4,1,0,1.4v0l0,0c0.2,0.2,0.4,0.3,0.7,0.3c0.3,0,0.5-0.1,0.7-0.3c0,0,0,0,0,0c0,0,0,0,0,0L13,13.2l0,0
+	c0.4-0.4,0.4-1,0-1.4c0,0,0,0,0,0L2.3,0.6z" fill="white" stroke="white"/>
+</svg>
+
+        </Logo>
+    );
+};
+
+export const BackIcon = ({size = null}) => {
+    return (
+        <Logo viewBox="0 0 14 25" size={size}>
             <svg width="14" height="25" viewBox="0 0 14 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M11.6088 24.4797L11.6088 24.4797L11.6123 24.4833C11.9887 24.8689 12.6098 24.8903 13.009 24.5097L13.009 24.5097L13.0132 24.5056C13.3988 24.1292 13.4202 23.5082 13.0396 23.109L13.0389 23.1083L2.90728 12.5228L13.0345 1.93285L13.035 1.93232C13.4156 1.53316 13.3942 0.912068 13.0086 0.535673L13.0086 0.535646L13.0042 0.531391C12.8147 0.350951 12.5718 0.255615 12.3193 0.255615C12.0596 0.255615 11.7986 0.358085 11.6041 0.561733C11.6041 0.561776 11.604 0.561818 11.604 0.561861C11.6039 0.561909 11.6039 0.561958 11.6038 0.562006L0.824648 11.8374L0.823996 11.8381C0.459175 12.2212 0.452676 12.8251 0.826245 13.2101C0.826888 13.2108 0.82753 13.2115 0.828175 13.2121L11.6088 24.4797Z" fill="white" stroke="white"/>
             </svg>
@@ -106,7 +146,6 @@ export const SocialIcon = () => {
 
 export const KickIcon = () => {
     return (
-
         <LogoKick viewBox="0 0 512 512"  >
             <svg height="512" viewBox="0 0 320.941 320.941" width="512" xmlns="http://www.w3.org/2000/svg">
                 <path d="m290.853 40.118h-181.049c-9.06 0-17.551 4.016-23.301 11.038l-84.241 102.968c-3.017 3.692-3.017 9.001 0 12.693l84.251 102.978c5.739 7.013 14.231 11.028 23.291 11.028h181.048c16.592 0 30.088-13.497 30.088-30.088v-180.529c.001-16.592-13.496-30.088-30.087-30.088zm10.029 210.617c0 5.534-4.496 10.029-10.029 10.029h-181.049c-3.026 0-5.857-1.342-7.767-3.673l-79.05-96.621 79.04-96.611c1.92-2.341 4.75-3.683 7.777-3.683h181.048c5.534 0 10.029 4.496 10.029 10.029.001.001.001 180.53.001 180.53z" fill="white"/>
