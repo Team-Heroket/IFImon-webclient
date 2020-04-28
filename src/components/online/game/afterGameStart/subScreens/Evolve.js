@@ -42,11 +42,6 @@ function getStepContent(step) {
     }
 }
 
-function getSteps() {
-    return ['Select campaign settings', 'Create an ad group', 'Create an ad'];
-
-}
-
 export let Evolve = ({masterState, history}) => {
 
     //This function is evoked after 5 seconds (masterState.startTime+20000 - new Date().getTime()) FOR EVERYONE
@@ -127,6 +122,7 @@ export let Evolve = ({masterState, history}) => {
     }
 
 
+
     return (
         <div>
             <Grid
@@ -139,19 +135,27 @@ export let Evolve = ({masterState, history}) => {
 
                 {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', false)}
 
-                <ButtonContainer>
-                    Do you want to evolve?
-                    <br/>
-                    {evolveButtons()}
-                    <LogOutButton
-                        onClick={() => {
-                            localStorage.setItem("evolveTo", 0)
-                        }}
-                    >
-                        undo
-                    </LogOutButton>
 
-                </ButtonContainer>
+                { masterState.deck.cards[0].evolutionNames.length == 0 ?
+
+                    <ButtonContainer>
+                        {masterState.deck.cards[0].name} has no evolutions!
+                    </ButtonContainer>
+                    :
+                    <ButtonContainer>
+                        Do you want to evolve?
+                        <br/>
+                        {evolveButtons()}
+                        <LogOutButton disabled={()=>masterState.berries<1}
+                            onClick={() => {
+                            localStorage.setItem("evolveTo", 0)}}
+                        >
+                            undo
+                        </LogOutButton>
+                    </ButtonContainer>
+                }
+
+
 
                 {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username, false)}
 

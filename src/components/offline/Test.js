@@ -104,6 +104,124 @@ class Test extends React.Component {
      */
     masterState = {
         id:14,
+        berries:0,
+        deck:{
+            id:37,
+            cards:[
+                {
+                    id:424,
+                    pokemonId:139,
+                    categories:{
+                        "SPEED":55,
+                        "HP":70,
+                        "DEF":125,
+                        "ATK":60,
+                        "WEIGHT":350,
+                        "CAPTURE_RATING":45
+                    },
+                    name:"Omastar1",
+                    spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                    cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                    elements:[
+                        "WATER",
+                        "ROCK"
+                    ],
+                    evolutionNames:[
+                        "WATER",
+                        "ROCK"
+                    ]
+                },
+                {
+                    id:424,
+                    pokemonId:139,
+                    categories:{
+                        "SPEED":55,
+                        "HP":70,
+                        "DEF":125,
+                        "ATK":60,
+                        "WEIGHT":350,
+                        "CAPTURE_RATING":45
+                    },
+                    name:"Omastar2",
+                    spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                    cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                    elements:[
+                        "WATER",
+                        "ROCK"
+                    ],
+                    evolutionNames:[
+
+                    ]
+                },
+                {
+                    id:424,
+                    pokemonId:139,
+                    categories:{
+                        "SPEED":55,
+                        "HP":70,
+                        "DEF":125,
+                        "ATK":60,
+                        "WEIGHT":350,
+                        "CAPTURE_RATING":45
+                    },
+                    name:"Omastar3",
+                    spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                    cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                    elements:[
+                        "WATER",
+                        "ROCK"
+                    ],
+                    evolutionNames:[
+
+                    ]
+                },
+                {
+                    id:424,
+                    pokemonId:139,
+                    categories:{
+                        "SPEED":55,
+                        "HP":70,
+                        "DEF":125,
+                        "ATK":60,
+                        "WEIGHT":350,
+                        "CAPTURE_RATING":45
+                    },
+                    name:"Omastar4",
+                    spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                    cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                    elements:[
+                        "WATER",
+                        "ROCK"
+                    ],
+                    evolutionNames:[
+
+                    ]
+                },
+                {
+                    id:424,
+                    pokemonId:139,
+                    categories:{
+                        "SPEED":55,
+                        "HP":70,
+                        "DEF":125,
+                        "ATK":60,
+                        "WEIGHT":350,
+                        "CAPTURE_RATING":45
+                    },
+                    name:"Omastar5",
+                    spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                    cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                    elements:[
+                        "WATER",
+                        "ROCK"
+                    ],
+                    evolutionNames:[
+
+                    ]
+                }
+            ],
+            empty:false
+        },
         gameName:"lol",
         token:"Kricketot",
         creator:{
@@ -180,8 +298,8 @@ class Test extends React.Component {
                             "WATER",
                             "ROCK"
                         ],
-                        evolutionNames:[
-
+                        evolutionNames: [
+                            'Omastar1', 'Omastar1'
                         ]
                     },
                     {
@@ -325,7 +443,7 @@ class Test extends React.Component {
                     },
                     creationDate:"26.04.2020",
                     online:true,
-                    id:1,
+                    id:2,
                     npc:false
                 },
                 id:43,
@@ -495,7 +613,7 @@ class Test extends React.Component {
                     },
                     creationDate:"26.04.2020",
                     online:true,
-                    id:1,
+                    id:3,
                     npc:false
                 },
                 id:43,
@@ -665,7 +783,7 @@ class Test extends React.Component {
                     },
                     creationDate:"26.04.2020",
                     online:true,
-                    id:1,
+                    id:4,
                     npc:false
                 },
                 id:43,
@@ -837,7 +955,7 @@ class Test extends React.Component {
                     },
                     creationDate:"26.04.2020",
                     online:true,
-                    id:1,
+                    id:4,
                     npc:false
                 },
                 id:43,
@@ -1007,7 +1125,7 @@ class Test extends React.Component {
                     },
                     creationDate:"26.04.2020",
                     online:true,
-                    id:1,
+                    id:5,
                     npc:false
                 },
                 id:43,
@@ -1131,7 +1249,7 @@ class Test extends React.Component {
             }
         ],
         mode:"SOCIAL",
-        category:"DEF",
+        chosenCategory:"DEF",
         state:"RUNNING",
         creationTime:"1587916419782",
         startTime:"1587916794381",
@@ -1388,9 +1506,7 @@ class Test extends React.Component {
 
         return (
             <BaseContainer>
-                    {
-                        this.state.user ?  this.SpritesGenerator() : <Spinner/>
-                    }
+                    <Result masterState={this.masterState} history={this.props.history}/>
             </BaseContainer>
         );
     }

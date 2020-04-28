@@ -52,46 +52,45 @@ export let Result = ({masterState, history}) => {
         return(<ButtonContainer>
             {
                 masterState.players.map(player => {
-                    if(!(player.user.id == localStorage.getItem('id'))){
-                        if(masterState.winners>1){
-                            let printed = false;
-                            for (let c = 0; c < masterState.winners.length; c++) {
-                                if (masterState.winners[c].user.username == player.user.username) {
-                                    printed = true;
-                                    return (
-                                        <Badge color={"secondary"} badgeContent={"Winner"}>
-                                            <PlayerContainer>
-                                                <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
-                                            </PlayerContainer>
-                                        </Badge>
-                                    )
-                                }
-                            }
-                            if(!printed){
+                    if(masterState.winners.length>1){
+                        let printed = false;
+                        for (let c = 0; c < masterState.winners.length; c++) {
+                            if (masterState.winners[c].user.username == player.user.username) {
+                                printed = true;
                                 return (
-                                    <PlayerContainer>
-                                        <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
-                                    </PlayerContainer>
-                                );
+                                    <Badge color={"primary"} badgeContent={"Draw"}>
+                                        <PlayerContainer>
+                                            <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
+                                        </PlayerContainer>
+                                    </Badge>
+                                )
                             }
-                        }else{
-                        if(masterState.winners[0].user.id === player.user.id){
+                        }
+                        if(!printed){
                             return (
-                                <Badge color={"secondary"} badgeContent={"Winner"}>
                                 <PlayerContainer>
                                     <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
                                 </PlayerContainer>
-                                </Badge>
-                            )
+                            );
                         }
-                        else{
-                            return(
-                                    <PlayerContainer>
-                                        <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
-                                    </PlayerContainer>
-                            )
-                        }}
+                    }else{
+                    if(masterState.winners[0].user.id === player.user.id){
+                        return (
+                            <Badge color={"secondary"} badgeContent={"Winner"}>
+                            <PlayerContainer>
+                                <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
+                            </PlayerContainer>
+                            </Badge>
+                        )
                     }
+                    else{
+                        return(
+                                <PlayerContainer>
+                                    <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
+                                </PlayerContainer>
+                        )
+                    }}
+
 
                 })
             }
@@ -149,11 +148,10 @@ export let Result = ({masterState, history}) => {
                 {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', false)}
             </div>
             <div>
-                {masterState.winners.length >1 ? <h1> Draw </h1>: null}
                 {showCards()}
             </div>
             <div>
-                <Badge color={"secondary"} badgeContent={"winner"}>
+                <Badge color={masterState.winners.length >1 ?'primary': 'secondary'} badgeContent={masterState.winners.length >1 ?'Draw': 'Winner'}>
                     {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username, true) }
                 </Badge>
 

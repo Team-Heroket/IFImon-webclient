@@ -70,6 +70,8 @@ export let ChooseCategory = ({masterState, history}) => {
 
         if(masterState.amITurnPlayer){
             steps[0] = 'Select category';
+        }else{
+            steps[0] = masterState.turnPlayer.user.username + 'is choosing';
         }
         return (<ButtonContainer>
                     {masterState.players.map(player => {

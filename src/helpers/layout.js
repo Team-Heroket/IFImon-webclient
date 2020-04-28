@@ -42,6 +42,7 @@ export const GameContainer = styled.div`
 export const  ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
+  color: white;
   
   align-items: center;
   justify-content: center;

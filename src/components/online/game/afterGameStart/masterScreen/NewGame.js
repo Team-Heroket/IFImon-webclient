@@ -1,40 +1,18 @@
 import React from 'react';
 import {withRouter} from "react-router-dom";
-import {
-    BaseContainer,
-    ButtonContainer,
-    FormContainer,
-    PokeCodeContainer,
-    PlayerContainer,
-    GameContainer, Row
-} from "../../../../../helpers/layout";
+import {GameContainer, Row} from "../../../../../helpers/layout";
 import Header from "../../../../../views/Header";
 import styled from "styled-components";
-import {Button, MenuButton, RoundContainer, TransparentButton} from "../../../../../views/design/Button";
+import {RoundContainer} from "../../../../../views/design/Button";
 import {BackIcon} from "../../../../../views/design/Icons";
 import {api, handleError} from "../../../../../helpers/api";
 import {Spinner} from "../../../../../views/design/Spinner";
-import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin, PlayerStatCard} from "../../../../../views/Player";
-import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import {ChooseCategory} from "../subScreens/ChooseCategory";
 import {Evolve} from "../subScreens/Evolve";
 import {Finished} from "../subScreens/Finished";
 import {Result} from "../subScreens/Result";
 import {Clock} from "../Clock";
-import {Spectator} from "../subScreens/Spectator";import PropTypes from 'prop-types';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import Check from '@material-ui/icons/Check';
-import SettingsIcon from '@material-ui/icons/Settings';
-import GroupAddIcon from '@material-ui/icons/GroupAdd';
-import VideoLabelIcon from '@material-ui/icons/VideoLabel';
-import StepConnector from '@material-ui/core/StepConnector';
-import ButtonUI from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import {ColorlibStepIcon, ColorlibConnector, useColorlibStepIconStyles, useStyles} from "../../../../../views/design/Stepper";
+import {Spectator} from "../subScreens/Spectator";
 
 
 

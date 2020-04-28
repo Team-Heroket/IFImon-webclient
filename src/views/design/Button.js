@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import React from "react";
-import {BackIcon, LeaderboardIcon, QuickplayIcon, SettingsIcon, SocialIcon} from "./Icons";
+import {BackIcon, LeaderboardIcon, QuickplayIcon, SettingsIcon, SocialIcon, TutorialIcon} from "./Icons";
 
 export const Button = styled.button`
   &:hover {
@@ -63,7 +63,7 @@ export const PageButton = styled.button`
     transition: all 0.3s ease;
   }
   &:active {
-    transform: ${props => (props.disabled ? 'scale(1)' : 'scale(2.6)')};
+    transform: ${props => (props.alignment=='left' ? 'translateX(-10px)' : 'translateX(10px)')};
     transition: all 0.3s ease;
   }
   position: absolute;
@@ -163,12 +163,13 @@ export const MenuButton = styled.button`
 
 export const LogOutButton = styled.button`
   &:hover {
-    transform: translateY(2px);
+    transform: ${props => (props.disabled ? 'translateY(0px)' :'translateY(2px)')};
     font-weight: 700;
     color: rgba(255, 255, 255, 1);
     opacity:  ${props => (props.disabled ? "66%" : "90%")};;
-    border: 0px solid #FFFFFF;;
-    background:  ${props => (props.disabled ? "" : "linear-gradient(227.89deg, #F53E28 1.67%, rgba(255, 255, 255, 0) 322.73%), #FCE93A")};
+    border: ${props => (props.disabled ? '1' :'0')}px solid #FFFFFF;;
+    background:  ${props => (props.disabled ? 'rgba(255,255,255,0)' : "linear-gradient(227.89deg, #F53E28 1.67%, rgba(255, 255, 255, 0) 322.73%), #FCE93A")}; 
+  opacity: ${props => (props.disabled ? "0%" : "100%")};
     transition: all 0.3s ease;
   }
   padding: 6px;
@@ -184,7 +185,7 @@ export const LogOutButton = styled.button`
   border-radius: 25px;
   margin-top: 30px;
   cursor: ${props => (props.disabled ? "default" : "pointer")};
-  opacity: ${props => (props.disabled ? "66%" : "90%")};
+  opacity: ${props => (props.disabled ? "0%" : "90%")};
   background: rgb(255, 255, 255);
   transition: all 0.1s ease;
 `;
@@ -376,6 +377,8 @@ function buttonIcon(type) {
             return <SocialIcon/>;
         case('quickplay'):
             return <QuickplayIcon/>;
+        case('tutorial'):
+            return <TutorialIcon/>;
     };
 }
 
