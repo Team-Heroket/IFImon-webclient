@@ -174,7 +174,7 @@ class Login extends React.Component {
                            color="inherit"
                            size="small"
                            onClick={() => {
-                             this.setState({openError: false});
+                             this.setState({openSuccess: false});
                            }}
                        >
                          <CloseIcon fontSize="inherit"/>
