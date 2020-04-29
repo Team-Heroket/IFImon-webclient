@@ -65,7 +65,7 @@ export const  HorizontalButtonContainer = styled.div`
 `;
 
 export const FormContainer = styled.div`
-  margin-top: 2em;
+  margin-top: ${props => props.margin || '2em'};
   width: ${props => props.width || null};
   display: flex;
   flex-direction: column;
@@ -83,6 +83,18 @@ export const SimpleContainer = styled.div`
   align-items: center;
   margin-top: ${props => (props.heigth/2-5)+'px' || null}
   display: flex;
+`;
+
+export const SimpleColumnContainer = styled.div`
+  width: ${props => props.width || null};
+  float: ${props => props.defFloat || null};
+  color: ${props => props.color || null};;
+  justify-content:center;
+  margin:auto;
+  align-items: center;
+  margin-top: ${props => (props.heigth/2-5)+'px' || null}
+  display: flex;
+  flex-direction: column;
 `;
 
 export const PokeCodeContainer = styled.label`

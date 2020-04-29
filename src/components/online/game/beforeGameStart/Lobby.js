@@ -4,10 +4,11 @@ import {BaseContainer, ButtonContainer, FormContainer, PokeCodeContainer, Player
 import Header from "../../../../views/Header";
 import styled from "styled-components";
 import {Button, MenuButton, RoundContainer, TransparentButton} from "../../../../views/design/Button";
-import {BackIcon} from "../../../../views/design/Icons";
+import {BackButton, BackIcon, SoundButton} from "../../../../views/design/Icons";
 import {api, handleError} from "../../../../helpers/api";
 import {Spinner} from "../../../../views/design/Spinner";
 import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin} from "../../../../views/Player";
+import Grid from "@material-ui/core/Grid";
 
 
 const Row = styled.div`
@@ -290,13 +291,23 @@ class Lobby extends React.Component {
                     <Spinner/> ) :
                 <div>
                     {console.log("Went in main")}
-                <Row>
-                    <RoundContainer onClick={() => {
-                        this.goBack()
-                    }}>
-                        <BackIcon/>
-                    </RoundContainer>
-                </Row>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="space-between"
+                        alignItems="flex-start"
+                    >
+                        <BackButton action={() => {this.goBack()}}/>
+                        {localStorage.getItem('VolumeMuted')=='true'?
+                            <SoundButton mute={false} action={()=>{
+                                localStorage.setItem('VolumeMuted', 'false');
+                                this.forceUpdate()}} />
+                            :
+                            <SoundButton mute={true} action={() => {
+                                localStorage.setItem('VolumeMuted', 'true');
+                                this.forceUpdate()}} />
+                        }
+                    </Grid>
                 <FormContainer>
                     <Form>
                         <Label>

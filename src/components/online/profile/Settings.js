@@ -8,8 +8,9 @@ import {Button, AvatarButton, RoundContainer} from '../../../views/design/Button
 import ReactDOM from "react-dom";
 import Header from "../../../views/Header";
 import {Player, PlayerStatCard} from "../../../views/Player";
-import {BackIcon} from "../../../views/design/Icons";
+import {BackButton, BackIcon, SoundButton} from "../../../views/design/Icons";
 import {Spinner} from "../../../views/design/Spinner";
+import Grid from "@material-ui/core/Grid";
 
 const Label = styled.label`
   position: relative;
@@ -228,17 +229,27 @@ class Settings extends React.Component {
         return(
                     <BaseContainer>
                         <Header height={140} top={33}/>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="space-between"
+                            alignItems="flex-start"
+                        >
+                            <BackButton action={() => {this.goBack()}}/>
+                            {localStorage.getItem('VolumeMuted')=='true'?
+                                <SoundButton mute={false} action={()=>{
+                                    localStorage.setItem('VolumeMuted', 'false');
+                                    this.forceUpdate()}} />
+                                :
+                                <SoundButton mute={true} action={() => {
+                                    localStorage.setItem('VolumeMuted', 'true');
+                                    this.forceUpdate()}} />
+                            }
+                        </Grid>
                         {!this.state.user ?
                             null
                             :
                             <div>
-                            <Row>
-                                <RoundContainer onClick={() => {
-                                    this.goBack()
-                                }}>
-                                    <BackIcon/>
-                                </RoundContainer>
-                            </Row>
 
 
                         {this.state.editClicked ? null :

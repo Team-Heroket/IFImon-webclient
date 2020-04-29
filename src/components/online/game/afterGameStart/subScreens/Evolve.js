@@ -22,6 +22,7 @@ import {ColorlibConnector, ColorlibStepIcon} from "../../../../../views/design/S
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
+import Badge from "@material-ui/core/Badge";
 
 
 const Column = styled.div`
@@ -146,7 +147,7 @@ export let Evolve = ({masterState, history}) => {
                         Do you want to evolve?
                         <br/>
                         {evolveButtons()}
-                        <LogOutButton disabled={()=>masterState.berries<1}
+                        <LogOutButton disabled={masterState.berries<1}
                             onClick={() => {
                             localStorage.setItem("evolveTo", 0)}}
                         >
@@ -156,9 +157,9 @@ export let Evolve = ({masterState, history}) => {
                 }
 
 
-
-                {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username, false)}
-
+                <Badge color={'primary'} badgeContent={'Current winner'}>
+                 {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username, false)}
+                </Badge>
             </Grid>
         </div>
 

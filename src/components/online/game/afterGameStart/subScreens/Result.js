@@ -136,6 +136,8 @@ export let Result = ({masterState, history}) => {
         );
     }
 
+    let winnersUsername = masterState.winners[0].user.username == masterState.player_me.user.username ? 'Your Card' : masterState.winners[0].user.username;
+
     return (
         <Grid
             container
@@ -152,7 +154,7 @@ export let Result = ({masterState, history}) => {
             </div>
             <div>
                 <Badge color={masterState.winners.length >1 ?'primary': 'secondary'} badgeContent={masterState.winners.length >1 ?'Draw': 'Winner'}>
-                    {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username, true) }
+                    {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, winnersUsername, true) }
                 </Badge>
 
             </div>

@@ -11,11 +11,12 @@ import {
     RoundContainer,
     TextRoundContainer
 } from "../../../../views/design/Button";
-import {BackIcon, KickIcon} from "../../../../views/design/Icons";
+import {BackButton, BackIcon, KickIcon, SoundButton} from "../../../../views/design/Icons";
 import {api, handleError} from "../../../../helpers/api";
 import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin} from "../../../../views/Player";
 import {Spinner} from "../../../../views/design/Spinner";
 import {CenterContainer} from "./Lobby";
+import Grid from "@material-ui/core/Grid";
 
 const Form = styled.div`
   display: flex;
@@ -332,7 +333,6 @@ class CreateGame extends React.Component {
 
 
     goBack() {
-
         this.leaveGame();
         this.props.history.push('/socialmode');
     }
@@ -407,11 +407,23 @@ class CreateGame extends React.Component {
         return (
             <BaseContainer>
                 <Header height={140} top={33}/>
-                <RoundContainer onClick={() => {
-                    this.goBack()
-                }}>
-                    <BackIcon/>
-                </RoundContainer>
+                <Grid
+                    container
+                    direction="row"
+                    justify="space-between"
+                    alignItems="flex-start"
+                >
+                    <BackButton action={() => {this.goBack()}}/>
+                    {localStorage.getItem('VolumeMuted')=='true'?
+                        <SoundButton mute={false} action={()=>{
+                            localStorage.setItem('VolumeMuted', 'false');
+                            this.forceUpdate()}} />
+                        :
+                        <SoundButton mute={true} action={() => {
+                            localStorage.setItem('VolumeMuted', 'true');
+                            this.forceUpdate()}} />
+                    }
+                </Grid>
                 <FormContainer>
                     {(!this.state.users || !this.state.admin || this.state.startingGame) ? (
                         <Spinner/>) : <Form>

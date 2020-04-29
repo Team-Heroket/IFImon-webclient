@@ -109,6 +109,7 @@ class Test extends React.Component {
         id:14,
         berries:0,
         username:"asd",
+        amIAdmin: true,
         deck:{
             id:37,
             cards:[
@@ -1599,7 +1600,6 @@ class Test extends React.Component {
         }
     }
 
-
     SpritesGenerator () {
         let windowButtons = [];
         let pokemon_list = [];
@@ -1702,7 +1702,7 @@ class Test extends React.Component {
                 <BackButton action={() => {this.goBack()}}/>
             </Grid>
             <BaseContainer>
-                    <Finished masterState={this.masterState} history={this.props.history}/>
+                    <Spectator masterState={this.masterState} history={this.props.history}/>
             </BaseContainer>
             </GameContainer>
         );

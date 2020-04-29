@@ -46,7 +46,7 @@ export const EvolveButton = styled.button`
   font-size: 16px;
   text-align: center;
   color: ${props => (props.disabled ? "rgba(255, 255, 255, 1)" : "rgba(142, 197, 177, 1)")};
-  width: 100%;
+  width: ${props => props.width || '100%'};;
   height: 35px;
   border: 1px solid #FFFFFF;;
   border-radius: 25px;

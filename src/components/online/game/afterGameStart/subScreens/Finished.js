@@ -1,7 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import {ButtonContainer, FormContainer} from "../../../../../helpers/layout";
-import {LogOutButton} from "../../../../../views/design/Button";
+import {
+    ButtonContainer,
+    FormContainer,
+    GameContainer,
+    SimpleColumnContainer,
+    SimpleContainer
+} from "../../../../../helpers/layout";
+import {EvolveButton, LogOutButton} from "../../../../../views/design/Button";
 import Confetti from "../../../../shared/Confetti";
 import Grid from "@material-ui/core/Grid";
 import {Clock} from "../Clock";
@@ -22,7 +28,6 @@ const Space = styled.div`
 
 const Label = styled.label`
   position: relative;
-  transform : translate(-50%, 0%);
   width: 400px;
  
   color: white;
@@ -34,17 +39,6 @@ const Label = styled.label`
   text-align: center;
 `;
 
-const Label2 = styled.label`
-  position: relative;
-  transform : translate(-50%, 0%);
-  width: 400px;
- 
-  color: white;
-  
-  margin-bottom: 50px;
-  text-transform: uppercase;
-  text-align: center;
-`;
 let clock;
 clock = {
     GAMESTART: "gamestart",
@@ -86,38 +80,39 @@ export let Finished = ({masterState, history}) => {
 
 
     return (
-        <div>
+            <FormContainer margin={'5em'}>
             <Grid
                 container
                 direction="row"
                 justify="space-evenly"
                 alignItems="center">
                 <div>
+                    <ButtonContainer>
                     {masterState.winners[0].user.avatarId.valueOf() < 10 ? <img alt="avatar" src={require('../../../../../components/shared/images/avatarSVG/00'+(masterState.winners[0].user.avatarId)+'-avatar.svg')} height={"150px"} width={"150px"}/>
                         : <img alt="avatar" src={require('../../../../../components/shared/images/avatarSVG/0'+(masterState.winners[0].user.avatarId)+'-avatar.svg')} height={"150px"} width={"150px"}/>}
-                    <Space/>
+                    </ButtonContainer>
+                        <Space/>
                     <Label>
                         {winnerText()}
                     </Label>
                 </div>
                 {masterState.amIAdmin ?
-                    <div>
+                    <ButtonContainer>
                         <Clock remainingTime={10000} totalTime={10000} type={clock.REMATCH} />
                         <Space/>
                         <div>
-                            <LogOutButton
-                            width = "50%"
+                            <EvolveButton
+                            width = "150px"
                             onClick={() => {rematch()}} > Rematch
-                            </LogOutButton>
+                            </EvolveButton>
                         </div>
                         <div>
                             <LogOutButton
-                            width = "50%"
+                            width = "100px"
                             onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) history.push('/menu') }} > Leave
                             </LogOutButton>
                         </div>
-
-                    </div>
+                    </ButtonContainer>
                     :
                     <ButtonContainer>
                         <Label>
@@ -132,7 +127,7 @@ export let Finished = ({masterState, history}) => {
                     </ButtonContainer>
                 }
             </Grid>
-        </div>
+    </FormContainer>
 
 
 

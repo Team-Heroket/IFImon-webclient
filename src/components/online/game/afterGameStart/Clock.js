@@ -33,7 +33,7 @@ const renderTimeRematch = value => {
 
     return (
         <div className="timer">
-            <div className="textTimer">Waiting for Admin</div>
+            <div className="textTimer">Rematch?</div>
             <div className="valueTimer">{value}</div>
             <div className="textTimer">seconds</div>
         </div>

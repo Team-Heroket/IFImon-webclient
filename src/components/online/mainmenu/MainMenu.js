@@ -15,7 +15,7 @@ import {
     MenuButtonIcon, DotButton, PokedexGenerationButton, PageButton,
 } from '../../../views/design/Button';
 import Header from "../../../views/Header";
-import {BackIcon, EncounteredPokemonSprite, ForwardIcon, NewPokemonSprite} from "../../../views/design/Icons";
+import {BackIcon, EncounteredPokemonSprite, ForwardIcon, NewPokemonSprite, NextIcon} from "../../../views/design/Icons";
 import {Spinner} from "../../../views/design/Spinner";
 import Grid from "@material-ui/core/Grid";
 
@@ -250,7 +250,7 @@ class MainMenu extends React.Component {
             <AvatarContainer height={'550px'} width={'500px'} margin={"0px"} onScroll={this.handleScroll}>
                 {this.generationTabs()}
                 <PageButton disabled={this.state.step==0 && this.state.generation == this.genPokemon.I} alignment={'left'} onClick={()=>this.previousPage()}>
-                    <BackIcon size={'33%'}/>
+                    <NextIcon size={'33%'}/>
                 </PageButton>
                 <PageButton disabled={this.state.step==3 && this.state.generation == this.genPokemon.VIII} alignment={'right'} onClick={()=>this.nextPage()}>
                     <ForwardIcon size={'33%'}/>

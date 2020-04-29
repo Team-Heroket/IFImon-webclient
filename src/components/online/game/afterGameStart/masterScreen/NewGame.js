@@ -4,7 +4,7 @@ import {GameContainer, Row} from "../../../../../helpers/layout";
 import Header from "../../../../../views/Header";
 import styled from "styled-components";
 import {RoundContainer} from "../../../../../views/design/Button";
-import {BackIcon} from "../../../../../views/design/Icons";
+import {BackButton, BackIcon, SoundButton} from "../../../../../views/design/Icons";
 import {api, handleError} from "../../../../../helpers/api";
 import {Spinner} from "../../../../../views/design/Spinner";
 import {ChooseCategory} from "../subScreens/ChooseCategory";
@@ -13,6 +13,7 @@ import {Finished} from "../subScreens/Finished";
 import {Result} from "../subScreens/Result";
 import {Clock} from "../Clock";
 import {Spectator} from "../subScreens/Spectator";
+import Grid from "@material-ui/core/Grid";
 
 
 
@@ -96,7 +97,7 @@ class NewGame extends React.Component {
             oldPeriod: this.period.INTERMEDIARY,
             currentCard: null,
             oldCard: null,
-            state: null
+            state: null,
         }
     }
 
@@ -569,13 +570,23 @@ class NewGame extends React.Component {
         return (
             <GameContainer>
                 <Header height={140} top={33}/>
-                <Row>
-                    <RoundContainer onClick={() => {
-                        this.goBack()
-                    }}>
-                        <BackIcon/>
-                    </RoundContainer>
-                </Row>
+                <Grid
+                    container
+                    direction="row"
+                    justify="space-between"
+                    alignItems="flex-start"
+                >
+                    <BackButton action={() => {this.goBack()}}/>
+                    {localStorage.getItem('VolumeMuted')=='true'?
+                        <SoundButton mute={false} action={()=>{
+                            localStorage.setItem('VolumeMuted', 'false');
+                            this.forceUpdate()}} />
+                        :
+                        <SoundButton mute={true} action={() => {
+                            localStorage.setItem('VolumeMuted', 'true');
+                            this.forceUpdate()}} />
+                    }
+                </Grid>
 
                 {this.state.justInitialized ?
 

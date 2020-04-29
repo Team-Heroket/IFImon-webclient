@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import { BaseContainer, ButtonContainer, FormContainer, PlayerContainer } from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
 import { withRouter } from 'react-router-dom';
-import { Button, LogOutButton, BackButton, RoundContainer} from '../../../views/design/Button';
+import { Button, LogOutButton, RoundContainer} from '../../../views/design/Button';
 import Header from "../../../views/Header";
 import {PlayerStatCard, Player, PlayerMe} from "../../../views/Player";
 
-import {BackIcon} from "../../../views/design/Icons";
+import {BackButton, BackIcon} from "../../../views/design/Icons";
 import {Spinner} from "../../../views/design/Spinner";
+import Grid from "@material-ui/core/Grid";
 
 const Row = styled.div`
     &::after{
@@ -41,11 +42,14 @@ class Tutorial extends React.Component {
         return (
             <BaseContainer>
                 <Header height={140} top={33}/>
-                <Row>
-                    <RoundContainer onClick = {() => {this.goBack()}}>
-                        <BackIcon />
-                    </RoundContainer>
-                </Row>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                >
+                    <BackButton action={() => {this.goBack()}}/>
+                </Grid>
 
                 <Row>
 
