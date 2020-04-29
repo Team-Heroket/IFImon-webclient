@@ -169,7 +169,7 @@ export const LogOutButton = styled.button`
     opacity:  ${props => (props.disabled ? "66%" : "90%")};;
     border: ${props => (props.disabled ? '1' :'0')}px solid #FFFFFF;;
     background:  ${props => (props.disabled ? 'rgba(255,255,255,0)' : "linear-gradient(227.89deg, #F53E28 1.67%, rgba(255, 255, 255, 0) 322.73%), #FCE93A")}; 
-  opacity: ${props => (props.disabled ? "0%" : "100%")};
+    opacity: ${props => (props.disabled ? "0%" : "100%")};
     transition: all 0.3s ease;
   }
   padding: 6px;
