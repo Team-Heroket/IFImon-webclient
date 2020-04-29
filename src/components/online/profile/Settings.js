@@ -2,14 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import {AvatarContainer, BaseContainer, ButtonContainer, FormContainer} from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
-import User from '../../shared/models/User';
 import { withRouter } from 'react-router-dom';
-import {Button, AvatarButton, RoundContainer} from '../../../views/design/Button';
-import ReactDOM from "react-dom";
+import {Button, AvatarButton} from '../../../views/design/Button';
 import Header from "../../../views/Header";
-import {Player, PlayerStatCard} from "../../../views/Player";
-import {BackButton, BackIcon, SoundButton} from "../../../views/design/Icons";
-import {Spinner} from "../../../views/design/Spinner";
+import {PlayerStatCard} from "../../../views/Player";
+import {BackButton, SoundButton} from "../../../views/design/Icons";
 import Grid from "@material-ui/core/Grid";
 
 const Label = styled.label`

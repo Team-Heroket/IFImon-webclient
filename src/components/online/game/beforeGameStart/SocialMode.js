@@ -3,8 +3,8 @@ import {withRouter} from "react-router-dom";
 import {BaseContainer, ButtonContainer, FormContainer} from "../../../../helpers/layout";
 import Header from "../../../../views/Header";
 import styled from "styled-components";
-import {Button, MenuButton, RoundContainer, TransparentButton} from "../../../../views/design/Button";
-import {BackButton, BackIcon, SoundButton} from "../../../../views/design/Icons";
+import {Button, TransparentButton} from "../../../../views/design/Button";
+import {BackButton, SoundButton} from "../../../../views/design/Icons";
 import {api, handleError} from "../../../../helpers/api";
 import Grid from "@material-ui/core/Grid";
 

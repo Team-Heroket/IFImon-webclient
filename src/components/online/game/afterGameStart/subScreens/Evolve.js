@@ -10,14 +10,13 @@
 
 import React from "react";
 import {api, handleError} from "../../../../../helpers/api";
-import {ButtonContainer, GameContainer, PlayerContainer, Row,} from "../../../../../helpers/layout";
-import {Player, PlayerGame, PlayerMe, PlayerMeGame} from "../../../../../views/Player";
+import {ButtonContainer, PlayerContainer} from "../../../../../helpers/layout";
+import {PlayerGame} from "../../../../../views/Player";
 import styled from "styled-components";
-import {LogOutButton, RoundContainer, Button, AvatarButton, EvolveButton} from "../../../../../views/design/Button";
-import {BackIcon, BerriesIcon, BerriesIconWithBadge} from "../../../../../views/design/Icons";
-import {FocusedPokemonCard, PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
+import {LogOutButton, EvolveButton} from "../../../../../views/design/Button";
+import {BerriesIconWithBadge} from "../../../../../views/design/Icons";
+import {FocusedPokemonCard} from "../../../../../views/design/PokemonCard";
 import Grid from "@material-ui/core/Grid";
-import {Clock} from "../Clock";
 import {ColorlibConnector, ColorlibStepIcon} from "../../../../../views/design/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
@@ -25,23 +24,6 @@ import Stepper from "@material-ui/core/Stepper";
 import Badge from "@material-ui/core/Badge";
 
 
-const Column = styled.div`
-    position: absolute
-    left: auto
-    }
-`
-function getStepContent(step) {
-    switch (step) {
-        case 0:
-            return 'Select campaign settings...';
-        case 1:
-            return 'What is an ad group anyways?';
-        case 2:
-            return 'This is the bit I really care about!';
-        default:
-            return 'Unknown step';
-    }
-}
 
 export let Evolve = ({masterState, history}) => {
 

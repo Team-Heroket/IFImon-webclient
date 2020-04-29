@@ -2,10 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import {
     ButtonContainer,
-    FormContainer,
-    GameContainer,
-    SimpleColumnContainer,
-    SimpleContainer
+    FormContainer
 } from "../../../../../helpers/layout";
 import {EvolveButton, LogOutButton} from "../../../../../views/design/Button";
 import Confetti from "../../../../shared/Confetti";
@@ -50,7 +47,6 @@ clock = {
 
 export let Finished = ({masterState, history}) => {
 
-    let clickedOnRematch
     function winnerText() {
         let text = '';
         if (masterState.winners[0].id === masterState.player_me.id) {

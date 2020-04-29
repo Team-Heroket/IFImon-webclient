@@ -9,28 +9,21 @@
 
 
 import React from "react";
-import {api, handleError} from "../../../../../helpers/api";
 import {
     ButtonContainer,
-    DESKTOP_WIDTH,
-    GameContainer,
-    PlayerContainer, Row,
-    SimpleContainer
+    PlayerContainer
 } from "../../../../../helpers/layout";
-import {Player, PlayerGame, PlayerMe, PlayerMeGame} from "../../../../../views/Player";
-import styled from "styled-components";
-import {LogOutButton, RoundContainer} from "../../../../../views/design/Button";
+import {PlayerGame} from "../../../../../views/Player";
+import {LogOutButton} from "../../../../../views/design/Button";
 import {PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
-import { Redirect } from 'react-router-dom'
 
 import Grid from '@material-ui/core/Grid';
-import {Spinner} from "../../../../../views/design/Spinner";
-import {Clock} from "../Clock";
+
 import {ColorlibConnector, ColorlibStepIcon} from "../../../../../views/design/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
-import {BerriesIcon, BerriesIconWithBadge} from "../../../../../views/design/Icons";
+import {BerriesIconWithBadge} from "../../../../../views/design/Icons";
 
 let category;
 category = {
@@ -48,18 +41,6 @@ clock = {
     PERIOD: "period"
 }
 
-function getStepContent(step) {
-    switch (step) {
-        case 0:
-            return 'Select campaign settings...';
-        case 1:
-            return 'What is an ad group anyways?';
-        case 2:
-            return 'This is the bit I really care about!';
-        default:
-            return 'Unknown step';
-    }
-}
 
 export let ChooseCategory = ({masterState, history}) => {
 

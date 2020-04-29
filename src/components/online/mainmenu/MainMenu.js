@@ -14,7 +14,7 @@ import {
     MenuButtonIcon, DotButton, PokedexGenerationButton, PageButton,
 } from '../../../views/design/Button';
 import Header from "../../../views/Header";
-import {BackIcon, EncounteredPokemonSprite, ForwardIcon, NewPokemonSprite, NextIcon} from "../../../views/design/Icons";
+import {EncounteredPokemonSprite, ForwardIcon, NewPokemonSprite, NextIcon} from "../../../views/design/Icons";
 import {Spinner} from "../../../views/design/Spinner";
 import Grid from "@material-ui/core/Grid";
 

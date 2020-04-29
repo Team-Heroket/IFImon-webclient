@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer, ButtonContainer, FormContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
-import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 import Header from "../../views/Header";
@@ -108,7 +107,7 @@ class Login extends React.Component {
       setTimeout(() => {
         this.setState({openSuccess: false});
         localStorage.setItem('accountCreation', 'false');
-      }, 7000);
+      }, 5000);
     }
   }
   /**

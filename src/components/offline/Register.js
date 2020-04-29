@@ -3,13 +3,10 @@ import styled from 'styled-components';
 import {
     AvatarContainer,
     BaseContainer,
-    ButtonContainer,
     FormContainer,
-    SimpleColumnContainer,
     SimpleContainer
 } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
-import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import {AvatarButton, Button, LogOutButton} from '../../views/design/Button';
 import Header from "../../views/Header";
@@ -19,28 +16,6 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Collapse from "@material-ui/core/Collapse";
 
-
-const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 60%;
-  height: 375px;
-  font-size: 16px;
-  font-weight: 300;
-  padding-left: 37px;
-  padding-right: 37px;
-  border-radius: 5px;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-`;
-
-const Row = styled.div`
-    &::after{
-    content: "";
-    clear: "";
-    display: table "";
-    }
-    `;
 
 const InputField = styled.input`
   &::placeholder {
@@ -86,18 +61,6 @@ const PasswordField = styled.input`
 `;
 
 
-
-const Column = styled.div`
-    float: ${props => props.float || "left"};;
-    align-items: center
-    
-    width = 100%
-    
-    @media only screen and (min-width: 768px){
-    width: 50%;
-    padding-top: 100px;
-    }
-`
 
 const Label = styled.label`
   position: relative;
@@ -212,7 +175,7 @@ class Register extends React.Component {
                 >
                     <FormContainer margin={'100px'}>
                             <Collapse in={this.state.open}>
-                                <Alert severity="warning"
+                                <Alert severity="error"
                                     action={
                                         <IconButton
                                             aria-label="close"

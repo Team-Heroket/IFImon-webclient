@@ -1,14 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BaseContainer, ButtonContainer, FormContainer, PlayerContainer } from '../../../helpers/layout';
-import { api, handleError } from '../../../helpers/api';
+import { BaseContainer} from '../../../helpers/layout';
 import { withRouter } from 'react-router-dom';
-import { Button, LogOutButton, RoundContainer} from '../../../views/design/Button';
 import Header from "../../../views/Header";
-import {PlayerStatCard, Player, PlayerMe} from "../../../views/Player";
-
-import {BackButton, BackIcon} from "../../../views/design/Icons";
-import {Spinner} from "../../../views/design/Spinner";
+import {BackButton} from "../../../views/design/Icons";
 import Grid from "@material-ui/core/Grid";
 
 const Row = styled.div`

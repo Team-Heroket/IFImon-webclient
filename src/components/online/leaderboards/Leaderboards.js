@@ -3,11 +3,10 @@ import styled from 'styled-components';
 import { BaseContainer, ButtonContainer, FormContainer, PlayerContainer } from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
 import { withRouter } from 'react-router-dom';
-import { Button, LogOutButton, RoundContainer} from '../../../views/design/Button';
 import Header from "../../../views/Header";
 import {PlayerStatCard, Player, PlayerMe} from "../../../views/Player";
 
-import {BackButton, BackIcon, SoundButton} from "../../../views/design/Icons";
+import {BackButton} from "../../../views/design/Icons";
 import {Spinner} from "../../../views/design/Spinner";
 import Grid from "@material-ui/core/Grid";
 

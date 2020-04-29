@@ -8,10 +8,9 @@ import {
     KickContainer,
     LogOutButton,
     MenuButton,
-    RoundContainer,
     TextRoundContainer
 } from "../../../../views/design/Button";
-import {BackButton, BackIcon, KickIcon, SoundButton} from "../../../../views/design/Icons";
+import {BackButton, KickIcon, SoundButton} from "../../../../views/design/Icons";
 import {api, handleError} from "../../../../helpers/api";
 import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin} from "../../../../views/Player";
 import {Spinner} from "../../../../views/design/Spinner";
@@ -52,13 +51,6 @@ const ErrorMessage = styled.label`
   margin-bottom: 10px;
 `;
 
-const Row = styled.div`
-    &::after{
-    content: "";
-    clear: "";
-    display: table "";
-    }
-    `;
 
 const Column = styled.div`
     float: ${props => props.floate};
