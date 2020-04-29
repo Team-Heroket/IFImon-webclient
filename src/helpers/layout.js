@@ -137,6 +137,24 @@ export const AvatarContainer = styled.div`
   
 `;
 
+export const PokedexContainer = styled.div`
+  position: relative;
+  padding-top: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  margin-left: ${props => props.margin || "15%"};
+  
+  align-items: center;
+  justify-content: center;
+  
+  border-radius: 25px;
+  margin-top: 5px;
+  height:  ${props => props.height || "350px"};
+  width: ${props => props.width || "450px"};
+  padding-left: ${props => props.margin || "15px"};
+  padding-right: ${props => props.margin || "15px"};
+  
+`;
+
 export const InnerContainerPokedex = styled.div`
  
   align-items: center;

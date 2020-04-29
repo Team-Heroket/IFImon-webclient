@@ -118,6 +118,7 @@ class Register extends React.Component {
         this.handleClick = this.handleClick.bind(this)
         this.state = {
             open: false,
+            errorCode: null,
             password: null,
             username: null,
             avatarId: null,
@@ -177,7 +178,9 @@ class Register extends React.Component {
 
         } catch (error) {
             if(error.response.data.status == '400'){
-                this.setState({open: true});
+                this.setState({open: true, errorCode: 400});
+            }else if(error.response.data.status == '500'){
+                this.setState({open: true, errorCode: 500});
             }
             else{
             alert(`Something went wrong during the login: \n${handleError(error)}`);}
@@ -221,7 +224,7 @@ class Register extends React.Component {
                                         </IconButton>
                                     }
                                 >
-                                    Username already taken!
+                                    {this.state.errorCode == 400 ? 'Username already taken!' : 'Internal Server Error'}
                                 </Alert>
                                 <br/>
                             </Collapse>

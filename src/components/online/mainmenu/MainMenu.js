@@ -1,11 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import {
-    AvatarContainer,
     BaseContainer,
     ButtonContainer,
     FormContainer, HorizontalButtonContainer,
-    InnerContainerPokedex,
+    InnerContainerPokedex, PokedexContainer,
     SimpleContainer
 } from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
@@ -80,14 +79,6 @@ class MainMenu extends React.Component {
             }
         }
     }
-
-    handleScroll = () => {
-
-     this.setState({
-            step: this.state.step+1,
-         });
-     setTimeout(null,1000);
-     }
 
     goToSettings() {
         this.props.history.push('/settings/'+localStorage.getItem('id'))
@@ -239,15 +230,15 @@ class MainMenu extends React.Component {
         }
         else{
             return(
-                <AvatarContainer height={'500px'} width={'500px'}>
+                <PokedexContainer height={'500px'} width={'500px'}>
                     <SimpleContainer heigth={500} color={'#FFFFFF'} >
                         Your Pokèdex will start working after your first game!
                     </SimpleContainer>
-                </AvatarContainer>
+                </PokedexContainer>
             )
         }
         return(
-            <AvatarContainer height={'550px'} width={'500px'} margin={"0px"} onScroll={this.handleScroll}>
+            <PokedexContainer height={'550px'} width={'500px'} margin={"0px"} onScroll={this.handleScroll}>
                 {this.generationTabs()}
                 <PageButton disabled={this.state.step==0 && this.state.generation == this.genPokemon.I} alignment={'left'} onClick={()=>this.previousPage()}>
                     <NextIcon size={'33%'}/>
@@ -261,7 +252,7 @@ class MainMenu extends React.Component {
                 <HorizontalButtonContainer align={'bottom'}>
                     {windowButtons}
                 </HorizontalButtonContainer>
-            </AvatarContainer>)
+            </PokedexContainer>)
 
     }
 

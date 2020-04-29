@@ -129,6 +129,9 @@ class Login extends React.Component {
       else if(error.response.status == 401){
         this.setState({open: true, errorCode: 401});
       }
+      else if(error.response.status == 500){
+        this.setState({open: true, errorCode: 500});
+      }
       else {
         alert(`Something went wrong during the login: \n${handleError(error)}`);
       }
@@ -171,7 +174,7 @@ class Login extends React.Component {
                        </IconButton>
                      }
               >
-                {this.state.errorCode == 404 ?  'User does not exist!' : 'Wrong password!'}
+                {this.state.errorCode == 404 ?  'User does not exist!' : (this.state.errorCode ==500 ? 'Internal Server Error': 'Wrong password!')}
               </Alert>
               <br/>
             </Collapse>
