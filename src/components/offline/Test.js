@@ -27,8 +27,8 @@ import {
     BackIcon,
     BerriesIconWithBadge,
     EncounteredPokemonSprite,
-    LogoPokeball,
-    NewPokemonSprite
+    LogoPokeball, MuteIcon,
+    NewPokemonSprite, SoundButton, VolumeIcon
 } from "../../views/design/Icons";
 import {ChooseCategory} from "../online/game/afterGameStart/subScreens/ChooseCategory";
 import {Evolve} from "../online/game/afterGameStart/subScreens/Evolve";
@@ -44,6 +44,8 @@ import Confetti from "../shared/Confetti";
 import {Spectator} from "../online/game/afterGameStart/subScreens/Spectator";
 import {Result} from "../online/game/afterGameStart/subScreens/Result";
 import {Spinner} from "../../views/design/Spinner";
+import Grid from "@material-ui/core/Grid";
+import {Finished} from "../online/game/afterGameStart/subScreens/Finished";
 
 
 /**
@@ -63,6 +65,7 @@ class Test extends React.Component {
 
     constructor() {
         super();
+        localStorage.setItem('VolumeMuted', 'false');
         this.state = {
             user: null,
             step: 0,
@@ -105,6 +108,7 @@ class Test extends React.Component {
     masterState = {
         id:14,
         berries:0,
+        username:"asd",
         deck:{
             id:37,
             cards:[
@@ -394,10 +398,180 @@ class Test extends React.Component {
                 empty:false
             }
         },
+        player_me: {
+            user:{
+                username:"asd",
+                avatarId:1,
+                statistics:{
+                    encounteredPokemon:[
+                        1,
+                        4,
+                        25,
+                        27,
+                        29,
+                        32,
+                        37,
+                        46,
+                        48,
+                        54,
+                        58,
+                        63,
+                        72,
+                        74,
+                        77,
+                        79,
+                        81,
+                        83,
+                        86,
+                        90,
+                        95,
+                        100,
+                        102,
+                        106,
+                        107,
+                        111,
+                        113,
+                        116,
+                        123,
+                        129,
+                        132,
+                        138,
+                        140,
+                        145
+                    ],
+                    gamesWon:1,
+                    gamesPlayed:1,
+                    rating:2,
+                    storyProgress:0
+                },
+                creationDate:"26.04.2020",
+                online:true,
+                id:1,
+                npc:false
+            },
+            id:43,
+            berries:1,
+            deck:{
+                id:37,
+                cards:[
+                    {
+                        id:424,
+                        pokemonId:139,
+                        categories:{
+                            "SPEED":55,
+                            "HP":70,
+                            "DEF":125,
+                            "ATK":60,
+                            "WEIGHT":350,
+                            "CAPTURE_RATING":45
+                        },
+                        name:"Omastar1",
+                        spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                        cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                        elements:[
+                            "WATER",
+                            "ROCK"
+                        ],
+                        evolutionNames: [
+                            'Omastar1', 'Omastar1'
+                        ]
+                    },
+                    {
+                        id:424,
+                        pokemonId:139,
+                        categories:{
+                            "SPEED":55,
+                            "HP":70,
+                            "DEF":125,
+                            "ATK":60,
+                            "WEIGHT":350,
+                            "CAPTURE_RATING":45
+                        },
+                        name:"Omastar2",
+                        spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                        cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                        elements:[
+                            "WATER",
+                            "ROCK"
+                        ],
+                        evolutionNames:[
+
+                        ]
+                    },
+                    {
+                        id:424,
+                        pokemonId:139,
+                        categories:{
+                            "SPEED":55,
+                            "HP":70,
+                            "DEF":125,
+                            "ATK":60,
+                            "WEIGHT":350,
+                            "CAPTURE_RATING":45
+                        },
+                        name:"Omastar3",
+                        spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                        cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                        elements:[
+                            "WATER",
+                            "ROCK"
+                        ],
+                        evolutionNames:[
+
+                        ]
+                    },
+                    {
+                        id:424,
+                        pokemonId:139,
+                        categories:{
+                            "SPEED":55,
+                            "HP":70,
+                            "DEF":125,
+                            "ATK":60,
+                            "WEIGHT":350,
+                            "CAPTURE_RATING":45
+                        },
+                        name:"Omastar4",
+                        spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                        cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                        elements:[
+                            "WATER",
+                            "ROCK"
+                        ],
+                        evolutionNames:[
+
+                        ]
+                    },
+                    {
+                        id:424,
+                        pokemonId:139,
+                        categories:{
+                            "SPEED":55,
+                            "HP":70,
+                            "DEF":125,
+                            "ATK":60,
+                            "WEIGHT":350,
+                            "CAPTURE_RATING":45
+                        },
+                        name:"Omastar5",
+                        spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                        cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                        elements:[
+                            "WATER",
+                            "ROCK"
+                        ],
+                        evolutionNames:[
+
+                        ]
+                    }
+                ],
+                empty:false
+            }
+        },
         players:[
             {
                 user:{
-                    username:"Tim1",
+                    username:"asd",
                     avatarId:1,
                     statistics:{
                         encounteredPokemon:[
@@ -1500,14 +1674,37 @@ class Test extends React.Component {
         this.setState({step: (newStep)} )
     }
 
+    goBack() {
+        if (window.confirm('Are you sure you want to leave the game?')) this.props.history.push('/menu')
+    }
 
 
     render() {
 
         return (
+            <GameContainer>
+            <Header height={140} top={33}/>
+                <Grid
+                    container
+                    direction="row"
+                    justify="space-between"
+                    alignItems="flex-start"
+                >
+                {localStorage.getItem('VolumeMuted')=='true'?
+                    <SoundButton mute={false} action={()=>{
+                        localStorage.setItem('VolumeMuted', 'false');
+                        this.forceUpdate()}} />
+                :
+                    <SoundButton mute={true} action={() => {
+                        localStorage.setItem('VolumeMuted', 'true');
+                        this.forceUpdate()}} />
+                }
+                <BackButton action={() => {this.goBack()}}/>
+            </Grid>
             <BaseContainer>
-                    <Result masterState={this.masterState} history={this.props.history}/>
+                    <Finished masterState={this.masterState} history={this.props.history}/>
             </BaseContainer>
+            </GameContainer>
         );
     }
 }
