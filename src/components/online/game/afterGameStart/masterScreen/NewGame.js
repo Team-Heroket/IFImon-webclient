@@ -38,6 +38,7 @@ class NewGame extends React.Component {
     timeout_evolve = null;
     timeout_callNext = null;
     timeout_waitForAdmin = null;
+    timeout_all = null;
 
     timer_spectator = null;
     timer_waitForNextTurn = null;
@@ -477,6 +478,9 @@ class NewGame extends React.Component {
 
 
     componentWillUnmount() {
+        clearTimeout(this.timeout_all)
+        this.timeout_all = null;
+
         clearTimeout(this.timeout_makeTurn);
         this.timeout_makeTurn = null;
 
