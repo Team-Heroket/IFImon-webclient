@@ -106,7 +106,8 @@ class Login extends React.Component {
     if (localStorage.getItem('accountCreation') == 'true') {
       this.setState({openSuccess: true});
       setTimeout(() => {
-        this.setState({openSuccess: false})
+        this.setState({openSuccess: false});
+        localStorage.setItem('accountCreation', 'false');
       }, 7000);
     }
   }
