@@ -3,8 +3,7 @@ import {withRouter} from "react-router-dom";
 import {GameContainer, Row} from "../../../../../helpers/layout";
 import Header from "../../../../../views/Header";
 import styled from "styled-components";
-import {RoundContainer} from "../../../../../views/design/Button";
-import {BackButton, BackIcon, SoundButton} from "../../../../../views/design/Icons";
+import {BackButton, SoundButton} from "../../../../../views/design/Icons";
 import {api, handleError} from "../../../../../helpers/api";
 import {Spinner} from "../../../../../views/design/Spinner";
 import {ChooseCategory} from "../subScreens/ChooseCategory";
@@ -97,7 +96,7 @@ class Game extends React.Component {
             oldPeriod: this.period.INTERMEDIARY,
             currentCard: null,
             oldCard: null,
-            state: null,
+            state: null
         }
     }
 
@@ -319,8 +318,10 @@ class Game extends React.Component {
                     this.makeTurn();
                 }, 13000)
                 this.timeout_waitForCategoryResult = setTimeout(() => {
-                    this.getGameInfo();
-                }, 15000)
+                    this.timer_waitForCategory= setInterval(() => {
+                        this.getGameInfo()
+                    }, 1000)
+                }, 12000)
             }
             else {
                 this.timer_waitForCategory= setInterval(() => {
