@@ -209,7 +209,12 @@ class NewGame extends React.Component {
 
 
         } catch (error) {
-            alert(`Something went wrong: \n${handleError(error)}`);
+            if (error.response.status == 404) {
+                this.props.history.push('/menu')
+            }
+            else {
+                alert(`Something went wrong: \n${handleError(error)}`);
+            }
         }
     }
 
@@ -411,7 +416,7 @@ class NewGame extends React.Component {
         if (this.state.amIAdmin) {
             this.timeout_waitForAdmin = setTimeout(() => {
                 this.props.history.push('/menu')
-            }, 10000)
+            }, 15000)
 
             this.timer_listenToAdmin = setInterval(() => {
                 this.getGameWaitForAdmin();

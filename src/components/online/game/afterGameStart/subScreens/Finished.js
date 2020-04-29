@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components";
-import {FormContainer} from "../../../../../helpers/layout";
+import {ButtonContainer, FormContainer} from "../../../../../helpers/layout";
 import {LogOutButton} from "../../../../../views/design/Button";
 import Confetti from "../../../../shared/Confetti";
 import Grid from "@material-ui/core/Grid";
 import {Clock} from "../Clock";
 import {api, handleError} from "../../../../../helpers/api";
+import {Spinner} from "../../../../../views/design/Spinner";
 
 /**
     This will be displayed when the whole Game is finished
@@ -30,6 +31,19 @@ const Label = styled.label`
   text-transform: uppercase;
   font-size: 30px;
   font-weight: 300;
+  text-align: center;
+`;
+
+const Label2 = styled.label`
+  position: relative;
+  transform : translate(-50%, 0%);
+  width: 400px;
+ 
+  color: white;
+  
+  margin-bottom: 50px;
+  text-transform: uppercase;
+  text-align: center;
 `;
 let clock;
 clock = {
@@ -70,9 +84,14 @@ export let Finished = ({masterState, history}) => {
 
 
 
+
     return (
         <div>
-            <Grid>
+            <Grid
+                container
+                direction="row"
+                justify="space-evenly"
+                alignItems="center">
                 <div>
                     {masterState.winners[0].user.avatarId.valueOf() < 10 ? <img alt="avatar" src={require('../../../../../components/shared/images/avatarSVG/00'+(masterState.winners[0].user.avatarId)+'-avatar.svg')} height={"150px"} width={"150px"}/>
                         : <img alt="avatar" src={require('../../../../../components/shared/images/avatarSVG/0'+(masterState.winners[0].user.avatarId)+'-avatar.svg')} height={"150px"} width={"150px"}/>}
@@ -85,24 +104,32 @@ export let Finished = ({masterState, history}) => {
                     <div>
                         <Clock remainingTime={10000} totalTime={10000} type={clock.REMATCH} />
                         <Space/>
-                        <LogOutButton
+                        <div>
+                            <LogOutButton
                             width = "50%"
                             onClick={() => {rematch()}} > Rematch
-                        </LogOutButton>
-                        <LogOutButton
+                            </LogOutButton>
+                        </div>
+                        <div>
+                            <LogOutButton
                             width = "50%"
                             onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) history.push('/menu') }} > Leave
-                        </LogOutButton>
+                            </LogOutButton>
+                        </div>
+
                     </div>
                     :
-                    <div>
-                        <Clock remainingTime={15000} totalTime={15000} type={clock.REMATCH} />
+                    <ButtonContainer>
+                        <Label>
+                            Wait for Admin...
+                        </Label>
                         <Space/>
+                        <Spinner/>
                         <LogOutButton
                             width = "50%"
                             onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) history.push('/menu') }} > Leave
                         </LogOutButton>
-                    </div>
+                    </ButtonContainer>
                 }
             </Grid>
         </div>

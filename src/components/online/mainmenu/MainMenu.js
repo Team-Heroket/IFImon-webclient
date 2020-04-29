@@ -70,7 +70,14 @@ class MainMenu extends React.Component {
 
         }
         catch (error) {
-            alert(`Something went wrong: \n${handleError(error)}`);
+            if (error.response.status == 401) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('id');
+                this.props.history.push('/login')
+            }
+            else {
+                alert(`Something went wrong: \n${handleError(error)}`);
+            }
         }
     }
 
