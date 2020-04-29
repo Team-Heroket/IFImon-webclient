@@ -97,8 +97,18 @@ class Login extends React.Component {
     this.state = {
       password: null,
       username: null,
-      open: false
+      openError: false,
+      openSuccess: false
     };
+  }
+
+  componentDidMount() {
+    if (localStorage.getItem('accountCreation') == 'true') {
+      this.setState({openSuccess: true});
+      setTimeout(() => {
+        this.setState({openSuccess: false})
+      }, 7000);
+    }
   }
   /**
    * HTTP POST request is sent to the backend.
@@ -124,10 +134,10 @@ class Login extends React.Component {
       this.props.history.push(`/menu`);
     } catch (error) {
       if(error.response.data.error == 'User not found'){
-        this.setState({open: true, errorCode: 404});
+        this.setState({openError: true, errorCode: 404});
       }
       else if(error.response.status == 401){
-        this.setState({open: true, errorCode: 401});
+        this.setState({openError: true, errorCode: 401});
       }
       else {
         alert(`Something went wrong during the login: \n${handleError(error)}`);
@@ -156,7 +166,26 @@ class Login extends React.Component {
         <Header height={195} top={66} />
         <FormContainer>
           <Form>
-            <Collapse in={this.state.open}>
+            <Collapse in={this.state.openSuccess}>
+              <Alert severity="success"
+                     action={
+                       <IconButton
+                           aria-label="close"
+                           color="inherit"
+                           size="small"
+                           onClick={() => {
+                             this.setState({openError: false});
+                           }}
+                       >
+                         <CloseIcon fontSize="inherit"/>
+                       </IconButton>
+                     }
+              >
+                Account successfully created!
+              </Alert>
+              <br/>
+            </Collapse>
+            <Collapse in={this.state.openError}>
               <Alert severity="error"
                      action={
                        <IconButton
@@ -164,7 +193,7 @@ class Login extends React.Component {
                            color="inherit"
                            size="small"
                            onClick={() => {
-                             this.setState({open: false});
+                             this.setState({openError: false});
                            }}
                        >
                          <CloseIcon fontSize="inherit"/>

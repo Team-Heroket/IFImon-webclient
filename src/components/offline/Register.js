@@ -116,6 +116,7 @@ class Register extends React.Component {
     constructor() {
         super();
         this.handleClick = this.handleClick.bind(this)
+        localStorage.setItem('accountCreation', 'false');
         this.state = {
             open: false,
             password: null,
@@ -173,6 +174,7 @@ class Register extends React.Component {
                 avatarId: this.state.avatarId
             });
             await api.post('/users', requestBody);
+            localStorage.setItem('accountCreation', "true");
             this.goToLogin();
 
         } catch (error) {
