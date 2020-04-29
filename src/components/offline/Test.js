@@ -12,6 +12,8 @@ import {
 } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
 import User from '../shared/models/User';
+
+import CloseIcon from '@material-ui/icons/Close';
 import { withRouter } from 'react-router-dom';
 import {
     AvatarButton,
@@ -22,6 +24,7 @@ import {
     RoundContainer
 } from '../../views/design/Button';
 import Header from "../../views/Header";
+import { Alert } from '@material-ui/lab';
 import {
     BackButton,
     BackIcon,
@@ -46,6 +49,8 @@ import {Result} from "../online/game/afterGameStart/subScreens/Result";
 import {Spinner} from "../../views/design/Spinner";
 import Grid from "@material-ui/core/Grid";
 import {Finished} from "../online/game/afterGameStart/subScreens/Finished";
+import Collapse from "@material-ui/core/Collapse";
+import IconButton from "@material-ui/core/IconButton";
 
 
 /**
@@ -67,6 +72,8 @@ class Test extends React.Component {
         super();
         localStorage.setItem('VolumeMuted', 'false');
         this.state = {
+            open: true,
+            setOpen: true,
             user: null,
             step: 0,
             generation: this.genPokemon.I
@@ -1678,8 +1685,8 @@ class Test extends React.Component {
         if (window.confirm('Are you sure you want to leave the game?')) this.props.history.push('/menu')
     }
 
-
     render() {
+
 
         return (
             <GameContainer>
@@ -1702,6 +1709,7 @@ class Test extends React.Component {
                 <BackButton action={() => {this.goBack()}}/>
             </Grid>
             <BaseContainer>
+
                     <Spectator masterState={this.masterState} history={this.props.history}/>
             </BaseContainer>
             </GameContainer>

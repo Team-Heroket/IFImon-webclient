@@ -6,6 +6,10 @@ import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 import Header from "../../views/Header";
+import {Alert} from "@material-ui/lab";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Collapse from "@material-ui/core/Collapse";
 
 
 const Form = styled.div`
@@ -92,7 +96,8 @@ class Login extends React.Component {
     super();
     this.state = {
       password: null,
-      username: null
+      username: null,
+      open: false
     };
   }
   /**
@@ -118,7 +123,15 @@ class Login extends React.Component {
       // Login successfully worked --> navigate to the route /game in the GameRouter
       this.props.history.push(`/menu`);
     } catch (error) {
-      alert(`Something went wrong during the login: \n${handleError(error)}`);
+      if(error.response.data.error == 'User not found'){
+        this.setState({open: true, errorCode: 404});
+      }
+      else if(error.response.status == 401){
+        this.setState({open: true, errorCode: 401});
+      }
+      else {
+        alert(`Something went wrong during the login: \n${handleError(error)}`);
+      }
     }
   }
 
@@ -143,6 +156,25 @@ class Login extends React.Component {
         <Header height={195} top={66} />
         <FormContainer>
           <Form>
+            <Collapse in={this.state.open}>
+              <Alert severity="error"
+                     action={
+                       <IconButton
+                           aria-label="close"
+                           color="inherit"
+                           size="small"
+                           onClick={() => {
+                             this.setState({open: false});
+                           }}
+                       >
+                         <CloseIcon fontSize="inherit"/>
+                       </IconButton>
+                     }
+              >
+                {this.state.errorCode == 404 ?  'User does not exist!' : 'Wrong password!'}
+              </Alert>
+              <br/>
+            </Collapse>
             <Label>Username</Label>
             <InputField
               placeholder="Enter here.."

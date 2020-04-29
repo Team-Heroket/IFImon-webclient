@@ -129,7 +129,7 @@ export const AvatarContainer = styled.div`
   justify-content: center;
   
   border-radius: 25px;
-  margin-top: 15px;
+  margin-top: 5px;
   height:  ${props => props.height || "350px"};
   width: ${props => props.width || "450px"};
   padding-left: ${props => props.margin || "15px"};
