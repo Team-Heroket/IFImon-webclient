@@ -50,7 +50,7 @@ export let ChooseCategory = ({masterState, history, parentMethod}) => {
         if(masterState.amITurnPlayer){
             steps[0] = 'Select category';
         }else{
-            steps[0] = masterState.turnPlayer.user.username + 'is choosing';
+            steps[0] = masterState.turnPlayer.user.username + ' is choosing';
         }
         return (<SimpleColumnContainer width={'280px'} sideMargin={'0px'} style={{marginLeft: '10px'}}>
                 {masterState.players.map(player => {

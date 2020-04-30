@@ -299,7 +299,7 @@ export let PlayerStatCard = ({ user }) => {
                         </RankCard>
                         <br/>
                         <RankCard>
-                            Lost: {user.statistics.gamesLost}
+                            Lost: {user.statistics.gamesPlayed-user.statistics.gamesWon}
                         </RankCard>
                         <br/>
                         <RankCard>

@@ -77,6 +77,7 @@ export let Finished = ({masterState, history}) => {
 
     return (
             <FormContainer margin={'5em'}>
+                <Confetti/>
             <Grid
                 container
                 direction="row"
