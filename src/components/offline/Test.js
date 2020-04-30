@@ -115,6 +115,7 @@ class Test extends React.Component {
     masterState = {
         id:14,
         berries:0,
+        mute: (localStorage.getItem('mute') ? (localStorage.getItem('mute')=='true' ? true : false) : false),
         username:"asd",
         amIAdmin: true,
         deck:{
@@ -1699,18 +1700,20 @@ class Test extends React.Component {
                 >
                 {localStorage.getItem('VolumeMuted')=='true'?
                     <SoundButton mute={false} action={()=>{
+                        this.masterState.mute = true;
                         localStorage.setItem('VolumeMuted', 'false');
                         this.forceUpdate()}} />
                 :
                     <SoundButton mute={true} action={() => {
+
+                        this.masterState.mute = false;
                         localStorage.setItem('VolumeMuted', 'true');
                         this.forceUpdate()}} />
                 }
                 <BackButton action={() => {this.goBack()}}/>
             </Grid>
             <BaseContainer>
-
-                    <Spectator masterState={this.masterState} history={this.props.history}/>
+                    <Evolve masterState={this.masterState} history={this.props.history}/>
             </BaseContainer>
             </GameContainer>
         );

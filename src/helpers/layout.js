@@ -90,9 +90,10 @@ export const SimpleColumnContainer = styled.div`
   float: ${props => props.defFloat || null};
   color: ${props => props.color || null};;
   justify-content:center;
-  margin:auto;
   align-items: center;
-  margin-top: ${props => (props.heigth/2-5)+'px' || null}
+  margin-top: ${props => (props.heigth/2-5)+'px' || null};
+  margin-left: ${props => (props.sideMargin)|| null};
+  margin-right: ${props => (props.sideMargin)|| null};
   display: flex;
   flex-direction: column;
 `;

@@ -4,9 +4,10 @@ import {BaseContainer, FormContainer} from "../../../helpers/layout";
 import Header from "../../../views/Header";
 import styled from "styled-components";
 import {RoundContainer} from "../../../views/design/Button";
-import {BackIcon} from "../../../views/design/Icons";
+import {BackButton, BackIcon} from "../../../views/design/Icons";
 import {api, handleError} from "../../../helpers/api";
 import {Spinner} from "../../../views/design/Spinner";
+import Grid from "@material-ui/core/Grid";
 
 
 
@@ -47,11 +48,7 @@ class Quickplay extends React.Component {
         return (
             <BaseContainer>
                 <Header height={140} top={33}/>
-                <RoundContainer onClick={() => {
-                    this.goBack()
-                }}>
-                    <BackIcon/>
-                </RoundContainer>
+                <BackButton action={() => {this.goBack()}}/>
                 <FormContainer>
                     <Space/>
                     <Spinner/>

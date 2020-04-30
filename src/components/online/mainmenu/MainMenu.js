@@ -49,6 +49,12 @@ class MainMenu extends React.Component {
 
     constructor() {
         super();
+        if(!localStorage.getItem('SFXVol')){
+            console.log('entered SFXVOL non existing')
+            localStorage.setItem('SFXVol', 33);
+            localStorage.setItem('MusicVol', 25);
+            localStorage.setItem('VolumeMuted', 'false')
+        }
         this.state = {
             pokeCode: "asdasas",
             amountOfPlayers: 6,

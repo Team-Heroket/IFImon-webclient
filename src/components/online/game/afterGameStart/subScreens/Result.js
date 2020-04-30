@@ -7,7 +7,7 @@
  */
 
 import React from "react";
-import {ButtonContainer, PlayerContainer} from "../../../../../helpers/layout";
+import {ButtonContainer, PlayerContainer, SimpleColumnContainer} from "../../../../../helpers/layout";
 import {PlayerGame, PlayersCard} from "../../../../../views/Player";
 import {LogOutButton} from "../../../../../views/design/Button";
 import {BerriesIconWithBadge} from "../../../../../views/design/Icons";
@@ -79,7 +79,7 @@ export let Result = ({masterState, history}) => {
         if(masterState.amITurnPlayer){
             steps[0] = 'Select category';
         }
-        return (<ButtonContainer>
+        return (<SimpleColumnContainer width={'280px'} sideMargin={'0px'} style={{marginLeft: '10px'}}>
                 {masterState.players.map(player => {
                     return (
                         <PlayerContainer>
@@ -92,7 +92,7 @@ export let Result = ({masterState, history}) => {
                     );
                 })}
 
-                <Stepper alternativeLabel activeStep={2} connector={<ColorlibConnector />} style={{ backgroundColor: "transparent" }}>
+                <Stepper alternativeLabel activeStep={2} connector={<ColorlibConnector />} style={{ backgroundColor: "transparent" }} style={{padding: '0px', margin: '0px', marginTop: '25px', marginBottom: '25px', background: 'transparent', width: '280px'}}>
                     {steps.map((label) => (
                         <Step key={label}>
                             <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
@@ -108,7 +108,7 @@ export let Result = ({masterState, history}) => {
                     onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) history.push('/menu') }} > Give Up
                 </LogOutButton>
 
-            </ButtonContainer>
+            </SimpleColumnContainer>
         );
     }
 
@@ -120,17 +120,14 @@ export let Result = ({masterState, history}) => {
             direction="row"
             justify="space-between"
             alignItems="center"
+            style={{marginTop: '50px'}}
         >
             {showLeaderboard()}
-            <div>
-                {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', false)}
-            </div>
-            <div>
-                {showCards()}
-            </div>
+            {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', null ,false, true)}
+            {showCards()}
             <div>
                 <Badge color={masterState.winners.length >1 ?'primary': 'secondary'} badgeContent={masterState.winners.length >1 ?'Draw': 'Winner'}>
-                    {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, winnersUsername, true) }
+                    {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, winnersUsername, null ,true, localStorage.getItem('playedSound')=='true' ? true : masterState.mute , localStorage.getItem('SFXVol')/100) }
                 </Badge>
 
             </div>

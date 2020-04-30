@@ -57,6 +57,48 @@ export const EvolveButton = styled.button`
   transition: all 0.3s ease;
 `;
 
+export const ActiveEvolveButton = styled.button`
+  &:hover {
+    transform: translateY(2px);
+    font-family: Helvetica;
+    font-weight: 500;
+    text-transform: uppercase;
+  font-size: 16px;
+  text-align: center;
+    line-height: 23px;
+    color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+    background: linear-gradient(227.89deg, #F53E28 1.67%, rgba(255, 255, 255, 0) 322.73%), #FCE93A;
+  }
+  &:focus{
+    font-family: Helvetica;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 16px;
+    text-align: center;
+    line-height: 23px;
+    color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+    background: linear-gradient(227.89deg, #F53E28 1.67%, rgba(255, 255, 255, 0) 322.73%), #FCE93A;
+  }
+  padding: 6px;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 16px;
+  text-align: center;
+  color: rgba(255, 255, 255, 1);
+  width: ${props => props.width || '100%'};;
+  height: 35px;
+  border: 1px solid #FFFFFF;;
+  border-radius: 25px;
+  margin-top: 10px;
+  cursor: "default";
+  opacity: "100%";
+  background: linear-gradient(102.87deg, #69CBD1 0%, rgba(255, 255, 255, 0) 188.68%), #89FBB8;
+  transition: all 0.3s ease;
+`;
+
+
 export const PageButton = styled.button`
   &:hover {
     transform: ${props => (props.disabled ? 'scale(1)' : 'scale(2.5)')};

@@ -16,11 +16,26 @@ import Grid from "@material-ui/core/Grid";
 
 
 
+
 const Space = styled.div`
   margin-bottom: 80px
   width: 100%
 `;
 
+const Audio = React.memo(function Audio({children}) {
+    return(
+        <div style={{width: '0px', height: '0px', margin: '0px', fontSize: '0'}}>
+            <audio src={require('../../../../shared/BackGroundMusic.mp3')} id="Background"/>
+            {setTimeout(()=> {
+                try{
+                document.getElementById("Background").volume = localStorage.getItem('VolumeMuted')=='false' ? (localStorage.getItem('MusicVol')/100) : 0;
+                document.getElementById("Background").play();
+                document.getElementById("Background").loop = true;
+                }catch (e) {}
+                }, 500)}
+        </div>
+    )
+})
 
 /**
  1) all clients: get game
@@ -96,10 +111,11 @@ class Game extends React.Component {
             oldPeriod: this.period.INTERMEDIARY,
             currentCard: null,
             oldCard: null,
-            state: null
+            state: null,
+            mute: (localStorage.getItem('VolumeMuted') ? (localStorage.getItem('VolumeMuted')=='true' ? true : false) : false)
         }
+        localStorage.setItem('SelectedCat',0);
     }
-
 
 
     async getGameInfo() {
@@ -163,6 +179,9 @@ class Game extends React.Component {
 
 
             else if (resp2.winners.length == 0) {
+                if(this.state.currentPeriod == this.period.RESULT){
+                    localStorage.setItem('SelectedCat',0);
+                }
                 currentPeriod = this.period.CHOOSECATEGORY;
                 clearInterval(this.timer_waitForNextTurn);
                 this.timer_waitForNextTurn= null;
@@ -235,8 +254,6 @@ class Game extends React.Component {
         }
     }
 
-
-
     startClock() {
 
         if (!this.state.remainingTime) {
@@ -262,7 +279,6 @@ class Game extends React.Component {
             alert(`Something went wrong: \n${handleError(error)}`);
         }
     }
-
 
     async makeTurn() {
         console.log("Make category put request")
@@ -316,6 +332,7 @@ class Game extends React.Component {
             if (this.state.amITurnPlayer) {
                 this.timeout_makeTurn = await setTimeout(() => {
                     this.makeTurn();
+                    localStorage.setItem('playedSound', 'false');
                 }, 13000)
                 this.timeout_waitForCategoryResult = setTimeout(() => {
                     this.timer_waitForCategory= setInterval(() => {
@@ -330,30 +347,33 @@ class Game extends React.Component {
             }
         }
         else if (this.state.currentPeriod == this.period.EVOLVE) {
+            localStorage.setItem('evolveTo', 0);
             this.timeout_evolve = setTimeout(() => {
                 if (localStorage.getItem('evolveTo') != 0) {
                     this.evolvePokemon();
                 }
-                this.setState({goToEvolve: false},  this.getGameInfo)
+                this.setState({goToEvolve: false},  this.getGameInfo);
+                localStorage.setItem('playedSound', 'false');
             }, 10000)
         }
         else if (this.state.currentPeriod == this.period.RESULT) {
+            localStorage.setItem('evolveTo', 0);
             this.timer_waitForNextTurn= setInterval(() => {
                 this.getGameInfo()
-
             }, 2000)
+            setTimeout(() => {
+                localStorage.setItem('playedSound', 'false');
+            }, 13000)
 
             if (this.state.amIAdmin) {
                 this.timeout_callNext = setTimeout(() => {
                     this.makeFinalTurn();
                     setTimeout(() => {
-                        this.setState({goToEvolve: true},  this.getGameInfo)
+                        this.setState({goToEvolve: true},  this.getGameInfo);
                     }, 2000)
                 }, 10000)
             }
         }
-
-
 
     }
 
@@ -388,6 +408,7 @@ class Game extends React.Component {
 
 
     }
+
     async getGameWaitForAdmin() {
         try {
             console.log("Tried getting game info");
@@ -472,12 +493,10 @@ class Game extends React.Component {
         }
     }
 
-
     componentDidMount() {
         this.setupBeforeUnloadListener();
         this.getGameInfo();
     }
-
 
     componentWillUnmount() {
         clearTimeout(this.timeout_all)
@@ -522,6 +541,7 @@ class Game extends React.Component {
             console.log(this.state.pokeCode)
             await api.put('/games/'+this.state.pokeCode+'/players', requestBody,{ headers: {'Token': localStorage.getItem('token')}});
         } catch (error) {
+            console.log('logged error:'+ error);
             if (error.response.status != 404) {
                 alert(`Something went wrong: \n${handleError(error)}`);
             }
@@ -529,18 +549,16 @@ class Game extends React.Component {
         }
     }
 
-
-
     renderPeriod() {
 
         if (this.state.currentPeriod == this.period.CHOOSECATEGORY) {
-            return <ChooseCategory masterState={this.state} history={this.props.history}/>
+            return <ChooseCategory masterState={this.state} history={this.props.history} parentMethod={() => {this.forceUpdate()}} />
         } else if (this.state.currentPeriod == this.period.EVOLVE) {
             console.log(" Entered EVOLVE Period with: "+localStorage.getItem('evolveTo'));
-            return <Evolve masterState={this.state} history={this.props.history}/>
+            return <Evolve masterState={this.state} history={this.props.history} parentMethod={() => {this.forceUpdate()}}/>
         } else if (this.state.currentPeriod == this.period.RESULT) {
             console.log(" Entered RESULT Period with: "+localStorage.getItem('evolveTo'));
-            return <Result masterState={this.state} history={this.props.history}/>
+            return <Result masterState={this.state} history={this.props.history} />
         } else if (this.state.currentPeriod == this.period.SPECTATOR) {
             return <Spectator masterState={this.state} history={this.props.history}/>
         } else if (this.state.currentPeriod == this.period.FINISHED) {
@@ -555,21 +573,16 @@ class Game extends React.Component {
         if (window.confirm('Are you sure you want to leave the game?')) this.props.history.push('/menu')
     }
 
-
-
     setupBeforeUnloadListener = () => {
         window.addEventListener("beforeunload", (ev) => {
             return this.leaveGame();
         });
     };
 
-
-
-
-
     render() {
         return (
             <GameContainer>
+                <Audio/>
                 <Header height={140} top={33}/>
                 <Grid
                     container
@@ -578,14 +591,17 @@ class Game extends React.Component {
                     alignItems="flex-start"
                 >
                     <BackButton action={() => {this.goBack()}}/>
-                    {localStorage.getItem('VolumeMuted')=='true'?
-                        <SoundButton mute={false} action={()=>{
+                    { this.state.mute ?
+                        <SoundButton mute={true} action={()=>{
                             localStorage.setItem('VolumeMuted', 'false');
-                            this.forceUpdate()}} />
+                            this.setState({mute: false});
+                            document.getElementById("Background").volume = localStorage.getItem('MusicVol')/100;
+                        }} />
                         :
-                        <SoundButton mute={true} action={() => {
+                        <SoundButton mute={false} action={() => {
                             localStorage.setItem('VolumeMuted', 'true');
-                            this.forceUpdate()}} />
+                            this.setState({mute: true});
+                            document.getElementById("Background").volume = 0}} />
                     }
                 </Grid>
 

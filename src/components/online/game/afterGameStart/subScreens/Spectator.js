@@ -56,7 +56,7 @@ export let Spectator = ({masterState, history}) => {
                         if (masterState.winners[c].user.username == masterState.players[i].user.username) {
                             firstCards.push(
                                 <Badge color={"secondary"} badgeContent={"Winner"}>
-                                    {FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false)}
+                                    {FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false, true)}
                                 </Badge>
                             );
                             printed = true;
@@ -64,12 +64,12 @@ export let Spectator = ({masterState, history}) => {
                     }
                     if(!printed && !masterState.players[i].deck.empty){
                         firstCards.push(
-                            FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false)
+                            FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false, true)
                         );
                     }
                 } else if (!masterState.players[i].deck.empty){
                     firstCards.push(
-                        FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false)
+                        FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false, true)
                     );
                 }
             }

@@ -11,11 +11,11 @@
 import React from "react";
 import {
     ButtonContainer,
-    PlayerContainer
+    PlayerContainer, SimpleColumnContainer
 } from "../../../../../helpers/layout";
 import {PlayerGame} from "../../../../../views/Player";
 import {LogOutButton} from "../../../../../views/design/Button";
-import {PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
+import {FocusedPokemonCard, PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
 
 import Grid from '@material-ui/core/Grid';
 
@@ -42,11 +42,9 @@ clock = {
 }
 
 
-export let ChooseCategory = ({masterState, history}) => {
-
+export let ChooseCategory = ({masterState, history, parentMethod}) => {
 
     function showLeaderboard() {
-
         let steps = ['Category selection', 'Evolve Pokémon', 'Results'];
 
         if(masterState.amITurnPlayer){
@@ -54,19 +52,20 @@ export let ChooseCategory = ({masterState, history}) => {
         }else{
             steps[0] = masterState.turnPlayer.user.username + 'is choosing';
         }
-        return (<ButtonContainer>
-                    {masterState.players.map(player => {
-                        return (
-                            <PlayerContainer>
-                                {player.user.id == localStorage.getItem('id') ?
-                                    (<PlayerGame player={player} addOn = "(Me)"/>) :
-                                    (<PlayerGame player={player} addOn = ""/>)
-                                }
-                            </PlayerContainer>
+        return (<SimpleColumnContainer width={'280px'} sideMargin={'0px'} style={{marginLeft: '10px'}}>
+                {masterState.players.map(player => {
+                    return (
+                        <PlayerContainer>
+                            {player.user.id == localStorage.getItem('id') ?
+                                (<PlayerGame player={player} addOn = "(Me)"/>) :
+                                (<PlayerGame player={player} addOn = ""/>)
+                            }
+                        </PlayerContainer>
 
-                        );
-                    })}
-                <Stepper alternativeLabel activeStep={0} connector={<ColorlibConnector />} style={{ backgroundColor: "transparent" }}>
+                    );
+                })}
+
+                <Stepper alternativeLabel activeStep={0} connector={<ColorlibConnector />} style={{ backgroundColor: "transparent" }} style={{padding: '0px', margin: '0px', marginTop: '25px', marginBottom: '25px', background: 'transparent', width: '280px'}}>
                     {steps.map((label) => (
                         <Step key={label}>
                             <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
@@ -74,20 +73,17 @@ export let ChooseCategory = ({masterState, history}) => {
                     ))}
                 </Stepper>
 
-                {BerriesIconWithBadge(masterState.berries)}
 
+                {BerriesIconWithBadge(masterState.berries)}
                 <LogOutButton
                     width = "50%"
                     disabled={masterState.amITurnPlayer}
-                    onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) history.push('/menu') }} >
-                    Give Up
+                    onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) history.push('/menu') }} > Give Up
                 </LogOutButton>
-            </ButtonContainer>
+
+            </SimpleColumnContainer>
         );
     }
-
-
-
 
     return (
         <Grid
@@ -95,9 +91,14 @@ export let ChooseCategory = ({masterState, history}) => {
             direction="row"
             justify="space-between"
             alignItems="center"
+            style={{marginTop: '50px'}}
         >
                 {showLeaderboard()}
-                {PokemonCard(masterState.deck.cards[0], !masterState.amITurnPlayer, 'Your Card')}
+                {localStorage.getItem('SelectedCat')==0 ?
+                    FocusedPokemonCard(masterState.deck.cards[0], !masterState.amITurnPlayer, '0', 'Your Card', parentMethod, false, true)
+                :
+                    FocusedPokemonCard(masterState.deck.cards[0], !masterState.amITurnPlayer, localStorage.getItem('SelectedCat'), 'Your Card', parentMethod, false, true)
+                }
                 {PlaceholderCard()}
 
             </Grid>

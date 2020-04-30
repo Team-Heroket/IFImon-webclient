@@ -1,23 +1,35 @@
 import React from 'react';
 import styled from 'styled-components';
-import {AvatarContainer, BaseContainer, ButtonContainer, FormContainer} from '../../../helpers/layout';
+import {
+    AvatarContainer,
+    BaseContainer,
+    ButtonContainer,
+    FormContainer,
+    SimpleColumnContainer
+} from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
 import { withRouter } from 'react-router-dom';
 import {Button, AvatarButton} from '../../../views/design/Button';
 import Header from "../../../views/Header";
-import {PlayerStatCard} from "../../../views/Player";
-import {BackButton, SoundButton} from "../../../views/design/Icons";
+import {Player, PlayerStatCard} from "../../../views/Player";
+import {BackButton, BackIcon, MuteIcon, SoundButton} from "../../../views/design/Icons";
+import Slider from '@material-ui/core/Slider';
+import VolumeDownRoundedIcon from '@material-ui/icons/VolumeDownRounded';
+import VolumeUpRoundedIcon from '@material-ui/icons/VolumeUpRounded';
 import Grid from "@material-ui/core/Grid";
+import UIFx from 'uifx';
+import pokeCry from '../../shared/pikachu.mp3';
+import music from '../../shared/musicSample.mp3';
 
 const Label = styled.label`
   position: relative;
-  transform : translate(-50%, 0%);
-  width: 400px;
-  left: 15%;
+  left: 10px;
+  
   color: white;
+  width: ${props => props.width ? props.width : '400px'};
   margin-left: 4px;
-  margin-bottom: 50px;
-  text-transform: uppercase;
+  margin-bottom: 5px;
+  text-transform: ${props => props.transform ? null : 'uppercase'};
   font-size: 16px;
   font-weight: 300;
 `;
@@ -64,18 +76,25 @@ const Column = styled.div`
     }
 `
 
+
 class Settings extends React.Component {
+
 
     constructor() {
         super();
         this.handleClick = this.handleClick.bind(this);
+        this.handleChange = this.handleChange.bind(this)
         this.state = {
             user: null,
             editClicked: false,
             newUsername: null,
             newPassword: null,
             newAvatarId: null,
-            avatarClicked: null
+            avatarClicked: null,
+            mute: localStorage.getItem('VolumeMuted') ? localStorage.getItem('VolumeMuted') : 'false',
+            SFXVol :  (localStorage.getItem('SFXVol') ?  localStorage.getItem('SFXVol') : 50),
+            MusicVol :  (localStorage.getItem('MusicVol') ?  localStorage.getItem('MusicVol') : 50),
+            runningSample: false,
         };
     }
 
@@ -219,97 +238,165 @@ class Settings extends React.Component {
         }
     }
 
+    handleChange(key, newValue) {
+
+        if(key=='SFXVol'){
+            localStorage.setItem('SFXVol', newValue);
+            if(!this.state.runningSample){
+                this.setState({runningSample: true});
+                const beep = new UIFx(pokeCry);
+                beep.setVolume(newValue/100).play();
+                setTimeout(() => {
+                    this.setState({runningSample: false})}, 500)}
+        }else{
+            localStorage.setItem('MusicVol', newValue);
+            if(!this.state.runningSample){
+                this.setState({runningSample: true});
+                const beep = new UIFx(music);
+                beep.setVolume(newValue/100).play();
+                setTimeout(() => {
+                    this.setState({runningSample: false})}, 1000)}
+        }
+        this.setState({ [key]: newValue });
+
+    };
 
     render() {
         //Shows user information
-
         return(
-                    <BaseContainer>
-                        <Header height={140} top={33}/>
-                        <Grid
-                            container
-                            direction="row"
-                            justify="space-between"
-                            alignItems="flex-start"
-                        >
-                            <BackButton action={() => {this.goBack()}}/>
-                            {localStorage.getItem('VolumeMuted')=='true'?
-                                <SoundButton mute={false} action={()=>{
-                                    localStorage.setItem('VolumeMuted', 'false');
-                                    this.forceUpdate()}} />
-                                :
-                                <SoundButton mute={true} action={() => {
-                                    localStorage.setItem('VolumeMuted', 'true');
-                                    this.forceUpdate()}} />
-                            }
-                        </Grid>
-                        {!this.state.user ?
-                            null
-                            :
+            <BaseContainer>
+                <Header height={140} top={33}/>
+                <BackButton action={() => {this.goBack()}}/>
+                <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                >
+                    <FormContainer margin={'5em'} >
+                        {!this.state.user ? null :
                             <div>
-
-
-                        {this.state.editClicked ? null :
-                            <FormContainer>
-                            <PlayerStatCard user={this.state.user}/>
-
-                            <Button
-                            width="30%"
-                            onClick={() => {
-                            this.setState({editClicked: true});
-                        }}
-                            >
-
-                            Edit Profile
-                            </Button>
-                            </FormContainer>}
-                        {this.state.editClicked ?
-                            <div>
-                            <Column>
-                            <Label>Enter new Username</Label>
-                                <div></div>
-                            <InputField
-                            placeholder="Enter here.."
-                            onChange={e => {
-                            this.handleInputChange('newUsername', e.target.value);
-                        }}
-                            />
-                            <div></div>
-                            <Label>Enter new Password</Label>
-                                <div></div>
-                            <InputField
-                            placeholder="Enter here.."
-                            onChange={e => {
-                            this.handleInputChange('newPassword', e.target.value);
-                        }}
-                            />
-                            <ButtonContainer>
-                            <Button
-                            width="55%"
-                            onClick={() => {
-                            this.setState({editClicked: false});
-                            this.save();
-                        }}
-                            >
-                            Save
-                            </Button>
-                            </ButtonContainer>
-                            </Column>
-                            <Column>
-                            <Label>Choose new Avatar</Label>
-                            <AvatarContainer>
-                            {
-                                this.createAvatarList()
+                            {this.state.editClicked ? null :
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justify="center"
+                                    alignItems="center"
+                                >
+                                    <SimpleColumnContainer width={'400px'}>
+                                        <SimpleColumnContainer width={'300px'}>
+                                            <Label transform={true} width={'100%'}>
+                                                Sound Effects Volume
+                                            </Label>
+                                        <Grid container spacing={2}>
+                                            <Grid item>
+                                                <VolumeDownRoundedIcon style={{ color: "white" }}/>
+                                            </Grid>
+                                            <Grid item xs>
+                                                {this.state.mute == 'true'? <Slider disabled value={this.state.SFXVol} onChange={(e,val)=> {this.handleChange('SFXVol', val)}} aria-labelledby="continuous-slider" /> :
+                                                    <Slider value={this.state.SFXVol} onChange={(e,val)=> {this.handleChange('SFXVol', val)}} aria-labelledby="continuous-slider" />}
+                                            </Grid>
+                                            <Grid item>
+                                                <VolumeUpRoundedIcon style={{ color: "white" }}/>
+                                            </Grid>
+                                        </Grid>
+                                        </SimpleColumnContainer>
+                                        <br/>
+                                        <SimpleColumnContainer width={'300px'}>
+                                            <Label transform={true} width={'100%'}>
+                                                Background Music
+                                            </Label>
+                                            <Grid container spacing={2}>
+                                                <Grid item>
+                                                    <VolumeDownRoundedIcon style={{ color: "white" }}/>
+                                                </Grid>
+                                                <Grid item xs>
+                                                    {this.state.mute == 'true' ? <Slider disabled value={this.state.MusicVol} onChange={(e,val) => {
+                                                            this.handleChange('MusicVol', val)}} aria-labelledby="continuous-slider" /> :
+                                                        <Slider value={this.state.MusicVol} onChange={(e, val) => {
+                                                            this.handleChange('MusicVol', val)
+                                                        }} aria-labelledby="continuous-slider"/>
+                                                    }
+                                                </Grid>
+                                                <Grid item>
+                                                    <VolumeUpRoundedIcon style={{ color: "white" }}/>
+                                                </Grid>
+                                            </Grid>
+                                        </SimpleColumnContainer>
+                                        <br/>
+                                        { this.state.mute=='true' ?
+                                            <SoundButton mute={true} action={()=>{
+                                                localStorage.setItem('VolumeMuted', 'false');
+                                                this.setState({mute: 'false'});
+                                                this.forceUpdate();
+                                            }} />
+                                            :
+                                            <SoundButton mute={false} action={() => {
+                                                localStorage.setItem('VolumeMuted', 'true');
+                                                this.setState({mute: 'true'});
+                                                this.forceUpdate()}} />
+                                        }
+                                    </SimpleColumnContainer>
+                                    <SimpleColumnContainer>
+                                        <PlayerStatCard user={this.state.user}/>
+                                        <Button width="30%"
+                                                onClick={() => {this.setState({editClicked: true});}}
+                                        >
+                                            Edit Profile
+                                        </Button>
+                                    </SimpleColumnContainer>
+                                </Grid>
                             }
-                            </AvatarContainer>
-                            </Column>
-
-                            </div>
+                            {this.state.editClicked ?
+                                <Grid
+                                    container
+                                    direction="row"
+                                    justify="center"
+                                    alignItems="center"
+                                >
+                                <SimpleColumnContainer>
+                                    <Label>Enter new Username</Label>
+                                    <InputField
+                                    placeholder="Enter here.."
+                                    onChange={e => {
+                                        this.handleInputChange('newUsername', e.target.value);
+                                    }}
+                                    />
+                                    <Label>Enter new Password</Label>
+                                    <InputField
+                                    placeholder="Enter here.."
+                                    onChange={e => {
+                                    this.handleInputChange('newPassword', e.target.value);
+                                }}
+                                    />
+                                    <ButtonContainer>
+                                    <Button
+                                    width="150px"
+                                    onClick={() => {
+                                    this.setState({editClicked: false});
+                                    this.save();
+                                }}
+                                    >
+                                    Save
+                                    </Button>
+                                    </ButtonContainer>
+                                </SimpleColumnContainer>
+                                <SimpleColumnContainer>
+                                    <Label>Choose new Avatar</Label>
+                                    <AvatarContainer>
+                                    {
+                                        this.createAvatarList()
+                                    }
+                                    </AvatarContainer>
+                                </SimpleColumnContainer>
+                            </Grid>
                             : null
                         }
                             </div>
                         }
-                    </BaseContainer>
+                    </FormContainer>
+                </Grid>
+            </BaseContainer>
 
         );
     }
