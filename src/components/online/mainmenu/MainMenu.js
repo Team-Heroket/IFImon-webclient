@@ -17,6 +17,7 @@ import Header from "../../../views/Header";
 import {EncounteredPokemonSprite, ForwardIcon, NewPokemonSprite, NextIcon} from "../../../views/design/Icons";
 import {Spinner} from "../../../views/design/Spinner";
 import Grid from "@material-ui/core/Grid";
+import {RandomPokemonFact} from "./RandomPokemonFact";
 
 const Form = styled.div`
   display: flex;
@@ -61,11 +62,20 @@ class MainMenu extends React.Component {
             amountOfNPC: 0,
             user: null,
             step: 0,
-            generation: this.genPokemon.I
+            generation: this.genPokemon.I,
+            justInitialized: false
         };
     }
 
     async componentDidMount(){
+        if (localStorage.getItem('justLoggedIn') == 'true') {
+            this.setState({justInitialized: true});
+            setTimeout(() => {
+                this.setState({justInitialized: false})
+            }, 3000)
+        }
+        
+        localStorage.setItem('justLoggedIn', 'false');
         try {
             const resp = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
 
@@ -292,48 +302,65 @@ class MainMenu extends React.Component {
                 {console.log(localStorage.getItem('token'))}
                 {console.log(localStorage.getItem('id'))}
                 <Header height={140} top={33}/>
-                <Grid
-                    container
-                    direction="row"
-                    justify="center"
-                    alignItems="center"
-                >
-                <FormContainer width={'500px'}>
-                    <Form>
-                        <ButtonContainer>
+                {this.state.justInitialized ? <RandomPokemonFact/>
+                    :
 
-                            <MenuButtonIcon type={{text: "social mode"}}
-                                            onClicktoDo = {() => {this.goToSocialMode()}}
-                            />
-                            <MenuButtonIcon type={{text: "quickplay"}}
-                                            onClicktoDo = {() => {this.goToQuickplay()}}
-                            />
-                            <MenuButtonIcon type={{text: "leaderboard"}}
-                                            onClicktoDo = {() => {this.goToLeaderBoard()}}
-                            />
-                            <MenuButtonIcon type={{text: "settings"}}
-                                            onClicktoDo = {() => {this.goToSettings()}}
-                            />
-                            <MenuButtonIcon type={{text: "tutorial"}}
-                                            onClicktoDo = {() => {this.goToTutorial()}}
-                            />
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        alignItems="center"
+                    >
+                        <FormContainer width={'500px'}>
+                            <Form>
 
-                            <LogOutButton
-                                width="50%"
-                                onClick = {() => {this.logOut()}}
-                            >
-                                Log Out
-                            </LogOutButton>
-                        </ButtonContainer>
+                                <ButtonContainer>
 
-                    </Form>
-                </FormContainer>
-                    <div><br/><br/>
-                {
-                    this.state.user ?  this.SpritesGenerator() : <Spinner/>
+                                    <MenuButtonIcon type={{text: "social mode"}}
+                                                    onClicktoDo={() => {
+                                                        this.goToSocialMode()
+                                                    }}
+                                    />
+                                    <MenuButtonIcon type={{text: "quickplay"}}
+                                                    onClicktoDo={() => {
+                                                        this.goToQuickplay()
+                                                    }}
+                                    />
+                                    <MenuButtonIcon type={{text: "leaderboard"}}
+                                                    onClicktoDo={() => {
+                                                        this.goToLeaderBoard()
+                                                    }}
+                                    />
+                                    <MenuButtonIcon type={{text: "settings"}}
+                                                    onClicktoDo={() => {
+                                                        this.goToSettings()
+                                                    }}
+                                    />
+                                    <MenuButtonIcon type={{text: "tutorial"}}
+                                                    onClicktoDo={() => {
+                                                        this.goToTutorial()
+                                                    }}
+                                    />
+
+                                    <LogOutButton
+                                        width="50%"
+                                        onClick={() => {
+                                            this.logOut()
+                                        }}
+                                    >
+                                        Log Out
+                                    </LogOutButton>
+                                </ButtonContainer>
+
+                            </Form>
+                        </FormContainer>
+                        <div><br/><br/>
+                            {
+                                this.state.user ? this.SpritesGenerator() : <Spinner/>
+                            }
+                        </div>
+                    </Grid>
                 }
-                    </div>
-                </Grid>
 
             </BaseContainer>
         );
