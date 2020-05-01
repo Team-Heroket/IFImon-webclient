@@ -74,7 +74,7 @@ class MainMenu extends React.Component {
                 this.setState({justInitialized: false})
             }, 3000)
         }
-        
+
         localStorage.setItem('justLoggedIn', 'false');
         try {
             const resp = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
@@ -118,13 +118,14 @@ class MainMenu extends React.Component {
 
     async logOut(){
         try {
+            console.log('tried to logOut')
             const body = JSON.stringify({});
             let token = localStorage.getItem('token');
             localStorage.removeItem('token');
             localStorage.removeItem('id');
 
             await api.put('/logout', body , { headers: {'Token': token}});
-
+            this.props.history.push('/login')
             // Get the returned user and update a new object.
 
 
