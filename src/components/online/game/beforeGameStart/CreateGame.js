@@ -517,6 +517,7 @@ class CreateGame extends React.Component {
                             {this.state.amIAdmin ?
                                 <MenuButton
                                     width="55%"
+                                    disabled={this.state.users.length + this.state.amountOfNPC < 2}
                                     onClick={() => {
                                         this.startGame();
                                     }}>
