@@ -89,8 +89,10 @@ class CreateGame extends React.Component {
         this.state = {
             pokeCode: null,
             amountOfPlayers: 6,
+            amountOfCards: 5,
             amountOfNPC: 0,
             regexp: /^[1-6\b]$/,
+            regexpCards: /^[2-6\b]$/,
             message: '',
             users: null,
             admin: null,
@@ -132,7 +134,6 @@ class CreateGame extends React.Component {
         console.log("Creation Time Check: "+ this.state.creationTime)
         this.setTimerUntilStart()
     }
-
 
     async getAndSetUserInformation() {
         try {
@@ -200,7 +201,8 @@ class CreateGame extends React.Component {
         try {
 
             const requestBody = JSON.stringify({
-                npc: this.state.amountOfNPC
+                npc: this.state.amountOfNPC,
+                card: this.state.amountOfCards,
             });
             this.setState({startingGame: true})
             await api.put('/games/' + this.state.pokeCode.toString(), requestBody, {headers: {'Token': localStorage.getItem('token')}});
@@ -319,6 +321,19 @@ class CreateGame extends React.Component {
                 this.setState({amountOfNPC: 6-this.state.users.length})
             } else {
                 this.setState({amountOfNPC: 0})
+            }
+        }
+    }
+
+    handleCardsEvent(value) {
+        if (this.state.regexpCards.test(this.state.amountOfCards + value) && (this.state.amountOfCards + value <= 6)) {
+            this.setState({amountOfCards: this.state.amountOfCards + value});
+
+        } else {
+            if (this.state.amountOfCards >= 6) {
+                this.setState({amountOfCards: 6})
+            } else {
+                this.setState({amountOfCards: 2})
             }
         }
     }
@@ -450,6 +465,25 @@ class CreateGame extends React.Component {
                                         +
                                     </TextRoundContainer>
                                 </Column>
+                        </SimpleContainer>
+                        <br/>
+                        <Label>Amount of Cards: </Label>
+                        <SimpleContainer width={"55%"} defFloat={"center"}>
+                            <Column width={"15%"} floate={"left"}>
+                                <TextRoundContainer onClick={() => this.handleCardsEvent(-1)}>
+                                    -
+                                </TextRoundContainer>
+                            </Column>
+                            <Column width={"250px"} floate={"center"}>
+                                <InputField
+                                    width={"250px"}
+                                    value={this.state.amountOfCards}/>
+                            </Column>
+                            <Column width={'15%'} floate={"right"}>
+                                <TextRoundContainer onClick={() => this.handleCardsEvent(1)}>
+                                    +
+                                </TextRoundContainer>
+                            </Column>
                         </SimpleContainer>
                         <br/>
                         <Label>Waiting for Players ({this.state.users.length}/{this.state.amountOfPlayers})</Label>

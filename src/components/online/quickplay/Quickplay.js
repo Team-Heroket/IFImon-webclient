@@ -31,7 +31,8 @@ class Quickplay extends React.Component {
             console.log('requesting new game')
             const requestBody = JSON.stringify({
                 gameName: 'lol',
-                mode: "SINGLE_PLAYER"
+                mode: "SINGLE_PLAYER",
+
             });
             const request = await api.post('/games', requestBody, {headers: {'Token': localStorage.getItem('token')}});
             this.props.history.push('/game/'+(request.data).token);
