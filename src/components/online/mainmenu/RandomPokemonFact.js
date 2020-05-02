@@ -119,7 +119,7 @@ export let RandomPokemonFact = () =>{
                 }}
             >
                 <LabelTop>
-                    Pokemon Fact #{randomIndex+1}
+                    Pokémon Fact #{randomIndex+1}
                 </LabelTop>
             </div>
             <ButtonContainer>
