@@ -158,7 +158,7 @@ class MainMenu extends React.Component {
         }else{
             let next = this.getGeneration(false);
             this.setState({
-                step: Math.ceil((next[1]-next[0])/25),
+                step: Math.floor((next[1]-next[0])/24),
                 generation: next});
         }
     };
@@ -366,6 +366,7 @@ class MainMenu extends React.Component {
             </BaseContainer>
         );
     }
+
 }
 
 export default withRouter(MainMenu);
