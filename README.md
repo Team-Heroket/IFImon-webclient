@@ -1,6 +1,7 @@
-# SoPra FS20 - Client Template
+# SoPra FS20 - Group 20
 
-## Getting started with React
+# Pokèmon
+## Top Trumps
 
 Read and go through those Tutorials, It will make your life easier!
 
