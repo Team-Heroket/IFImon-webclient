@@ -1,6 +1,6 @@
 import React from 'react';
 import {withRouter} from "react-router-dom";
-import {GameContainer, Row} from "../../../../../helpers/layout";
+import {FormContainer, GameContainer, Row} from "../../../../../helpers/layout";
 import Header from "../../../../../views/Header";
 import styled from "styled-components";
 import {BackButton, SoundButton} from "../../../../../views/design/Icons";
@@ -607,7 +607,7 @@ class Game extends React.Component {
 
                 {this.state.justInitialized ?
 
-                    <div><Space/>{this.startClock()}</div> :
+                    <FormContainer><Space/>{this.startClock()}</FormContainer> :
                     this.renderPeriod()
                 }
             </GameContainer>
