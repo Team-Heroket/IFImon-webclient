@@ -1,8 +1,6 @@
 import React from "react";
 import {CountdownCircleTimer} from "react-countdown-circle-timer";
-import ReactDOM from "react-dom";
 import "./StylesheetGame.css";
-import {ButtonContainer} from "../../../../helpers/layout";
 
 
 let clock;
@@ -14,7 +12,7 @@ clock = {
 
 const renderTimeGameStart = value => {
     if (value === 0) {
-        return <div className="timer">Too late...</div>;
+        return <div className="timer">Wait...</div>;
     }
 
     return (
@@ -28,7 +26,7 @@ const renderTimeGameStart = value => {
 
 const renderTimeRematch = value => {
     if (value === 0) {
-        return <div className="timer">Too late...</div>;
+        return <div className="timer">Wait...</div>;
     }
 
     return (
@@ -65,6 +63,7 @@ export function Clock({remainingTime, totalTime, type}) {
                 renderTime={renderTimeGameStart}
                 onComplete={() => [true, 1000]}
                 trailColor = "transparent"
+                duration={totalTime/1000}
             />
 
         );
@@ -80,6 +79,7 @@ export function Clock({remainingTime, totalTime, type}) {
                 renderTime={renderTimeRematch}
                 onComplete={() => [true, 1000]}
                 trailColor = "transparent"
+                duration={totalTime/1000}
             />
         );
     }
@@ -95,6 +95,7 @@ export function Clock({remainingTime, totalTime, type}) {
                 renderTime={renderTimePeriod}
                 onComplete={() => [true, 1000]}
                 trailColor = "#DDDDDD"
+                duration={totalTime/1000}
             />
         );
     }
