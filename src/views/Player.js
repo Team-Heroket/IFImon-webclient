@@ -120,7 +120,7 @@ export let Player = ({ user }) => {
 export let PlayerMe = ({ user }) => {
     return (
         <ContainerMe>
-            <Rank>{user.statistics.rating}.</Rank> <UserName>{user.username}</UserName>
+            <Rank>{user.statistics.rating}.</Rank> <UserName>You</UserName>
             <Id>{user.statistics.gamesWon}</Id>
         </ContainerMe>
     );

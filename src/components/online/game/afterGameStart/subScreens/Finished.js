@@ -77,7 +77,7 @@ export let Finished = ({masterState, history}) => {
 
     return (
             <FormContainer margin={'5em'}>
-                {masterState.winners[0].id == masterState.player_me.id ? <Confetti/> : null}
+                <Confetti/>
             <Grid
                 container
                 direction="row"
