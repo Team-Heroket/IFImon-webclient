@@ -2,10 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { BaseContainer, ButtonContainer, FormContainer } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
-import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 import Header from "../../views/Header";
+import {Alert} from "@material-ui/lab";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Collapse from "@material-ui/core/Collapse";
 
 
 const Form = styled.div`
@@ -92,8 +95,21 @@ class Login extends React.Component {
     super();
     this.state = {
       password: null,
-      username: null
+      username: null,
+      openError: false,
+      openSuccess: false
     };
+  }
+
+  componentDidMount() {
+    localStorage.setItem("justLoggedIn", "false")
+    if (localStorage.getItem('accountCreation') == 'true') {
+      this.setState({openSuccess: true});
+      setTimeout(() => {
+        this.setState({openSuccess: false});
+        localStorage.setItem('accountCreation', 'false');
+      }, 5000);
+    }
   }
   /**
    * HTTP POST request is sent to the backend.
@@ -114,11 +130,23 @@ class Login extends React.Component {
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('id', data.id)
+      localStorage.setItem("justLoggedIn", "true")
 
       // Login successfully worked --> navigate to the route /game in the GameRouter
       this.props.history.push(`/menu`);
     } catch (error) {
-      alert(`Something went wrong during the login: \n${handleError(error)}`);
+      if(error.response.data.error == 'User not found'){
+        this.setState({openError: true, errorCode: 404});
+      }
+      else if(error.response.status == 401){
+        this.setState({openError: true, errorCode: 401});
+      }
+      else if(error.response.status == 500){
+        this.setState({open: true, errorCode: 500});
+      }
+      else {
+        alert(`Something went wrong during the login: \n${handleError(error)}`);
+      }
     }
   }
 
@@ -143,6 +171,44 @@ class Login extends React.Component {
         <Header height={195} top={66} />
         <FormContainer>
           <Form>
+            <Collapse in={this.state.openSuccess}>
+              <Alert severity="success"
+                     action={
+                       <IconButton
+                           aria-label="close"
+                           color="inherit"
+                           size="small"
+                           onClick={() => {
+                             this.setState({openSuccess: false});
+                           }}
+                       >
+                         <CloseIcon fontSize="inherit"/>
+                       </IconButton>
+                     }
+              >
+                Account successfully created!
+              </Alert>
+              <br/>
+            </Collapse>
+            <Collapse in={this.state.openError}>
+              <Alert severity="error"
+                     action={
+                       <IconButton
+                           aria-label="close"
+                           color="inherit"
+                           size="small"
+                           onClick={() => {
+                             this.setState({openError: false});
+                           }}
+                       >
+                         <CloseIcon fontSize="inherit"/>
+                       </IconButton>
+                     }
+              >
+                {this.state.errorCode == 404 ?  'User does not exist!' : (this.state.errorCode ==500 ? 'Internal Server Error': 'Wrong password!')}
+              </Alert>
+              <br/>
+            </Collapse>
             <Label>Username</Label>
             <InputField
               placeholder="Enter here.."

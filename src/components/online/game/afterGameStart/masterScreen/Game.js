@@ -1,33 +1,41 @@
 import React from 'react';
 import {withRouter} from "react-router-dom";
-import {
-    BaseContainer,
-    ButtonContainer,
-    FormContainer,
-    PokeCodeContainer,
-    PlayerContainer,
-    GameContainer, Row
-} from "../../../../../helpers/layout";
+import {GameContainer, Row} from "../../../../../helpers/layout";
 import Header from "../../../../../views/Header";
 import styled from "styled-components";
-import {Button, MenuButton, RoundContainer, TransparentButton} from "../../../../../views/design/Button";
-import {BackIcon} from "../../../../../views/design/Icons";
+import {BackButton, SoundButton} from "../../../../../views/design/Icons";
 import {api, handleError} from "../../../../../helpers/api";
 import {Spinner} from "../../../../../views/design/Spinner";
-import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin, PlayerStatCard} from "../../../../../views/Player";
-import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import {ChooseCategory} from "../subScreens/ChooseCategory";
 import {Evolve} from "../subScreens/Evolve";
 import {Finished} from "../subScreens/Finished";
 import {Result} from "../subScreens/Result";
 import {Clock} from "../Clock";
 import {Spectator} from "../subScreens/Spectator";
+import Grid from "@material-ui/core/Grid";
+
+
 
 
 const Space = styled.div`
   margin-bottom: 80px
   width: 100%
 `;
+
+const Audio = React.memo(function Audio({children}) {
+    return(
+        <div style={{width: '0px', height: '0px', margin: '0px', fontSize: '0'}}>
+            <audio src={require('../../../../shared/BackGroundMusic.mp3')} id="Background"/>
+            {setTimeout(()=> {
+                try{
+                document.getElementById("Background").volume = localStorage.getItem('VolumeMuted')=='false' ? (localStorage.getItem('MusicVol')/100) : 0;
+                document.getElementById("Background").play();
+                document.getElementById("Background").loop = true;
+                }catch (e) {}
+                }, 500)}
+        </div>
+    )
+})
 
 /**
  1) all clients: get game
@@ -40,19 +48,19 @@ const Space = styled.div`
 
 class Game extends React.Component {
 
-    recurrentTimer = null;
+    timeout_makeTurn = null;
+    timeout_waitForCategoryResult = null;
+    timeout_evolve = null;
+    timeout_callNext = null;
+    timeout_waitForAdmin = null;
     timeout_all = null;
-    timeout_chose = null;
-    timeout_getMidInfo = null;
-    timeout_berry = null;
-    timeout_result = null;
-    timeout_newRoundTimer = null;
-    timeout_spectator1 = null;
 
-    timeUntilEvolve = 15000;
-    timeUntilResult = 30000;
-    timeUntilNewRoundTimer = 35000;
-    timeUntilNewRound = 40000;
+    timer_spectator = null;
+    timer_waitForNextTurn = null;
+    timer_waitForCategory = null;
+    timer_listenToAdmin = null;
+
+
 
     period = {
         CHOOSECATEGORY: "choose",
@@ -76,7 +84,8 @@ class Game extends React.Component {
 
     clock = {
         GAMESTART: "gamestart",
-        NEWROUND: "newround"
+        NEWROUND: "newround",
+        PERIOD: "period"
     }
 
     constructor() {
@@ -90,19 +99,22 @@ class Game extends React.Component {
             startTime: null,
             amITurnPlayer: null,
             amIAdmin: null,
-            period: this.period.INTERMEDIARY,
             justInitialized: true,
             chosenCategory: null,
-            evolved: 0,
+            evolved: false,
             remainingTime: null,
             berries: null,
             evolveBerries: 0,
-            nowTemporaryTimer: false
+            nowTemporaryTimer: false,
+            goToEvolve: true,
+            currentPeriod: this.period.INTERMEDIARY,
+            oldPeriod: this.period.INTERMEDIARY,
+            currentCard: null,
+            oldCard: null,
+            state: null,
+            mute: (localStorage.getItem('VolumeMuted') ? (localStorage.getItem('VolumeMuted')=='true' ? true : false) : false)
         }
-    }
-
-    goToSocialMode() {
-        this.props.history.push('/socialmode');
+        localStorage.setItem('SelectedCat',0);
     }
 
 
@@ -148,8 +160,47 @@ class Game extends React.Component {
             if (user_me.id == resp2.creator.id) {
                 amIAdmin = true;
             }
+            console.log("Am I Admin? "+amIAdmin)
+
+            let currentPeriod = null;
+            let oldCard = null;
+            if (resp2.state == 'FINISHED') {
+                currentPeriod = this.period.FINISHED;
+                clearInterval(this.timer_waitForNextTurn);
+                this.timer_waitForNextTurn= null;
+                oldCard = this.state.oldCard;
+            }
+
+            else if (user_me.deck.empty) {
+                currentPeriod = this.period.SPECTATOR;
+                oldCard = this.state.oldCard;
+            }
 
 
+
+            else if (resp2.winners.length == 0) {
+                if(this.state.currentPeriod == this.period.RESULT){
+                    localStorage.setItem('SelectedCat',0);
+                }
+                currentPeriod = this.period.CHOOSECATEGORY;
+                clearInterval(this.timer_waitForNextTurn);
+                this.timer_waitForNextTurn= null;
+
+                oldCard = user_me.deck.cards[0];
+            }
+            else {
+                if (this.state.goToEvolve) {
+                    currentPeriod = this.period.EVOLVE;
+                    clearInterval(this.timer_waitForNextTurn);
+                    clearInterval(this.timer_waitForCategory);
+                    this.timer_waitForCategory=null;
+                    oldCard = this.state.oldCard;
+                }
+                else {
+                    currentPeriod = this.period.RESULT;
+                    oldCard = this.state.oldCard;
+                }
+            }
 
 
 
@@ -163,8 +214,12 @@ class Game extends React.Component {
                 berries: user_me.berries,
                 deck: user_me.deck,
                 winners: resp2.winners,
-                amIAdmin: amIAdmin
+                amIAdmin: amIAdmin,
+                chosenCategory: resp2.category,
+                currentPeriod: currentPeriod,
+                currentCard: user_me.deck.cards[0]
             })
+
 
 
             if (this.state.justInitialized) {
@@ -174,7 +229,12 @@ class Game extends React.Component {
 
 
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            if (error.response.status == 404) {
+                this.props.history.push('/menu')
+            }
+            else {
+                alert(`Something went wrong: \n${handleError(error)}`);
+            }
         }
     }
 
@@ -183,15 +243,16 @@ class Game extends React.Component {
         let remainingTime = this.state.startTime - new Date().getTime();
         console.log("Remaining time is: "+remainingTime);
         this.setState({remainingTime: remainingTime})
-        this.timeout_all = setTimeout(() => {
-            this.setState({justInitialized: false})
-            this.startRound();
-            this.recurrentRounds();
-        }, remainingTime)
-
+        if (remainingTime < 0) {
+            this.setState({justInitialized: false}, this.startRound)
+        }
+        else {
+            this.timeout_all = setTimeout(() => {
+                this.setState({justInitialized: false})
+                this.startRound();
+            }, remainingTime)
+        }
     }
-
-
 
     startClock() {
 
@@ -203,8 +264,8 @@ class Game extends React.Component {
     }
 
     async evolvePokemon() {
+        console.log("Make evolve put request")
         try {
-
             console.log("Amount in evolve is: "+localStorage.getItem('evolveTo'))
             const requestBody = JSON.stringify({
                 amount: localStorage.getItem('evolveTo'),
@@ -212,16 +273,15 @@ class Game extends React.Component {
             });
             const response = await api.put('/games/' + this.state.pokeCode + '/berries', requestBody, {headers: {'Token': localStorage.getItem('token')}});
             let currentBerries = this.state.berries;
-            this.setState({berries: currentBerries - this.state.evolveBerries})
-
+            this.setState({berries: currentBerries - this.state.evolveBerries, evolved: true})
 
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
         }
     }
 
-
     async makeTurn() {
+        console.log("Make category put request")
         //Insert Put Function for turnPlayer to choose
         let category = localStorage.getItem('SelectedCat');
         if (category == 0) {
@@ -255,112 +315,120 @@ class Game extends React.Component {
      6) turnPlayer: put nextTurn - DONE
      */
 
-    startNormalRound() {
+    async startNormalRound() {
         let startTime = this.state.startTime;
-        console.log("Starttime in startRound is: "+startTime)
-        console.log("Time now in startRound is: "+new Date().getTime())
-        let rem0 = startTime - new Date().getTime();
-        console.log("So time delay in startRound is: "+rem0)
-        let rem1 = rem0+13000
-        let rem2 = rem0+this.timeUntilEvolve
-        console.log("Time until you make put request for category: "+rem1)
-        console.log("Time until you make get request to get intermediary result: "+rem2)
+        console.log("entered startNormalRound now")
 
-        localStorage.setItem('SelectedCat', 0);
-        console.log("Got In here start round")
+        if (this.state.currentPeriod == this.period.FINISHED) {
+            this.startFinishedRound();
+        }
 
+        else if (this.state.currentPeriod == this.period.SPECTATOR) {
+            this.startSpectatorRound();
+        }
 
-        this.setState({
-            startTime: startTime + 40000,
-            remainingTime: startTime + 15000 - new Date().getTime(),
-            period: this.period.CHOOSECATEGORY
-        });
-        //1 - all clients get game
-        this.getGameInfo()
-        console.log("getGameInfo at:", new Date().getTime())
-
-        //2) turnPlayer: put category
-        // MAKING TURN 2 SECONDS BEFORE TIMEUNTILEVOLVE
-        setTimeout(() => {
+        else if (this.state.currentPeriod == this.period.CHOOSECATEGORY) {
+            this.setState({goToEvolve: true, evolved: false});
             if (this.state.amITurnPlayer) {
-                this.makeTurn()
-                console.log("PUT request with category done at:", new Date().getTime())
+                this.timeout_makeTurn = await setTimeout(() => {
+                    this.makeTurn();
+                    localStorage.setItem('playedSound', 'false');
+                }, 13000)
+                this.timeout_waitForCategoryResult = setTimeout(() => {
+                    this.timer_waitForCategory= setInterval(() => {
+                        this.getGameInfo()
+                    }, 1000)
+                }, 12000)
             }
-        }, startTime + this.timeUntilEvolve - 2000 - new Date().getTime());
-
-        //3) all clients: get game
-        this.timeout_chose = setTimeout(() => {
-            this.setState({
-                categoryChosen: null,
-                remainingTime: startTime + this.timeUntilResult - new Date().getTime(),
-                period: this.period.EVOLVE
-            })
-            this.getGameInfo()
-            console.log("Ending Selection and going to EVOLVE component at: ", new Date().getTime())
-        }, startTime + this.timeUntilEvolve - new Date().getTime());
-
-        //4) those clients who want to: put berry + 5) all clients get game
-        this.timeout_getMidInfo = setTimeout(() => {
-            this.setState({
-                categoryChosen: null,
-                period: this.period.RESULT,
-                remainingTime: startTime + this.timeUntilNewRoundTimer - new Date().getTime()
-            })
-            if (localStorage.getItem('evolveTo') != 0) {
-                this.evolvePokemon();
+            else {
+                this.timer_waitForCategory= setInterval(() => {
+                    this.getGameInfo()
+                }, 2000)
             }
-            setTimeout(()=>this.getGameInfo(), 3000)
+        }
+        else if (this.state.currentPeriod == this.period.EVOLVE) {
+            localStorage.setItem('evolveTo', 0);
+            this.timeout_evolve = setTimeout(() => {
+                if (localStorage.getItem('evolveTo') != 0) {
+                    this.evolvePokemon();
+                }
+                this.setState({goToEvolve: false},  this.getGameInfo);
+                localStorage.setItem('playedSound', 'false');
+            }, 10000)
+        }
+        else if (this.state.currentPeriod == this.period.RESULT) {
+            localStorage.setItem('evolveTo', 0);
+            this.timer_waitForNextTurn= setInterval(() => {
+                this.getGameInfo()
+            }, 2000)
+            setTimeout(() => {
+                localStorage.setItem('playedSound', 'false');
+            }, 13000)
 
-            console.log("Ending Berry time and Going to Results at: ", new Date().getTime())
-        }, startTime + this.timeUntilResult -5000- new Date().getTime());
-
-        this.timeout_result = setTimeout(() => {
             if (this.state.amIAdmin) {
-                this.makeFinalTurn()
+                this.timeout_callNext = setTimeout(() => {
+                    this.makeFinalTurn();
+                    setTimeout(() => {
+                        this.setState({goToEvolve: true},  this.getGameInfo);
+                    }, 2000)
+                }, 10000)
             }
-            this.setState({
-                categoryChosen: null,
-                period: this.period.NEWROUNDTIMER,
-                remainingTime: startTime + this.timeUntilNewRound - new Date().getTime()
-            })
-            console.log("Set New Round Timer")
-        }, startTime + this.timeUntilNewRoundTimer - new Date().getTime());
-
-
-        this.timeout_newRoundTimer = setTimeout(() => {
-            console.log("AmITurnPlayer is: "+this.state.amITurnPlayer)
-
-            this.setState({
-                categoryChosen: null,
-                period: this.period.NEWROUNDTIMER,
-            })
-            console.log("Timer New Round ended")
-        }, startTime + this.timeUntilNewRound - new Date().getTime());
-
+        }
 
     }
 
     startSpectatorRound() {
         let startTime = this.state.startTime;
+
         this.setState({period: this.period.SPECTATOR, startTime: startTime + 40000});
+
+        clearTimeout(this.timeout_makeTurn);
+        this.timeout_makeTurn = null;
+
+        clearTimeout(this.timeout_waitForCategoryResult);
+        this.timeout_waitForCategoryResult = null;
+
+        clearTimeout(this.timeout_evolve);
+        this.timeout_evolve = null;
+
+        clearTimeout(this.timeout_callNext);
+        this.timeout_callNext = null;
+
+        clearInterval(this.timer_waitForNextTurn);
+        this.timer_waitForNextTurn = null;
+
+        clearInterval(this.timer_waitForCategory)
+        this.timer_waitForCategory = null;
 
         this.getGameInfo();
 
-        this.timeout_spectator1  = setTimeout(() => {
+        this.timer_spectator = setInterval( () => {
             this.getGameInfo();
-        }, startTime + 15000 - new Date().getTime())
-
-        this.timeout_spectator1  = setTimeout(() => {
-            this.getGameInfo();
-        }, startTime + 30000 - new Date().getTime())
+        }, 10000)
 
 
-        this.timeout_result  = setTimeout(() => {
-            this.setState({startOfRound: true})
-            if (this.state.amIAdmin) {
-                this.makeFinalTurn();
+    }
+
+    async getGameWaitForAdmin() {
+        try {
+            console.log("Tried getting game info");
+
+            const response2 = await api.get('/games/' + this.props.match.params.pokeCode.toString(), {headers: {'Token': localStorage.getItem('token')}});
+            const resp2 = response2.data;
+            let startTime = parseInt(resp2.startTime,10);
+            let state = resp2.state;
+
+            this.setState({startTime: startTime, state: state})
+
+
+        } catch (error) {
+            if (error.response.status == 404) {
+                this.props.history.push('/menu')
             }
-        }, startTime + 35000 - new Date().getTime())
+            else {
+                alert(`Something went wrong: \n${handleError(error)}`);
+            }
+        }
     }
 
     startFinishedRound() {
@@ -369,106 +437,185 @@ class Game extends React.Component {
         clearInterval(this.recurrentTimer);
         this.recurrentTimer = null;
 
+        if (this.state.amIAdmin) {
+            this.timeout_waitForAdmin = setTimeout(() => {
+                this.props.history.push('/menu')
+            }, 15000)
+
+            this.timer_listenToAdmin = setInterval(() => {
+                this.getGameWaitForAdmin();
+            }, 2000)
+        }
+        else {
+            this.timeout_waitForAdmin = setTimeout(() => {
+                this.props.history.push('/menu')
+            }, 15000)
+
+            this.timer_listenToAdmin = setInterval(() => {
+                this.getGameWaitForAdmin();
+            }, 2000)
+        }
+
     }
 
     async startRound() {
-        await this.getGameInfo();
-        if (this.state.state == 'FINISHED') {
-            this.startFinishedRound()
-        }
-        else {
-            if (this.state.player_me.deck.empty) {
-                this.startSpectatorRound()
-            }
-            else {
-                this.startNormalRound();
-            }
-        }
+
+        this.startNormalRound();
+
     }
 
-    recurrentRounds() {
-        this.recurrentTimer = setInterval(() => {
+    componentDidUpdate(prevProps, prevState) {
+
+        if (prevState.currentPeriod != this.state.currentPeriod && !this.state.justInitialized && prevState.currentPeriod) {
+            console.log("prevState is: "+prevState.currentPeriod)
+            console.log("currentState is: "+this.state.currentPeriod)
             this.startRound();
-        }, 40000);
+        }
+
+        if (prevState.currentPeriod && prevState.currentCard  && this.state.currentCard &&  prevState.currentCard.id != this.state.currentCard.id && !this.state.justInitialized && this.state.currentPeriod == this.period.RESULT && !this.state.evolved) {
+
+            console.log(" Entered ComponentDidUpdate Period with: "+localStorage.getItem('evolveTo'));
+            this.setState({goToEvolve: true});
+        }
+
+        if (prevState.currentPeriod &&  prevState.amIAdmin != this.state.amIAdmin && !this.state.justInitialized && this.state.currentPeriod == this.period.RESULT) {
+            clearInterval(this.timer_waitForNextTurn);
+            this.timer_waitForNextTurn = null;
+            this.startRound();
+        }
+
+        if (prevState.state && this.state.state && prevState.state == 'FINISHED' && this.state.state == 'RUNNING') {
+            this.setState({justInitialized: true}, this.getGameInfo)
+            clearInterval(this.timer_listenToAdmin);
+            this.timer_listenToAdmin = null;
+            clearTimeout(this.timeout_waitForAdmin);
+            this.timeout_waitForAdmin = null;
+        }
     }
 
-    async giveUp() {
+    componentDidMount() {
+        this.setupBeforeUnloadListener();
+        this.getGameInfo();
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timeout_all)
+        this.timeout_all = null;
+
+        clearTimeout(this.timeout_makeTurn);
+        this.timeout_makeTurn = null;
+
+        clearTimeout(this.timeout_waitForCategoryResult);
+        this.timeout_waitForCategoryResult = null;
+
+        clearTimeout(this.timeout_evolve);
+        this.timeout_evolve = null;
+
+        clearTimeout(this.timeout_callNext);
+        this.timeout_callNext = null;
+
+        clearInterval(this.timer_waitForNextTurn);
+        this.timer_waitForNextTurn = null;
+
+        clearInterval(this.timer_waitForCategory)
+        this.timer_waitForCategory = null;
+
+        clearInterval(this.timer_spectator);
+        this.timer_spectator = null;
+
+        clearInterval(this.timer_listenToAdmin);
+        this.timer_listenToAdmin = null;
+
+        clearTimeout(this.timeout_waitForAdmin);
+        this.timeout_waitForAdmin = null;
+        this.leaveGame();
+    }
+
+    async leaveGame() {
         try {
             const requestBody = JSON.stringify({
-                id: this.state.user.id,
+                id: this.state.player_me.user.id,
                 action: "LEAVE"
             });
             console.log(requestBody);
             console.log(this.state.pokeCode)
-            await api.put('/games/' + this.state.pokeCode + '/players', requestBody, {headers: {'Token': localStorage.getItem('token')}});
-            this.goToSocialMode();
+            await api.put('/games/'+this.state.pokeCode+'/players', requestBody,{ headers: {'Token': localStorage.getItem('token')}});
         } catch (error) {
-            alert(`Something went wrong: \n${handleError(error)}`);
+            console.log('logged error:'+ error);
+            if (error.response.status != 404) {
+                alert(`Something went wrong: \n${handleError(error)}`);
+            }
+
         }
-    }
-
-
-    componentDidMount() {
-        this.getGameInfo();
-    }
-
-
-    componentWillUnmount() {
-        clearInterval(this.recurrentTimer);
-        this.recurrentTimer = null;
-        clearTimeout(this.timeout_chose);
-        this.timeout_chose = null;
-        clearTimeout(this.timeout_getMidInfo);
-        this.timeout_getMidInfo = null;
-        clearTimeout(this.timeout_berry);
-        this.timeout_berry = null;
-        clearTimeout(this.timeout_result);
-        this.timeout_result = null;
-        clearTimeout(this.timeout_all);
-        this.timeout_all = null;
     }
 
     renderPeriod() {
-        if (this.state.period == this.period.CHOOSECATEGORY) {
-            return <ChooseCategory masterState={this.state}/>
-        } else if (this.state.period == this.period.EVOLVE) {
-            return <Evolve masterState={this.state}/>
-        } else if (this.state.period == this.period.RESULT) {
-            return <Result masterState={this.state}/>
-        } else if (this.state.period == this.period.SPECTATOR) {
-            return <Spectator masterState={this.state}/>
-        } else if (this.state.period == this.period.FINISHED) {
-            return <Finished masterState={this.state}/>
-        } else if (this.state.period == this.period.NEWROUNDTIMER) {
+
+        if (this.state.currentPeriod == this.period.CHOOSECATEGORY) {
+            return <ChooseCategory masterState={this.state} history={this.props.history} parentMethod={() => {this.forceUpdate()}} />
+        } else if (this.state.currentPeriod == this.period.EVOLVE) {
+            console.log(" Entered EVOLVE Period with: "+localStorage.getItem('evolveTo'));
+            return <Evolve masterState={this.state} history={this.props.history} parentMethod={() => {this.forceUpdate()}}/>
+        } else if (this.state.currentPeriod == this.period.RESULT) {
+            console.log(" Entered RESULT Period with: "+localStorage.getItem('evolveTo'));
+            return <Result masterState={this.state} history={this.props.history} />
+        } else if (this.state.currentPeriod == this.period.SPECTATOR) {
+            return <Spectator masterState={this.state} history={this.props.history}/>
+        } else if (this.state.currentPeriod == this.period.FINISHED) {
+            return <Finished masterState={this.state} history={this.props.history}/>
+        } else if (this.state.currentPeriod == this.period.NEWROUNDTIMER) {
             return <Clock remainingTime={this.state.remainingTime} totalTime={5000} type={this.clock.NEWROUND}/>
+
         }
     }
 
+    goBack() {
+        if (window.confirm('Are you sure you want to leave the game?')) this.props.history.push('/menu')
+    }
+
+    setupBeforeUnloadListener = () => {
+        window.addEventListener("beforeunload", (ev) => {
+            return this.leaveGame();
+        });
+    };
 
     render() {
         return (
             <GameContainer>
+                <Audio/>
                 <Header height={140} top={33}/>
-                <h1>Start Time is: {this.state.startTime}</h1>
-                <h1>Now Time is: {new Date().getTime()}</h1>
-                <h1>Remaining Time is: {this.state.remainingTime}</h1>
-                <Row>
-                    <RoundContainer onClick={() => {
-                        this.goBack()
-                    }}>
-                        <BackIcon/>
-                    </RoundContainer>
-                </Row>
+                <Grid
+                    container
+                    direction="row"
+                    justify="space-between"
+                    alignItems="flex-start"
+                >
+                    <BackButton action={() => {this.goBack()}}/>
+                    { this.state.mute ?
+                        <SoundButton mute={true} action={()=>{
+                            localStorage.setItem('VolumeMuted', 'false');
+                            this.setState({mute: false});
+                            document.getElementById("Background").volume = localStorage.getItem('MusicVol')/100;
+                        }} />
+                        :
+                        <SoundButton mute={false} action={() => {
+                            localStorage.setItem('VolumeMuted', 'true');
+                            this.setState({mute: true});
+                            document.getElementById("Background").volume = 0}} />
+                    }
+                </Grid>
 
                 {this.state.justInitialized ?
 
-                    <div><Space/>{this.startClock()}</div> : this.renderPeriod()
+                    <div><Space/>{this.startClock()}</div> :
+                    this.renderPeriod()
                 }
             </GameContainer>
         );
     }
 
     async makeFinalTurn() {
+        console.log("Tried to make final turn")
         try {
             const response = await api.put('/games/' + this.state.pokeCode + '/next', {}, {headers: {'Token': localStorage.getItem('token')}});
 
@@ -476,6 +623,7 @@ class Game extends React.Component {
             alert(`Something went wrong: \n${handleError(error)}`);
         }
     }
+
 }
 
 export default withRouter(Game);

@@ -8,14 +8,14 @@ import {
     KickContainer,
     LogOutButton,
     MenuButton,
-    RoundContainer,
     TextRoundContainer
 } from "../../../../views/design/Button";
-import {BackIcon, KickIcon} from "../../../../views/design/Icons";
+import {BackButton, KickIcon, SoundButton} from "../../../../views/design/Icons";
 import {api, handleError} from "../../../../helpers/api";
 import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin} from "../../../../views/Player";
 import {Spinner} from "../../../../views/design/Spinner";
 import {CenterContainer} from "./Lobby";
+import Grid from "@material-ui/core/Grid";
 
 const Form = styled.div`
   display: flex;
@@ -51,13 +51,6 @@ const ErrorMessage = styled.label`
   margin-bottom: 10px;
 `;
 
-const Row = styled.div`
-    &::after{
-    content: "";
-    clear: "";
-    display: table "";
-    }
-    `;
 
 const Column = styled.div`
     float: ${props => props.floate};
@@ -96,8 +89,10 @@ class CreateGame extends React.Component {
         this.state = {
             pokeCode: null,
             amountOfPlayers: 6,
+            amountOfCards: 5,
             amountOfNPC: 0,
             regexp: /^[1-6\b]$/,
+            regexpCards: /^[2-6\b]$/,
             message: '',
             users: null,
             admin: null,
@@ -139,7 +134,6 @@ class CreateGame extends React.Component {
         console.log("Creation Time Check: "+ this.state.creationTime)
         this.setTimerUntilStart()
     }
-
 
     async getAndSetUserInformation() {
         try {
@@ -207,7 +201,8 @@ class CreateGame extends React.Component {
         try {
 
             const requestBody = JSON.stringify({
-                npc: this.state.amountOfNPC
+                npc: this.state.amountOfNPC,
+                card: this.state.amountOfCards,
             });
             this.setState({startingGame: true})
             await api.put('/games/' + this.state.pokeCode.toString(), requestBody, {headers: {'Token': localStorage.getItem('token')}});
@@ -330,9 +325,21 @@ class CreateGame extends React.Component {
         }
     }
 
+    handleCardsEvent(value) {
+        if (this.state.regexpCards.test(this.state.amountOfCards + value) && (this.state.amountOfCards + value <= 6)) {
+            this.setState({amountOfCards: this.state.amountOfCards + value});
+
+        } else {
+            if (this.state.amountOfCards >= 6) {
+                this.setState({amountOfCards: 6})
+            } else {
+                this.setState({amountOfCards: 2})
+            }
+        }
+    }
+
 
     goBack() {
-
         this.leaveGame();
         this.props.history.push('/socialmode');
     }
@@ -407,11 +414,23 @@ class CreateGame extends React.Component {
         return (
             <BaseContainer>
                 <Header height={140} top={33}/>
-                <RoundContainer onClick={() => {
-                    this.goBack()
-                }}>
-                    <BackIcon/>
-                </RoundContainer>
+                <Grid
+                    container
+                    direction="row"
+                    justify="space-between"
+                    alignItems="flex-start"
+                >
+                    <BackButton action={() => {this.goBack()}}/>
+                    {localStorage.getItem('VolumeMuted')=='true'?
+                        <SoundButton mute={false} action={()=>{
+                            localStorage.setItem('VolumeMuted', 'false');
+                            this.forceUpdate()}} />
+                        :
+                        <SoundButton mute={true} action={() => {
+                            localStorage.setItem('VolumeMuted', 'true');
+                            this.forceUpdate()}} />
+                    }
+                </Grid>
                 <FormContainer>
                     {(!this.state.users || !this.state.admin || this.state.startingGame) ? (
                         <Spinner/>) : <Form>
@@ -448,6 +467,25 @@ class CreateGame extends React.Component {
                                 </Column>
                         </SimpleContainer>
                         <br/>
+                        <Label>Amount of Cards: </Label>
+                        <SimpleContainer width={"55%"} defFloat={"center"}>
+                            <Column width={"15%"} floate={"left"}>
+                                <TextRoundContainer onClick={() => this.handleCardsEvent(-1)}>
+                                    -
+                                </TextRoundContainer>
+                            </Column>
+                            <Column width={"250px"} floate={"center"}>
+                                <InputField
+                                    width={"250px"}
+                                    value={this.state.amountOfCards}/>
+                            </Column>
+                            <Column width={'15%'} floate={"right"}>
+                                <TextRoundContainer onClick={() => this.handleCardsEvent(1)}>
+                                    +
+                                </TextRoundContainer>
+                            </Column>
+                        </SimpleContainer>
+                        <br/>
                         <Label>Waiting for Players ({this.state.users.length}/{this.state.amountOfPlayers})</Label>
                         <ButtonContainer>
                             {
@@ -479,6 +517,7 @@ class CreateGame extends React.Component {
                             {this.state.amIAdmin ?
                                 <MenuButton
                                     width="55%"
+                                    disabled={this.state.users.length + this.state.amountOfNPC < 2}
                                     onClick={() => {
                                         this.startGame();
                                     }}>

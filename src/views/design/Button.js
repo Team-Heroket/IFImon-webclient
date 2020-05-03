@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import React from "react";
-import {BackIcon, LeaderboardIcon, QuickplayIcon, SettingsIcon, SocialIcon} from "./Icons";
+import {BackIcon, LeaderboardIcon, QuickplayIcon, SettingsIcon, SocialIcon, TutorialIcon} from "./Icons";
 
 export const Button = styled.button`
   &:hover {
@@ -46,7 +46,7 @@ export const EvolveButton = styled.button`
   font-size: 16px;
   text-align: center;
   color: ${props => (props.disabled ? "rgba(255, 255, 255, 1)" : "rgba(142, 197, 177, 1)")};
-  width: 100%;
+  width: ${props => props.width || '100%'};;
   height: 35px;
   border: 1px solid #FFFFFF;;
   border-radius: 25px;
@@ -56,6 +56,83 @@ export const EvolveButton = styled.button`
   background: rgb(255, 255, 255, ${props => (props.disabled ? "0%" : "100%")});
   transition: all 0.3s ease;
 `;
+
+export const ActiveEvolveButton = styled.button`
+  &:hover {
+    transform: translateY(2px);
+    font-family: Helvetica;
+    font-weight: 500;
+    text-transform: uppercase;
+  font-size: 16px;
+  text-align: center;
+    line-height: 23px;
+    color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+    background: linear-gradient(227.89deg, #F53E28 1.67%, rgba(255, 255, 255, 0) 322.73%), #FCE93A;
+  }
+  &:focus{
+    font-family: Helvetica;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 16px;
+    text-align: center;
+    line-height: 23px;
+    color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+    background: linear-gradient(227.89deg, #F53E28 1.67%, rgba(255, 255, 255, 0) 322.73%), #FCE93A;
+  }
+  padding: 6px;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 16px;
+  text-align: center;
+  color: rgba(255, 255, 255, 1);
+  width: ${props => props.width || '100%'};;
+  height: 35px;
+  border: 1px solid #FFFFFF;;
+  border-radius: 25px;
+  margin-top: 10px;
+  cursor: "default";
+  opacity: "100%";
+  background: linear-gradient(102.87deg, #69CBD1 0%, rgba(255, 255, 255, 0) 188.68%), #89FBB8;
+  transition: all 0.3s ease;
+`;
+
+
+export const PageButton = styled.button`
+  &:hover {
+    transform: ${props => (props.disabled ? 'scale(1)' : 'scale(2.5)')};
+    transition: all 0.3s ease;
+  }
+  &:active {
+    transform: ${props => (props.alignment=='left' ? 'translateX(-10px)' : 'translateX(10px)')};
+    transition: all 0.3s ease;
+  }
+  position: absolute;
+  top: 50%;
+  margin-top = 50%;
+  ${props => props.alignment}: 2%;
+  border: 0px;
+  padding: 2px;
+  width: 28px;
+  height: 50px;
+  cursor: "pointer";
+  opacity: ${props => (props.disabled ? "50%" : "100%")};
+  transition: visibility 1s linear;
+  
+  background: transparent;
+  
+  z-index: 6;
+`
+
+export const nextPage = ({disabled}) =>{
+    return(
+        <PageButton disabled={disabled}>
+            <BackIcon/>
+        </PageButton>
+    )
+}
+
 
 export const TransparentButton = styled.button`
   &:hover {
@@ -128,12 +205,13 @@ export const MenuButton = styled.button`
 
 export const LogOutButton = styled.button`
   &:hover {
-    transform: translateY(2px);
+    transform: ${props => (props.disabled ? 'translateY(0px)' :'translateY(2px)')};
     font-weight: 700;
     color: rgba(255, 255, 255, 1);
     opacity:  ${props => (props.disabled ? "66%" : "90%")};;
-    border: 0px solid #FFFFFF;;
-    background:  ${props => (props.disabled ? "" : "linear-gradient(227.89deg, #F53E28 1.67%, rgba(255, 255, 255, 0) 322.73%), #FCE93A")};
+    border: ${props => (props.disabled ? '1' :'0')}px solid #FFFFFF;;
+    background:  ${props => (props.disabled ? 'rgba(255,255,255,0)' : "linear-gradient(227.89deg, #F53E28 1.67%, rgba(255, 255, 255, 0) 322.73%), #FCE93A")}; 
+    opacity: ${props => (props.disabled ? "0%" : "100%")};
     transition: all 0.3s ease;
   }
   padding: 6px;
@@ -149,20 +227,20 @@ export const LogOutButton = styled.button`
   border-radius: 25px;
   margin-top: 30px;
   cursor: ${props => (props.disabled ? "default" : "pointer")};
-  opacity: ${props => (props.disabled ? "66%" : "90%")};
+  opacity: ${props => (props.disabled ? "0%" : "90%")};
   background: rgb(255, 255, 255);
   transition: all 0.1s ease;
 `;
 
 export const RoundContainer = styled.button`
-    &:hover {
-    opacity: 90%;
-    border: 0px solid #FFFFFF;;
-    background: rgb(255, 255, 255, 25%);
+   &:hover {
+    opacity: ${props => (props.disabled ? "66%" : "90%")};
+    border: ${props => (props.disabled ? null : "0px solid #FFFFFF")};
+    background: ${props => (props.disabled ? "rgb(255, 255, 255, 0%)" : "rgb(255, 255, 255, 20%)")};
     transition: all 0.3s ease;
   }
   &:active{
-   transform: translateY(2px);
+   transform: ${props => (props.disabled ? null : "translateY(2px)")};
   }
   margin:10px;
   width: ${props => props.width || "35px"};
@@ -177,7 +255,49 @@ export const RoundContainer = styled.button`
   
   transition: all 0.3s ease;
   background: rgb(255, 255, 255, 0%);
+  
+  cursor: ${props => (props.disabled ? "default" : "pointer")};
+  opacity: ${props => (props.disabled ? "66%" : "100%")};
 `;
+
+export const DotButton = styled.button`
+  &:active{
+  transform: ${props => (props.disabled ? null : "translateY(1px)")};
+  transition: all 0.3s ease;
+  }
+  margin-top: 10px;
+  margin-left: 5px;
+  color: #FFFFFF;
+  margin-right: 5px;
+  font-weight: ${props => (props.disabled ? '700' : null)};
+  width: ${props => props.width || "10px"};
+  height: ${props => props.width || "10px"};
+  border-radius: ${props => props.width || "10px"};
+  border: ${props => (props.disabled ? '2' : "1")}px solid #ffffff;
+  transition: all 0.3s ease;
+  opacity: ${props => (props.disabled ? '100%' : "90%")};
+  background: ${props => (props.disabled ? "linear-gradient(102.87deg, #69CBD1 0%, rgba(255, 255, 255, 0) 188.68%), #89FBB8;" : "rgb(255, 255, 255, 33%)")};
+  cursor: ${props => (props.disabled ? "default" : "pointer")};
+`;
+
+export const PokedexGenerationButton = styled.button`
+  &:active{
+  transform: ${props => (props.disabled ? null : "translateY(1px)")};
+  transition: all 0.3s ease;
+  }
+  color: #FFFFFF;
+  margin-top: -10px;
+  height: ${props => (props.width*2/3) || 10}px;;
+  font-weight: ${props => (props.disabled ? '700' : null)};
+  width: ${props => props.width || 10}px;
+  border-top-left-radius: ${props => (props.gen == 'I' ? '25px' : "0px")};
+  border-top-right-radius: ${props => (props.gen == 'VIII' ? '25px' : "0px")};
+  border: ${props => (props.disabled ? '2px solid rgba(255,255,255,1)' : '2px solid rgba(255,255,255,0.3)')};
+  transition: all 0.3s ease;
+  opacity: ${props => (props.disabled ? '100%' : "90%")};
+  background: ${props => (props.disabled ? "linear-gradient(102.87deg, #69CBD1 0%, rgba(255, 255, 255, 0) 188.68%), #89FBB8;" : "rgb(255, 255, 255, 0%)")};
+  cursor: ${props => (props.disabled ? "default" : "pointer")};
+`
 
 export const KickContainer = styled.button`
     &:hover {
@@ -299,12 +419,14 @@ function buttonIcon(type) {
             return <SocialIcon/>;
         case('quickplay'):
             return <QuickplayIcon/>;
+        case('tutorial'):
+            return <TutorialIcon/>;
     };
 }
 
 export let MenuButtonIcon = ( {type, onClicktoDo}) => {
     return (
-        <ExternalContainer width={"55%"} onClick = {onClicktoDo}>
+        <ExternalContainer width={"160%"} onClick = {onClicktoDo}>
             <Row>
                 <Column width={"25%"} float={'left'}>
                     {buttonIcon(type)}

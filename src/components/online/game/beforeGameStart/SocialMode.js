@@ -3,9 +3,10 @@ import {withRouter} from "react-router-dom";
 import {BaseContainer, ButtonContainer, FormContainer} from "../../../../helpers/layout";
 import Header from "../../../../views/Header";
 import styled from "styled-components";
-import {Button, MenuButton, RoundContainer, TransparentButton} from "../../../../views/design/Button";
-import {BackIcon} from "../../../../views/design/Icons";
+import {Button, TransparentButton} from "../../../../views/design/Button";
+import {BackButton, SoundButton} from "../../../../views/design/Icons";
 import {api, handleError} from "../../../../helpers/api";
+import Grid from "@material-ui/core/Grid";
 
 const Form = styled.div`
   display: flex;
@@ -116,11 +117,23 @@ class SocialMode extends React.Component {
             <BaseContainer>
                 <Header height={140} top={33} />
                 <Row>
-                    <RoundContainer onClick={() => {
-                        this.goBack()
-                    }}>
-                        <BackIcon/>
-                    </RoundContainer>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="space-between"
+                        alignItems="flex-start"
+                    >
+                        <BackButton action={() => {this.goBack()}}/>
+                        {localStorage.getItem('VolumeMuted')=='true'?
+                            <SoundButton mute={false} action={()=>{
+                                localStorage.setItem('VolumeMuted', 'false');
+                                this.forceUpdate()}} />
+                            :
+                            <SoundButton mute={true} action={() => {
+                                localStorage.setItem('VolumeMuted', 'true');
+                                this.forceUpdate()}} />
+                        }
+                    </Grid>
                 </Row>
                 <FormContainer>
                    <Form>

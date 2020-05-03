@@ -42,14 +42,31 @@ export const GameContainer = styled.div`
 export const  ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
+  color: white;
   
   align-items: center;
   justify-content: center;
   margin-bottom:20px
 `;
 
+export const  HorizontalButtonContainer = styled.div`
+  display: flex;
+  position: absolute;
+  
+  top: ${props => (props.align == 'top' ? '10px' : null)};
+  bottom: ${props => (props.align == 'bottom' ? '10px' : null)};
+  left: 50%
+  transform : translate(-50%, 0%);
+  flex-direction: row;
+  float: bottom;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+`;
+
 export const FormContainer = styled.div`
-  margin-top: 2em;
+  margin-top: ${props => props.margin || '2em'};
+  width: ${props => props.width || null};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -60,10 +77,25 @@ export const FormContainer = styled.div`
 export const SimpleContainer = styled.div`
   width: ${props => props.width || null};
   float: ${props => props.defFloat || null};
+  color: ${props => props.color || null};;
   justify-content:center;
   margin:auto;
   align-items: center;
+  margin-top: ${props => (props.heigth/2-5)+'px' || null}
   display: flex;
+`;
+
+export const SimpleColumnContainer = styled.div`
+  width: ${props => props.width || null};
+  float: ${props => props.defFloat || null};
+  color: ${props => props.color || null};;
+  justify-content:center;
+  align-items: center;
+  margin-top: ${props => (props.heigth/2-5)+'px' || null};
+  margin-left: ${props => (props.sideMargin)|| null};
+  margin-right: ${props => (props.sideMargin)|| null};
+  display: flex;
+  flex-direction: column;
 `;
 
 export const PokeCodeContainer = styled.label`
@@ -89,15 +121,57 @@ export const PokeCodeContainer = styled.label`
 
 export const AvatarContainer = styled.div`
   overflow-y: scroll;
+  position: relative;
+  padding-top: 5px;
   background: rgba(255, 255, 255, 0.2);
-  margin-left: 15%;
+  margin-left: ${props => props.margin || "15%"};
+  
+  align-items: center;
+  justify-content: center;
+  
   border-radius: 25px;
-  margin-top: 15px;
+  margin-top: 5px;
   height:  ${props => props.height || "350px"};
-  width: 450px;
-  padding-left: 15px;
+  width: ${props => props.width || "450px"};
+  padding-left: ${props => props.margin || "15px"};
+  padding-right: ${props => props.margin || "15px"};
   
 `;
+
+export const PokedexContainer = styled.div`
+  position: relative;
+  padding-top: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  margin-left: ${props => props.margin || "15%"};
+  
+  align-items: center;
+  justify-content: center;
+  
+  border-radius: 25px;
+  margin-top: 5px;
+  height:  ${props => props.height || "350px"};
+  width: ${props => props.width || "450px"};
+  padding-left: ${props => props.margin || "15px"};
+  padding-right: ${props => props.margin || "15px"};
+  
+`;
+
+export const InnerContainerPokedex = styled.div`
+ 
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 50px;
+  left: 48%;
+  width: 480px;
+  transform : translate(-46.5%, -0%);
+  float: bottom;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+
+`
+
 
 export const PlayerContainer = styled.li`
   

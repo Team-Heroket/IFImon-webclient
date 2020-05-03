@@ -1,13 +1,24 @@
 import React from "react";
-import {ButtonContainer, PlayerContainer, Row} from "../../../../../helpers/layout";
-import {Player, PlayerGame, PlayerMe, PlayerMeGame} from "../../../../../views/Player";
+import {ButtonContainer, PlayerContainer} from "../../../../../helpers/layout";
+import {PlayerGame} from "../../../../../views/Player";
 import styled from "styled-components";
-import {LogOutButton, RoundContainer} from "../../../../../views/design/Button";
-import {BackIcon} from "../../../../../views/design/Icons";
-import {FocusedPokemonCard, PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
+import {LogOutButton} from "../../../../../views/design/Button";
+import {FocusedPokemonCard} from "../../../../../views/design/PokemonCard";
 import Grid from "@material-ui/core/Grid";
 import Badge from "@material-ui/core/Badge";
 
+
+const Label = styled.label`
+  position: relative;
+  width: 400px;
+ 
+  color: white;
+  
+  margin-bottom: 50px;
+  font-size: 30px;
+  font-weight: 300;
+  text-align: center;
+`;
 
 export let Spectator = ({masterState, history}) => {
 
@@ -15,7 +26,7 @@ export let Spectator = ({masterState, history}) => {
     function showLeaderboard() {
         return (
             <ButtonContainer>
-                <h1> Spectating - You Lost! </h1>
+                <Label>  YOU LOST! <br/> You are now spectating </Label>
                 {masterState.players.map(player => {
                     return (
                         <PlayerContainer>
@@ -45,20 +56,20 @@ export let Spectator = ({masterState, history}) => {
                         if (masterState.winners[c].user.username == masterState.players[i].user.username) {
                             firstCards.push(
                                 <Badge color={"secondary"} badgeContent={"Winner"}>
-                                    {FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false)}
+                                    {FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false, true)}
                                 </Badge>
                             );
                             printed = true;
                         }
                     }
-                    if(!printed){
+                    if(!printed && !masterState.players[i].deck.empty){
                         firstCards.push(
-                            FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false)
+                            FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false, true)
                         );
                     }
-                } else{
+                } else if (!masterState.players[i].deck.empty){
                     firstCards.push(
-                        FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false)
+                        FocusedPokemonCard(masterState.players[i].deck.cards[0], true, masterState.chosenCategory, masterState.players[i].user.username, false, true)
                     );
                 }
             }

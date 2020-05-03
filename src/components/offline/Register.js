@@ -1,34 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
-import {AvatarContainer, BaseContainer, ButtonContainer, FormContainer, SimpleContainer} from '../../helpers/layout';
+import {
+    AvatarContainer,
+    BaseContainer,
+    FormContainer,
+    SimpleContainer
+} from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
-import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import {AvatarButton, Button, LogOutButton} from '../../views/design/Button';
 import Header from "../../views/Header";
+import Grid from "@material-ui/core/Grid";
+import {Alert} from "@material-ui/lab";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Collapse from "@material-ui/core/Collapse";
 
-
-const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 60%;
-  height: 375px;
-  font-size: 16px;
-  font-weight: 300;
-  padding-left: 37px;
-  padding-right: 37px;
-  border-radius: 5px;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-`;
-
-const Row = styled.div`
-    &::after{
-    content: "";
-    clear: "";
-    display: table "";
-    }
-    `;
 
 const InputField = styled.input`
   &::placeholder {
@@ -42,12 +29,12 @@ const InputField = styled.input`
   border: none;
   border-radius: 25px;
   margin-bottom: 20px;
+  margin-top: 5px;
   padding-left:10px;
   background: rgba(255, 255, 255, 0.2);
   color: white;
   font-size: 16px;
   font-weight: 300;
-  margin-top: 15px;
   
 `;
 
@@ -68,32 +55,21 @@ const PasswordField = styled.input`
   color: white;
   font-size: 16px;
   font-weight: 300;
-  margin-top: 15px;
+  margin-top: 5px;
   -Webkit-text-security: disc;
   text-security: disc;
 `;
 
 
 
-const Column = styled.div`
-    float: ${props => props.float || "left"};;
-    align-items: center
-    
-    width = 100%
-    
-    @media only screen and (min-width: 768px){
-    width: 50%;
-    padding-top: 100px;
-    }
-`
-
 const Label = styled.label`
   position: relative;
+  left: 10px;
   width: 400px;
-  left: 15%;
+  
   color: white;
   margin-left: 4px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   text-transform: uppercase;
   font-size: 16px;
   font-weight: 300;
@@ -103,7 +79,10 @@ class Register extends React.Component {
     constructor() {
         super();
         this.handleClick = this.handleClick.bind(this)
+        localStorage.setItem('accountCreation', 'false');
         this.state = {
+            open: false,
+            errorCode: null,
             password: null,
             username: null,
             avatarId: null,
@@ -159,10 +138,17 @@ class Register extends React.Component {
                 avatarId: this.state.avatarId
             });
             await api.post('/users', requestBody);
+            localStorage.setItem('accountCreation', "true");
             this.goToLogin();
 
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            if(error.response.data.status == '400'){
+                this.setState({open: true, errorCode: 400});
+            }else if(error.response.data.status == '500'){
+                this.setState({open: true, errorCode: 500});
+            }
+            else{
+            alert(`Something went wrong during the login: \n${handleError(error)}`);}
         }
     }
 
@@ -181,62 +167,75 @@ class Register extends React.Component {
         return (
             <BaseContainer>
                 <Header height={195} top={66} />
-                <div>
-                    <Column>
-
-                        <Row>
+                <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="flex-start"
+                >
+                    <FormContainer margin={'100px'}>
+                            <Collapse in={this.state.open}>
+                                <Alert severity="error"
+                                    action={
+                                        <IconButton
+                                            aria-label="close"
+                                            color="inherit"
+                                            size="small"
+                                            onClick={() => {
+                                                this.setState({open: false});
+                                            }}
+                                        >
+                                            <CloseIcon fontSize="inherit"/>
+                                        </IconButton>
+                                    }
+                                >
+                                    {this.state.errorCode == 400 ? 'Username already taken!' : 'Internal Server Error'}
+                                </Alert>
+                                <br/>
+                            </Collapse>
                             <Label>Enter Username</Label>
-                        </Row>
-                        <InputField
-                            placeholder="Enter here.."
-                            onChange={e => {
-                                this.handleInputChange('username', e.target.value);
-                            }}
-                        />
-                        <Row>
+                            <InputField
+                                placeholder="Enter here.."
+                                onChange={e => {
+                                    this.handleInputChange('username', e.target.value);
+                                }}
+                            />
+                            <br/>
+
                             <Label>Enter Password</Label>
-                        </Row>
-                        <PasswordField
-                            placeholder="Enter here.."
-                            onChange={e => {
-                                this.handleInputChange('password', e.target.value);
-                            }}
-                        />
-                        <ButtonContainer>
-                            <br/>
-                            <br/>
-                            <Button
-                                disabled={!this.state.username || !this.state.password || !this.state.avatarId}
-                                width="55%"
-                                onClick={() => {
-                                    this.register();
+                            <PasswordField
+                                placeholder="Enter here.."
+                                onChange={e => {
+                                    this.handleInputChange('password', e.target.value);
                                 }}
-                            >
-                                Sign Up
-                            </Button>
-                            <br/>
-                            <LogOutButton
-
-                                width="50%"
-                                onClick={() => {
-                                    this.goToLogin();
-                                }}
-                            >
-                                Cancel
-                            </LogOutButton>
-
-                        </ButtonContainer>
-                    </Column>
-                    <Column float={"right"}>
-                        <Label>Choose new Avatar</Label>
+                            />
+                                <Button
+                                    disabled={!this.state.username || !this.state.password || !this.state.avatarId}
+                                    width="250px"
+                                    onClick={() => {
+                                        this.register();
+                                    }}
+                                >
+                                    Sign Up
+                                </Button>
+                                <LogOutButton
+                                    width="250px"
+                                    onClick={() => {
+                                        this.goToLogin();
+                                    }}
+                                >
+                                    Cancel
+                                </LogOutButton>
+                    </FormContainer>
+                    <FormContainer margin={'100px'}>
+                        <Label>Choose your Avatar</Label>
                         <AvatarContainer>
                             {
                                 this.createAvatarList()
                             }
                         </AvatarContainer>
-                    </Column>
-
-                </div>
+                    </FormContainer>
+                </Grid>
             </BaseContainer>
         );
     }

@@ -10,44 +10,22 @@
 
 import React from "react";
 import {api, handleError} from "../../../../../helpers/api";
-import {ButtonContainer, GameContainer, PlayerContainer, Row,} from "../../../../../helpers/layout";
-import {Player, PlayerGame, PlayerMe, PlayerMeGame} from "../../../../../views/Player";
+import {ButtonContainer, PlayerContainer, SimpleColumnContainer} from "../../../../../helpers/layout";
+import {PlayerGame} from "../../../../../views/Player";
 import styled from "styled-components";
-import {LogOutButton, RoundContainer, Button, AvatarButton, EvolveButton} from "../../../../../views/design/Button";
-import {BackIcon, BerriesIcon, BerriesIconWithBadge} from "../../../../../views/design/Icons";
-import {FocusedPokemonCard, PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
+import {LogOutButton, EvolveButton, ActiveEvolveButton} from "../../../../../views/design/Button";
+import {BerriesIconWithBadge} from "../../../../../views/design/Icons";
+import {FocusedPokemonCard} from "../../../../../views/design/PokemonCard";
 import Grid from "@material-ui/core/Grid";
-import {Clock} from "../Clock";
 import {ColorlibConnector, ColorlibStepIcon} from "../../../../../views/design/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
+import Badge from "@material-ui/core/Badge";
 
 
-const Column = styled.div`
-    position: absolute
-    left: auto
-    }
-`
-function getStepContent(step) {
-    switch (step) {
-        case 0:
-            return 'Select campaign settings...';
-        case 1:
-            return 'What is an ad group anyways?';
-        case 2:
-            return 'This is the bit I really care about!';
-        default:
-            return 'Unknown step';
-    }
-}
 
-function getSteps() {
-    return ['Select campaign settings', 'Create an ad group', 'Create an ad'];
-
-}
-
-export let Evolve = ({masterState, history}) => {
+export let Evolve = ({masterState, history, parentMethod}) => {
 
     //This function is evoked after 5 seconds (masterState.startTime+20000 - new Date().getTime()) FOR EVERYONE
     async function evolvePokemon() {
@@ -73,8 +51,7 @@ export let Evolve = ({masterState, history}) => {
         if(masterState.amITurnPlayer){
             steps[0] = 'Select category';
         }
-        let amountOfBerries = masterState.berries;
-        return (<ButtonContainer>
+        return (<SimpleColumnContainer width={'280px'} sideMargin={'0px'} style={{marginLeft: '10px'}}>
                 {masterState.players.map(player => {
                     return (
                         <PlayerContainer>
@@ -86,36 +63,44 @@ export let Evolve = ({masterState, history}) => {
 
                     );
                 })}
-                <Stepper alternativeLabel activeStep={1} connector={<ColorlibConnector />} style={{ backgroundColor: "transparent" }}>
+
+                <Stepper alternativeLabel activeStep={1} connector={<ColorlibConnector />} style={{ backgroundColor: "transparent" }} style={{padding: '0px', margin: '0px', marginTop: '25px', marginBottom: '25px', background: 'transparent', width: '280px'}}>
                     {steps.map((label) => (
                         <Step key={label}>
                             <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
                         </Step>
                     ))}
                 </Stepper>
-
                 {BerriesIconWithBadge(masterState.berries)}
-
-
                 <LogOutButton
                     width = "50%"
                     disabled={masterState.amITurnPlayer}
                     onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) history.push('/menu') }} > Give Up
                 </LogOutButton>
-            </ButtonContainer>
+
+            </SimpleColumnContainer>
         );
     }
 
     function evolveButtons() {
         let evolutions = [];
-        localStorage.setItem('evolveTo', 0)
         for (let i=0; i< masterState.deck.cards[0].evolutionNames.length; i++) {
             let disableButton = (masterState.berries<i+1);
-            console.log(masterState.berries+" and i "+i);
             evolutions.push(
+                localStorage.getItem('evolveTo')==i+1 ?
+                    <ActiveEvolveButton
+                        id = {i}
+                        onClick={() => {localStorage.setItem("evolveTo", 0);
+                            setTimeout(parentMethod(), 5000)}}
+                        disabled={disableButton}
+                    >
+                        {masterState.deck.cards[0].evolutionNames[i]} Cost: {i+1}
+                    </ActiveEvolveButton>
+                    :
                 <EvolveButton
                     id = {i}
-                    onClick={() => {localStorage.setItem("evolveTo", i+1)}}
+                    onClick={() => {localStorage.setItem("evolveTo", i+1);
+                        setTimeout(parentMethod(), 5000)}}
                     disabled={disableButton}
                 >
                     {masterState.deck.cards[0].evolutionNames[i]} Cost: {i+1}
@@ -127,6 +112,7 @@ export let Evolve = ({masterState, history}) => {
     }
 
 
+
     return (
         <div>
             <Grid
@@ -134,27 +120,30 @@ export let Evolve = ({masterState, history}) => {
                 direction="row"
                 justify="space-between"
                 alignItems="center"
+                style={{marginTop: '50px'}}
             >
                 {showLeaderboard()}
 
-                {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', false)}
+                {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', null, false, true)}
 
-                <ButtonContainer>
-                    Do you want to evolve?
-                    <br/>
-                    {evolveButtons()}
-                    <LogOutButton
-                        onClick={() => {
-                            localStorage.setItem("evolveTo", 0)
-                        }}
-                    >
-                        undo
-                    </LogOutButton>
+                {
+                    masterState.deck.cards[0].evolutionNames.length == 0 ?
+                        <ButtonContainer>
+                            {masterState.deck.cards[0].name} has no evolutions!
+                        </ButtonContainer>
+                        :
+                        <ButtonContainer>
+                            Do you want to evolve?
+                            <br/>
+                            {evolveButtons()}
+                        </ButtonContainer>
 
-                </ButtonContainer>
+                }
 
-                {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username, false)}
 
+                <Badge color={'primary'} badgeContent={'Current winner'}>
+                 {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username, null ,false, true)}
+                </Badge>
             </Grid>
         </div>
 

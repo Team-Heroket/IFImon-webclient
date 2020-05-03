@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import { BaseContainer, ButtonContainer, FormContainer, PlayerContainer } from '../../../helpers/layout';
 import { api, handleError } from '../../../helpers/api';
 import { withRouter } from 'react-router-dom';
-import { Button, LogOutButton, BackButton, RoundContainer} from '../../../views/design/Button';
 import Header from "../../../views/Header";
 import {PlayerStatCard, Player, PlayerMe} from "../../../views/Player";
 
-import {BackIcon} from "../../../views/design/Icons";
+import {BackButton} from "../../../views/design/Icons";
 import {Spinner} from "../../../views/design/Spinner";
+import Grid from "@material-ui/core/Grid";
 
 const Row = styled.div`
     &::after{
@@ -57,7 +57,14 @@ class Leaderboards extends React.Component {
             console.log("response me", response2.data);
             console.log("response all", response1.data);
         } catch (error) {
-            alert(`Something went wrong: \n${handleError(error)}`);
+            if (error.response.status == 401) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('id');
+                this.props.history.push('/login')
+            }
+            else {
+                alert(`Something went wrong: \n${handleError(error)}`);
+            }
         }
 
     }
@@ -75,11 +82,14 @@ class Leaderboards extends React.Component {
         return (
             <BaseContainer>
                 <Header height={140} top={33}/>
-                <Row>
-                    <RoundContainer onClick = {() => {this.goBack()}}>
-                        <BackIcon />
-                    </RoundContainer>
-                </Row>
+                <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                >
+                    <BackButton action={() => {this.goBack()}}/>
+                </Grid>
                 {(!this.state.users || !this.state.user) ? (
                     <FormContainer><Spinner /></FormContainer>
                     ) : (
