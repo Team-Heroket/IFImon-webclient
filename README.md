@@ -1,7 +1,6 @@
 # SoPra FS20 - Group 20
 
-# Pokèmon
-## Top Trumps
+# IFImon - Top Trumps
 
 Read and go through those Tutorials, It will make your life easier!
 
