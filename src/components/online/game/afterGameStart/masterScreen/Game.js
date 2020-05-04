@@ -112,6 +112,7 @@ class Game extends React.Component {
             currentCard: null,
             oldCard: null,
             state: null,
+            totalCards: null,
             mute: (localStorage.getItem('VolumeMuted') ? (localStorage.getItem('VolumeMuted')=='true' ? true : false) : false)
         }
         localStorage.setItem('SelectedCat',0);
@@ -223,8 +224,9 @@ class Game extends React.Component {
 
 
             if (this.state.justInitialized) {
+                let totalCards = usersList[0].deck.cards.length;
                 let startTime = Number.parseInt(resp2.startTime,10);
-                this.setState({'startTime': startTime}, this.startGame);
+                this.setState({'startTime': startTime, totalCards: totalCards}, this.startGame);
             }
 
 

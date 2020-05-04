@@ -61,7 +61,8 @@ export let Finished = ({masterState, history}) => {
     async function rematch() {
         try {
             const requestBody = JSON.stringify({
-                npc: 0
+                npc: 0,
+                card: masterState.totalCards
             });
             await api.put('/games/' + masterState.pokeCode.toString(), requestBody, {headers: {'Token': localStorage.getItem('token')}});
 
