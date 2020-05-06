@@ -22,6 +22,7 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import Badge from "@material-ui/core/Badge";
+import {FlippedCard} from "./FlippedCard";
 
 
 
@@ -141,9 +142,10 @@ export let Evolve = ({masterState, history, parentMethod}) => {
                 }
 
 
-                <Badge color={'primary'} badgeContent={'Current winner'}>
-                 {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username, null ,false, true)}
-                </Badge>
+                <FlippedCard winner = {<Badge color={'primary'} badgeContent={'Current winner'}>
+                    {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username, null ,false, true)}
+                </Badge>}/>
+
             </Grid>
         </div>
 
