@@ -142,7 +142,7 @@ export let Evolve = ({masterState, history, parentMethod}) => {
                 }
 
 
-                <FlippedCard winner = {<Badge color={'primary'} badgeContent={'Current winner'}>
+                <FlippedCard front = {<Badge color={'primary'} badgeContent={'Current winner'}>
                     {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username, null ,false, true)}
                 </Badge>}/>
 

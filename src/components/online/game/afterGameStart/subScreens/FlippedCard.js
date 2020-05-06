@@ -4,7 +4,7 @@ import {PlaceholderCard} from "../../../../../views/design/PokemonCard";
 import {withRouter} from "react-router-dom";
 
 export class FlippedCard extends React.Component {
-    winner;
+    front;
 
 
     constructor() {
@@ -21,10 +21,10 @@ export class FlippedCard extends React.Component {
     }
 
     render() {
-        const winner = this.props.winner;
+        const front = this.props.front;
         return (
             <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="horizontal">
-                {winner}
+                {front}
 
                 {PlaceholderCard()}
             </ReactCardFlip>

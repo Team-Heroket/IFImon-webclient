@@ -24,6 +24,7 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import {BerriesIconWithBadge} from "../../../../../views/design/Icons";
+import {FlippedCard} from "./FlippedCard";
 
 let category;
 category = {
@@ -95,9 +96,9 @@ export let ChooseCategory = ({masterState, history, parentMethod}) => {
         >
                 {showLeaderboard()}
                 {localStorage.getItem('SelectedCat')==0 ?
-                    FocusedPokemonCard(masterState.deck.cards[0], !masterState.amITurnPlayer, '0', 'Your Card', parentMethod, false, true)
+                    <FlippedCard front = {FocusedPokemonCard(masterState.deck.cards[0], !masterState.amITurnPlayer, '0', 'Your Card', parentMethod, false, true)}/>
                 :
-                    FocusedPokemonCard(masterState.deck.cards[0], !masterState.amITurnPlayer, localStorage.getItem('SelectedCat'), 'Your Card', parentMethod, false, true)
+                    <FlippedCard front = {FocusedPokemonCard(masterState.deck.cards[0], !masterState.amITurnPlayer, localStorage.getItem('SelectedCat'), 'Your Card', parentMethod, false, true)}/>
                 }
                 {PlaceholderCard()}
 
