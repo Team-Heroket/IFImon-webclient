@@ -91,7 +91,7 @@ export let RandomPokemonFact = () =>{
         'https://play.pokemonshowdown.com/sprites/xyani/pikachu.gif']}
     let fact_14 = {fact: 'Yamask is a dead human', pokemon: ['http://play.pokemonshowdown.com/sprites/ani/yamask.gif', 'http://play.pokemonshowdown.com/sprites/ani/yamask-galar.gif']}
     let fact_15 = {fact: 'Munna was mentioned in the first game', pokemon: ['http://play.pokemonshowdown.com/sprites/ani/munna.gif']}
-    let fact_16 = {fact: 'Hitmonchan and Hitmonlee got their names from famous fighters', pokemon: ['http://play.pokemonshowdown.com/sprites/ani/hitmonchan.gif',
+    let fact_16 = {fact: 'Hitmonchan and Hitmonlee got their names from famous fighters (Jackie Chan and Bruce Lee)', pokemon: ['http://play.pokemonshowdown.com/sprites/ani/hitmonchan.gif',
         'http://play.pokemonshowdown.com/sprites/ani/hitmonlee.gif']}
     let fact_17 = {fact: 'Arcanine was intended to be a legendary Pokemon', pokemon: ['http://play.pokemonshowdown.com/sprites/ani/arcanine.gif']}
     let fact_18 = {fact: 'Clefairy was almost the face of Pokemon', pokemon: ['http://play.pokemonshowdown.com/sprites/ani/clefairy.gif']}

@@ -16,6 +16,8 @@ import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin} from "../../../../views
 import {Spinner} from "../../../../views/design/Spinner";
 import {CenterContainer} from "./Lobby";
 import Grid from "@material-ui/core/Grid";
+import Slider from "@material-ui/core/Slider";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 const Form = styled.div`
   display: flex;
@@ -77,8 +79,74 @@ const InputField = styled.input`
   padding-left:10px;
   background: rgba(255, 255, 255, 0.2);
   color: white;
-  
 `;
+
+
+const PrettoSlider = withStyles({
+    root: {
+        color: 'white',
+        height: 8,
+    },
+    thumb: {
+        height: 15,
+        width: 15,
+        backgroundColor: '#fff',
+        border: '2px solid currentColor',
+        marginTop: -5,
+        marginLeft: -7,
+        '&:focus, &:hover, &$active': {
+            boxShadow: 'inherit',
+        },
+    },
+    active: {},
+    valueLabel: {
+
+        '& *': {
+            background: 'white',
+            color: 'green',
+        },
+    },
+    track: {
+        height: 5,
+        borderRadius: 4,
+    },
+    rail: {
+        height: 5,
+        borderRadius: 4,
+    },
+
+})(Slider);
+
+const marks = [
+    {
+        value: 1,
+        label: '1',
+    },
+    {
+        value: 2,
+        label: '2',
+    },
+    {
+        value: 3,
+        label: '3',
+    },
+    {
+        value: 4,
+        label: '4',
+    },
+    {
+        value: 5,
+        label: '5',
+    },
+    {
+        value: 6,
+        label: '6',
+    },
+    {
+        value: 7,
+        label: '7',
+    },
+];
 
 
 
@@ -102,7 +170,8 @@ class CreateGame extends React.Component {
             state: null,
             amIAdmin: true,
             creationTime: null,
-            startingGame: false
+            startingGame: false,
+            generation: 1
         };
 
         this.requestPokeCode();
@@ -203,6 +272,7 @@ class CreateGame extends React.Component {
             const requestBody = JSON.stringify({
                 npc: this.state.amountOfNPC,
                 card: this.state.amountOfCards,
+                generation: this.state.generation
             });
             this.setState({startingGame: true})
             await api.put('/games/' + this.state.pokeCode.toString(), requestBody, {headers: {'Token': localStorage.getItem('token')}});
@@ -403,6 +473,9 @@ class CreateGame extends React.Component {
         this.props.history.push('/createGame');
     }
 
+
+
+
     render() {
 
         function SelectAll(id) {
@@ -484,6 +557,22 @@ class CreateGame extends React.Component {
                                     +
                                 </TextRoundContainer>
                             </Column>
+
+
+                        </SimpleContainer>
+                        <br/>
+                        <Label>Generation(s): </Label>
+                        <SimpleContainer width={"55%"} defFloat={"center"}>
+                            <PrettoSlider
+                                color = "white"
+                                aria-labelledby="discrete-slider-small-steps"
+                                marks = {marks}
+                                min={1}
+                                max={7}
+                                valueLabelDisplay="auto"
+                                aria-labelledby="discrete-slider-restrict"
+                                onChange={(e,val)=> {this.setState({generation: val})}}
+                            />
                         </SimpleContainer>
                         <br/>
                         <Label>Waiting for Players ({this.state.users.length}/{this.state.amountOfPlayers})</Label>
@@ -512,7 +601,6 @@ class CreateGame extends React.Component {
                         </ButtonContainer>
 
                         <CenterContainer>
-
                             <Spinner/>
                             {this.state.amIAdmin ?
                                 <MenuButton
