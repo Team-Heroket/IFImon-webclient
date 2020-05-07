@@ -18,6 +18,8 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import Badge from "@material-ui/core/Badge";
+import {FlippedCardResult} from "./FlippedCardResult";
+import {FlippedCardResultOur} from "./FlippedCardResultOur";
 
 
 
@@ -123,14 +125,18 @@ export let Result = ({masterState, history}) => {
             style={{marginTop: '50px'}}
         >
             {showLeaderboard()}
-            {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', null ,false, true)}
+            <FlippedCardResultOur front = {
+                FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', null ,false, true)
+            }/>
             {showCards()}
-            <div>
-                <Badge color={masterState.winners.length >1 ?'primary': 'secondary'} badgeContent={masterState.winners.length >1 ?'Draw': 'Winner'}>
-                    {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, winnersUsername, null ,true, localStorage.getItem('playedSound')=='true' ? true : masterState.mute , localStorage.getItem('SFXVol')/100) }
-                </Badge>
+            <FlippedCardResult front = {
+                <div>
+                    <Badge color={masterState.winners.length >1 ?'primary': 'secondary'} badgeContent={masterState.winners.length >1 ?'Draw': 'Winner'}>
+                        {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, winnersUsername, null ,true, localStorage.getItem('playedSound')=='true' ? true : masterState.mute , localStorage.getItem('SFXVol')/100) }
+                    </Badge>
+                </div>
+            }/>
 
-            </div>
 
         </Grid>
 

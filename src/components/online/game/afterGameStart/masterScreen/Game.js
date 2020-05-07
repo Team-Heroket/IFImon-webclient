@@ -17,6 +17,7 @@ import Grid from "@material-ui/core/Grid";
 
 
 
+
 const Space = styled.div`
   margin-bottom: 80px
   width: 100%
@@ -199,10 +200,8 @@ class Game extends React.Component {
                 }
                 else {
                     currentPeriod = this.period.RESULT;
-                    oldCard = this.state.oldCard;
                 }
             }
-
 
 
             this.setState({
@@ -360,6 +359,7 @@ class Game extends React.Component {
         }
         else if (this.state.currentPeriod == this.period.RESULT) {
             localStorage.setItem('evolveTo', 0);
+            this.getGameInfo()
             this.timer_waitForNextTurn= setInterval(() => {
                 this.getGameInfo()
             }, 2000)
@@ -612,6 +612,7 @@ class Game extends React.Component {
                     <FormContainer><Space/>{this.startClock()}</FormContainer> :
                     this.renderPeriod()
                 }
+
             </GameContainer>
         );
     }

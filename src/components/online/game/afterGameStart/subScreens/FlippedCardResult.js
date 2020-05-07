@@ -3,7 +3,7 @@ import ReactCardFlip from "react-card-flip";
 import {PlaceholderCard} from "../../../../../views/design/PokemonCard";
 
 
-export class FlippedCard extends React.Component {
+export class FlippedCardResult extends React.Component {
     front;
 
 
@@ -15,9 +15,14 @@ export class FlippedCard extends React.Component {
     }
 
     componentDidMount() {
+
         setTimeout(() => {
             this.setState({isFlipped: false})
-        }, 1000)
+        }, 2000)
+
+        setTimeout(() => {
+            this.setState({isFlipped: true})
+        }, 9000)
     }
 
     render() {
