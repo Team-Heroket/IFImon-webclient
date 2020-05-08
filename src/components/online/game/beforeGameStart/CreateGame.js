@@ -98,6 +98,16 @@ const PrettoSlider = withStyles({
             boxShadow: 'inherit',
         },
     },
+    mark: {
+        backgroundColor: 'white',
+        height: 15,
+        width: 1,
+        marginTop: -5,
+    },
+    markActive: {
+        opacity: 1,
+        backgroundColor: 'currentColor',
+    },
     active: {},
     valueLabel: {
 
@@ -106,6 +116,7 @@ const PrettoSlider = withStyles({
             color: 'green',
         },
     },
+
     track: {
         height: 5,
         borderRadius: 4,
