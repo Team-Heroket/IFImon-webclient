@@ -84,13 +84,13 @@ const InputField = styled.input`
 
 const PrettoSlider = withStyles({
     root: {
-        color: 'white',
+        color: '#FFFFFF',
         height: 8,
     },
     thumb: {
         height: 15,
         width: 15,
-        backgroundColor: '#fff',
+        backgroundColor: '#FFFFFF',
         border: '2px solid currentColor',
         marginTop: -5,
         marginLeft: -7,
@@ -150,6 +150,7 @@ const marks = [
 
 
 
+
 class CreateGame extends React.Component {
 
     constructor() {
@@ -202,6 +203,7 @@ class CreateGame extends React.Component {
     async componentDidMount() {
         console.log("Creation Time Check: "+ this.state.creationTime)
         this.setTimerUntilStart()
+
     }
 
     async getAndSetUserInformation() {
@@ -562,7 +564,7 @@ class CreateGame extends React.Component {
                         </SimpleContainer>
                         <br/>
                         <Label>Generation(s): </Label>
-                        <SimpleContainer width={"55%"} defFloat={"center"}>
+                        <SimpleContainer width={"45%"} defFloat={"center"}>
                             <PrettoSlider
                                 color = "white"
                                 aria-labelledby="discrete-slider-small-steps"
