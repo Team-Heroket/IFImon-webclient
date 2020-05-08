@@ -124,7 +124,7 @@ export let PlayerMe = ({ user }) => {
             <Id>{user.statistics.gamesWon}</Id>
         </ContainerMe>
     );
-};
+}
 
 
 
@@ -193,9 +193,9 @@ export let PlayerMeGame = ({ player }) => {
     );
 };
 
-export let PlayerAdmin = ({ user }) => {
+export let PlayerAdmin = ({ user, lobby = false }) => {
     return (
-        <Container>
+        <Container style={lobby ? ({width: '280px'}) : ({width: '330px'})}>
             <Rank>{user.statistics.rating}.</Rank> <UserName>{user.username} (Admin)</UserName>
             <Id>{user.statistics.gamesWon}</Id>
         </Container>
@@ -204,7 +204,7 @@ export let PlayerAdmin = ({ user }) => {
 
 export let PlayerMeAndAdmin = ({ user }) => {
     return (
-        <ContainerMe>
+        <ContainerMe style={{width: '330px'}}>
             <Rank>{user.statistics.rating}.</Rank> <UserName>{user.username} (Admin)</UserName>
             <Id>{user.statistics.gamesWon}</Id>
         </ContainerMe>

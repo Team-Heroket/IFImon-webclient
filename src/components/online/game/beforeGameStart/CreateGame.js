@@ -110,6 +110,7 @@ const PrettoSlider = withStyles({
     },
     active: {},
     valueLabel: {
+        color: 'white',
 
         '& *': {
             background: 'white',
@@ -431,12 +432,12 @@ class CreateGame extends React.Component {
         let playerBox = null;
         if (player.username === this.state.user.username) {
             if (player.username === this.state.admin.username) {
-                playerBox = <PlayerMeAndAdmin user={player}/>
+                playerBox = <PlayerMeAndAdmin user={player} style={{width: '330px'}}/>
             } else {
                 playerBox = <PlayerMe user={player}/>
             }
         } else if (player.username === this.state.admin.username) {
-            playerBox = <PlayerAdmin user={player}/>
+            playerBox = <PlayerAdmin user={player} style={{width: '330px'}}/>
         } else {
             playerBox = <Player user={player}/>
         }
@@ -517,17 +518,24 @@ class CreateGame extends React.Component {
                             this.forceUpdate()}} />
                     }
                 </Grid>
-                <FormContainer>
+
                     {(!this.state.users || !this.state.admin || this.state.startingGame) ? (
-                        <Spinner/>) : <Form>
+                        <Spinner/>) : <div>
                         <ErrorMessage> {this.state.message ? (
                             this.state.message
                         ) : <br/>
                         } </ErrorMessage>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="center"
+                            alignItems="center"
+                        >
+                        <FormContainer width={'500px'}>
                         <Label>Your Lobby's PokeCode</Label>
                         <PokeCodeContainer
                             onClick={this.copyTextToClipboard(this.state.pokeCode.toString())}
-                            width="55%"
+                            width="330px"
                         >
                             {this.state.pokeCode}
 
@@ -575,7 +583,7 @@ class CreateGame extends React.Component {
                         </SimpleContainer>
                         <br/>
                         <Label>Generation(s): </Label>
-                        <SimpleContainer width={"45%"} defFloat={"center"}>
+                        <SimpleContainer width={"320px"} defFloat={"center"}>
                             <PrettoSlider
                                 color = "white"
                                 aria-labelledby="discrete-slider-small-steps"
@@ -583,11 +591,16 @@ class CreateGame extends React.Component {
                                 min={1}
                                 max={7}
                                 valueLabelDisplay="auto"
+                                defaultValue={1}
                                 aria-labelledby="discrete-slider-restrict"
                                 onChange={(e,val)=> {this.setState({generation: val})}}
                             />
                         </SimpleContainer>
-                        <br/>
+                            </FormContainer>
+
+
+
+                        <FormContainer width={'500px'}>
                         <Label>Waiting for Players ({this.state.users.length}/{this.state.amountOfPlayers})</Label>
                         <ButtonContainer>
                             {
@@ -601,7 +614,7 @@ class CreateGame extends React.Component {
                                         }}>
                                             {this.displayPlayer(player)}
                                         </PlayerContainer>
-                                            { (player.id == localStorage.getItem('id')) ? <SimpleContainer width={"40px"}/> :
+                                            { (player.id == localStorage.getItem('id')) ? null :
                                                 <KickContainer onClick={()=> this.kick(player)}>
                                                     <KickIcon/>
                                                 </KickContainer>
@@ -617,7 +630,7 @@ class CreateGame extends React.Component {
                             <Spinner/>
                             {this.state.amIAdmin ?
                                 <MenuButton
-                                    width="55%"
+                                    width="330px"
                                     disabled={this.state.users.length + this.state.amountOfNPC < 2}
                                     onClick={() => {
                                         this.startGame();
@@ -626,19 +639,23 @@ class CreateGame extends React.Component {
                                 </MenuButton>
                                 : null}
                             <LogOutButton
-                                width="55%"
+                                width="100%"
                                 onClick={() => {
                                     this.goBack();
                                 }}>
                                 Leave Lobby
                             </LogOutButton>
                         </CenterContainer>
-                    </Form>
+                        </FormContainer>
+                        </Grid>
+                    </div>
                     }
-                </FormContainer>
+
             </BaseContainer>
         );
+
     }
+
 }
 
 export default withRouter(CreateGame);
