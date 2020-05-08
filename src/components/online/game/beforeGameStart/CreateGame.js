@@ -184,7 +184,7 @@ class CreateGame extends React.Component {
             amIAdmin: true,
             creationTime: null,
             startingGame: false,
-            generation: 1
+            generation: 4
         };
 
         this.requestPokeCode();
@@ -591,7 +591,7 @@ class CreateGame extends React.Component {
                                 min={1}
                                 max={7}
                                 valueLabelDisplay="auto"
-                                defaultValue={1}
+                                defaultValue={4}
                                 aria-labelledby="discrete-slider-restrict"
                                 onChange={(e,val)=> {this.setState({generation: val})}}
                             />
