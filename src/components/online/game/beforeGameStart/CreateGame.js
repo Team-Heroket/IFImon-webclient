@@ -18,6 +18,7 @@ import {CenterContainer} from "./Lobby";
 import Grid from "@material-ui/core/Grid";
 import Slider from "@material-ui/core/Slider";
 import withStyles from "@material-ui/core/styles/withStyles";
+import {RandomPokemonFact} from "../../mainmenu/RandomPokemonFact";
 
 const Form = styled.div`
   display: flex;
@@ -215,7 +216,6 @@ class CreateGame extends React.Component {
     async componentDidMount() {
         console.log("Creation Time Check: "+ this.state.creationTime)
         this.setTimerUntilStart()
-
     }
 
     async getAndSetUserInformation() {
@@ -519,8 +519,23 @@ class CreateGame extends React.Component {
                     }
                 </Grid>
 
-                    {(!this.state.users || !this.state.admin || this.state.startingGame) ? (
+                    {(!this.state.users || !this.state.admin) ? (
                         <Spinner/>) : <div>
+                        {(this.state.startingGame) ? <div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <Spinner/>
+                        </div> : <div>
                         <ErrorMessage> {this.state.message ? (
                             this.state.message
                         ) : <br/>
@@ -648,6 +663,7 @@ class CreateGame extends React.Component {
                         </CenterContainer>
                         </FormContainer>
                         </Grid>
+                            </div> }
                     </div>
                     }
 

@@ -72,7 +72,7 @@ class MainMenu extends React.Component {
             this.setState({justInitialized: true});
             setTimeout(() => {
                 this.setState({justInitialized: false})
-            }, 3000)
+            }, 4000)
         }
 
         localStorage.setItem('justLoggedIn', 'false');
@@ -303,7 +303,20 @@ class MainMenu extends React.Component {
                 {console.log(localStorage.getItem('token'))}
                 {console.log(localStorage.getItem('id'))}
                 <Header height={140} top={33}/>
-                {this.state.justInitialized ? <RandomPokemonFact/>
+                {this.state.justInitialized ?
+                    <div>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <RandomPokemonFact/>
+                        <Spinner/>
+                    </div>
+
                     :
 
                     <Grid

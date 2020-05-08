@@ -13,6 +13,7 @@ import {Result} from "../subScreens/Result";
 import {Clock} from "../Clock";
 import {Spectator} from "../subScreens/Spectator";
 import Grid from "@material-ui/core/Grid";
+import {RandomPokemonFact} from "../../../mainmenu/RandomPokemonFact";
 
 
 
@@ -259,8 +260,26 @@ class Game extends React.Component {
 
         if (!this.state.remainingTime) {
             return <Spinner/>
+
         } else {
-            return <Clock remainingTime={this.state.remainingTime} totalTime={15000} type={this.clock.GAMESTART} />
+            return (
+                <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                >
+                    <FormContainer width={'500px'}>
+                        <Clock remainingTime={this.state.remainingTime} totalTime={15000} type={this.clock.GAMESTART} />
+                    </FormContainer>
+                    <FormContainer width={'500px'}>
+                        <RandomPokemonFact/>
+                    </FormContainer>
+                </Grid>
+
+        );
+
+
         }
     }
 
@@ -272,9 +291,10 @@ class Game extends React.Component {
                 amount: localStorage.getItem('evolveTo'),
                 id: this.state.player_me.user.id
             });
-            const response = await api.put('/games/' + this.state.pokeCode + '/berries', requestBody, {headers: {'Token': localStorage.getItem('token')}});
             let currentBerries = this.state.berries;
             this.setState({berries: currentBerries - this.state.evolveBerries, evolved: true})
+            const response = await api.put('/games/' + this.state.pokeCode + '/berries', requestBody, {headers: {'Token': localStorage.getItem('token')}});
+
 
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
