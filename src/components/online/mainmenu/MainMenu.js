@@ -304,7 +304,16 @@ class MainMenu extends React.Component {
                     {windowButtons}
                 </HorizontalButtonContainer>
             </PokedexContainer>)
+    }
 
+    emptyPokedex() {
+        return(
+            <PokedexContainer height={'550px'} width={'500px'} margin={"0px"}>
+                <SimpleContainer heigth={500} color={'#FFFFFF'} >
+                    Your Pokèdex will start working after your first game!
+                </SimpleContainer>
+            </PokedexContainer>
+        )
     }
 
     generationTabs() {
@@ -405,7 +414,7 @@ class MainMenu extends React.Component {
                         <div><br/><br/>
                             <PopupboxContainer style={{color: '#FFFFFF', background: 'transparent', justifyContent: 'center', alignContent: 'center', boxShadow: '0px 0px 0px -200px rgba(0,0,0,0)'}}/>
                             {
-                                this.state.user ? this.SpritesGenerator() : <Spinner/>
+                                this.state.user ? this.SpritesGenerator() : this.emptyPokedex()
                             }
                         </div>
                     </Grid>
