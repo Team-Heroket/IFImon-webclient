@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import React from "react";
 import {BackIcon, LeaderboardIcon, QuickplayIcon, SettingsIcon, SocialIcon, TutorialIcon} from "./Icons";
 
@@ -124,14 +124,6 @@ export const PageButton = styled.button`
   
   z-index: 6;
 `
-
-export const nextPage = ({disabled}) =>{
-    return(
-        <PageButton disabled={disabled}>
-            <BackIcon/>
-        </PageButton>
-    )
-}
 
 
 export const TransparentButton = styled.button`

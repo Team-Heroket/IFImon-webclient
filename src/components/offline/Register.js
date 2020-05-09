@@ -99,10 +99,9 @@ class Register extends React.Component {
     createAvatarList() {
         let avatar_list = [];
         for (let i=1; i<61; i++) {
-            let s;
             let enable;
             enable = false;
-            s = '';
+            let s = '';
             if(i<10){
                 s='0'+i;
             }

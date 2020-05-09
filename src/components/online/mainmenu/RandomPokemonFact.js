@@ -33,24 +33,6 @@ const LabelTop = styled.label`
   font-weight: 300;
   text-align: center;
 `;
-const Space = styled.div`
-  margin-bottom: 80px
-  width: 100%
-`;
-
-const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 60%;
-  height: 375px;
-  font-size: 16px;
-  font-weight: 300;
-  padding-left: 37px;
-  padding-right: 37px;
-  border-radius: 5px;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-`;
 
 export class RandomPokemonFact extends React.Component {
 

@@ -18,21 +18,7 @@ import {CenterContainer} from "./Lobby";
 import Grid from "@material-ui/core/Grid";
 import Slider from "@material-ui/core/Slider";
 import withStyles from "@material-ui/core/styles/withStyles";
-import {RandomPokemonFact} from "../../mainmenu/RandomPokemonFact";
 
-const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 60%;
-  height: auto;
-  font-size: 16px;
-  font-weight: 700;
-  padding-left: 37px;
-  padding-right: 37px;
-  border-radius: 5px;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-`;
 
 const Label = styled.label`
   position: relative;

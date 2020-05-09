@@ -10,7 +10,6 @@
 
 import React from "react";
 import {
-    ButtonContainer,
     PlayerContainer, SimpleColumnContainer
 } from "../../../../../helpers/layout";
 import {PlayerGame} from "../../../../../views/Player";

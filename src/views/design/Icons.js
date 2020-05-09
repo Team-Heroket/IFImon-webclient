@@ -1,8 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import Badge from "@material-ui/core/Badge";
-import makeStyles from "@material-ui/core/styles/makeStyles";
-
 const Logo = styled.svg`
     
     position: relative;

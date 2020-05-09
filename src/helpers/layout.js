@@ -1,9 +1,6 @@
 import styled from "styled-components";
 
 export const DESKTOP_WIDTH = 1360;
-export const SMALL_LAPTOPS_WIDTH = 970;
-export const TABLETS_WIDTH = 750;
-export const SMALL_WIDTH = 768;
 
 export const Row = styled.div`
     &::after{
@@ -13,15 +10,6 @@ export const Row = styled.div`
     }
     `;
 
-const Column = styled.div`
-    float: left
-    align-items: center
-    width = 100%
-    
-    @media only screen and (min-width: 768px){
-    width: 50%;
-    }
-`
 
 export const BaseContainer = styled.div`
   margin-left: auto;
