@@ -15,7 +15,7 @@ import {
 } from "../../../../../helpers/layout";
 import {PlayerGame} from "../../../../../views/Player";
 import {LogOutButton} from "../../../../../views/design/Button";
-import {FocusedPokemonCard, PlaceholderCard, PokemonCard} from "../../../../../views/design/PokemonCard";
+import {FocusedPokemonCard, PlaceholderCard} from "../../../../../views/design/PokemonCard";
 
 import Grid from '@material-ui/core/Grid';
 

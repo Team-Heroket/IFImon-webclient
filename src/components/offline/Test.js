@@ -1713,7 +1713,7 @@ class Test extends React.Component {
                 <BackButton action={() => {this.goBack()}}/>
             </Grid>
             <BaseContainer>
-                    <Evolve masterState={this.masterState} history={this.props.history}/>
+                    <Result masterState={this.masterState} history={this.props.history}/>
             </BaseContainer>
             </GameContainer>
         );

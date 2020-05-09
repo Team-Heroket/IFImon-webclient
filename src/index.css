@@ -7,10 +7,15 @@ body {
   margin: 0;
   padding: 0;
   font-family: "Helvetica";
+  color: white;
 
   background: radial-gradient(134.72% 134.72% at 61.48% 128.19%, rgba(255, 255, 255, 0) 0%, #6EBFC5 100%) fixed, #6FCF97;
 }
+label {
 
+  font-family: "Helvetica";
+  color: white;
+}
 
 input,
 textarea,
