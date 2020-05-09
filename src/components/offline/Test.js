@@ -31,7 +31,7 @@ import {
     BerriesIconWithBadge,
     EncounteredPokemonSprite,
     LogoPokeball, MuteIcon,
-    NewPokemonSprite, SoundButton, VolumeIcon
+    PokemonSprite, SoundButton, VolumeIcon
 } from "../../views/design/Icons";
 import {ChooseCategory} from "../online/game/afterGameStart/subScreens/ChooseCategory";
 import {Evolve} from "../online/game/afterGameStart/subScreens/Evolve";
@@ -1623,7 +1623,7 @@ class Test extends React.Component {
                 }
                 else{
                     pokemon_list.push(
-                        <NewPokemonSprite src={require('../../components/shared/images/pokemonTypesSVG/unknown.svg')} size={"92px"} index = {i}/>
+                        <PokemonSprite src={require('../../components/shared/images/pokemonTypesSVG/unknown.svg')} size={"92px"} index = {i}/>
                     )
 
                 }

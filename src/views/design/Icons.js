@@ -94,14 +94,17 @@ const Container = styled.button`
   background: rgb(255, 255, 255, 0%);
 `;
 
-export const EncounteredPokemonSprite = styled.img`
+export const EncounteredPokemonSprite = styled.button`
 &:hover {
-    transform: 'scale(2)')};
     transition: all 0.3s ease;
   }
   position: relative;
+  background: transparent;
+  border: 0px;
+  
   width: ${props => props.size || "35px"};
   height: ${props => props.size || "35px"};
+  padding: 0px;
   justify-content: center;
   align-items: center;
   z-index: 4;
@@ -109,7 +112,7 @@ export const EncounteredPokemonSprite = styled.img`
 
 `
 
-export const NewPokemonSprite = styled.img`
+export const PokemonSprite = styled.img`
 &:hover {
     transform: 'scale(2)')};
     transition: all 0.3s ease;
