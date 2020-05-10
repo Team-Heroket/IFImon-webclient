@@ -554,6 +554,7 @@ class Game extends React.Component {
     }
 
     async leaveGame() {
+        localStorage.setItem('generation', null);
         try {
             const requestBody = JSON.stringify({
                 id: this.state.player_me.user.id,

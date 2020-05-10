@@ -62,7 +62,8 @@ export let Finished = ({masterState, history}) => {
         try {
             const requestBody = JSON.stringify({
                 npc: 0,
-                card: masterState.totalCards
+                card: masterState.totalCards,
+                generation:  localStorage.getItem('generation')
             });
             await api.put('/games/' + masterState.pokeCode.toString(), requestBody, {headers: {'Token': localStorage.getItem('token')}});
 

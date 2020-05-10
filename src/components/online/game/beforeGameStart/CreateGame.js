@@ -267,6 +267,7 @@ class CreateGame extends React.Component {
     async startGame() {
         console.log("entred startGame")
         console.log("Amount of NPC's: "+this.state.amountOfNPC)
+        localStorage.setItem('generation', this.state.generation);
         try {
 
             const requestBody = JSON.stringify({
