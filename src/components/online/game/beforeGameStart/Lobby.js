@@ -251,7 +251,7 @@ class Lobby extends React.Component {
             }
         }
         else if (player.username === this.state.admin.username) {
-            playerBox=<PlayerAdmin user={player}/>
+            playerBox=<PlayerAdmin user={player} lobby={true}/>
         }
         else {
             playerBox=<Player user={player}/>

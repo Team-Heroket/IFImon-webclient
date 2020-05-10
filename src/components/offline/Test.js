@@ -1,57 +1,26 @@
 import React from 'react';
-import styled from 'styled-components';
 import {
     AvatarContainer,
     BaseContainer,
-    ButtonContainer,
     HorizontalButtonContainer,
-    FormContainer,
     GameContainer,
-    PlayerContainer,
     Row, SimpleContainer, InnerContainerPokedex
 } from '../../helpers/layout';
 import { api, handleError } from '../../helpers/api';
-import User from '../shared/models/User';
 
-import CloseIcon from '@material-ui/icons/Close';
 import { withRouter } from 'react-router-dom';
 import {
-    AvatarButton,
-    Button,
     DotButton,
-    LogOutButton,
     PokedexGenerationButton,
-    RoundContainer
 } from '../../views/design/Button';
 import Header from "../../views/Header";
-import { Alert } from '@material-ui/lab';
 import {
     BackButton,
-    BackIcon,
-    BerriesIconWithBadge,
     EncounteredPokemonSprite,
-    LogoPokeball, MuteIcon,
-    NewPokemonSprite, SoundButton, VolumeIcon
+    PokemonSprite, SoundButton
 } from "../../views/design/Icons";
-import {ChooseCategory} from "../online/game/afterGameStart/subScreens/ChooseCategory";
-import {Evolve} from "../online/game/afterGameStart/subScreens/Evolve";
-import {Clock} from "../online/game/afterGameStart/Clock";
-import {PlayerGame} from "../../views/Player";
-import {ColorlibConnector, ColorlibStepIcon} from "../../views/design/Stepper";
-import Step from "@material-ui/core/Step";
-import StepLabel from "@material-ui/core/StepLabel";
-import Stepper from "@material-ui/core/Stepper";
-import {FocusedPokemonCard, PlaceholderCard} from "../../views/design/PokemonCard";
-import Badge from "@material-ui/core/Badge";
-import Confetti from "../shared/Confetti";
-import {Spectator} from "../online/game/afterGameStart/subScreens/Spectator";
 import {Result} from "../online/game/afterGameStart/subScreens/Result";
-import {Spinner} from "../../views/design/Spinner";
 import Grid from "@material-ui/core/Grid";
-import {Finished} from "../online/game/afterGameStart/subScreens/Finished";
-import Collapse from "@material-ui/core/Collapse";
-import IconButton from "@material-ui/core/IconButton";
-
 
 /**
  * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
@@ -1623,7 +1592,7 @@ class Test extends React.Component {
                 }
                 else{
                     pokemon_list.push(
-                        <NewPokemonSprite src={require('../../components/shared/images/pokemonTypesSVG/unknown.svg')} size={"92px"} index = {i}/>
+                        <PokemonSprite src={require('../../components/shared/images/pokemonTypesSVG/unknown.svg')} size={"92px"} index = {i}/>
                     )
 
                 }
@@ -1713,7 +1682,7 @@ class Test extends React.Component {
                 <BackButton action={() => {this.goBack()}}/>
             </Grid>
             <BaseContainer>
-                    <Evolve masterState={this.masterState} history={this.props.history}/>
+                    <Result masterState={this.masterState} history={this.props.history}/>
             </BaseContainer>
             </GameContainer>
         );

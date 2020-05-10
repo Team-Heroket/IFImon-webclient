@@ -5,15 +5,11 @@ import clsx from 'clsx';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import Check from '@material-ui/icons/Check';
 import SettingsIcon from '@material-ui/icons/Settings';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import VideoLabelIcon from '@material-ui/icons/VideoLabel';
 import StepConnector from '@material-ui/core/StepConnector';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import {Clock} from "../../components/online/game/afterGameStart/Clock";
-import {ButtonContainer} from "../../helpers/layout";
 
 export const ColorlibConnector = withStyles({
     alternativeLabel: {
@@ -71,7 +67,7 @@ export function ColorlibStepIcon(props) {
     switch (props.icon) {
         case 1: {
             if (props.active) {
-                icons["1"] = (<Clock type={"period"} remainingTime={15000} totalTime={15000}/>)
+                icons["1"] = (<Clock type={"period"} remainingTime={13000} totalTime={13000}/>)
             }
         }
         case 2: {

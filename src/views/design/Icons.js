@@ -1,8 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import Badge from "@material-ui/core/Badge";
-import makeStyles from "@material-ui/core/styles/makeStyles";
-
 const Logo = styled.svg`
     
     position: relative;
@@ -15,6 +12,20 @@ const Logo = styled.svg`
     transform : translate(-50%, 0%);
    
 `;
+
+const LogoBadge = styled.svg`
+    
+    position: relative;
+    z-index: 100;  
+    width: ${props => props.size ? props.size : '10px'};
+    top: 27px;
+    left:  24px;
+    justify-content: center;
+    align-items: center;
+    transform : translate(-25px, -25px);
+   
+`;
+
 
 const LogoArrow = styled.svg`
     
@@ -94,14 +105,17 @@ const Container = styled.button`
   background: rgb(255, 255, 255, 0%);
 `;
 
-export const EncounteredPokemonSprite = styled.img`
+export const EncounteredPokemonSprite = styled.button`
 &:hover {
-    transform: 'scale(2)')};
     transition: all 0.3s ease;
   }
   position: relative;
+  background: transparent;
+  border: 0px;
+  
   width: ${props => props.size || "35px"};
   height: ${props => props.size || "35px"};
+  padding: 0px;
   justify-content: center;
   align-items: center;
   z-index: 4;
@@ -109,7 +123,7 @@ export const EncounteredPokemonSprite = styled.img`
 
 `
 
-export const NewPokemonSprite = styled.img`
+export const PokemonSprite = styled.img`
 &:hover {
     transform: 'scale(2)')};
     transition: all 0.3s ease;
@@ -330,7 +344,7 @@ export const PlaceholderIcon = () => {
     );
 };
 
-const AmountOfBerries = styled.div`
+export const AmountOfBerries = styled.div`
   
   width: ${props => props.width || "35px"};
   height: ${props => props.width || "35px"};
@@ -343,10 +357,9 @@ const AmountOfBerries = styled.div`
   align-items: center;
   font-weight: 700;
   font-size: 20px;
-  z-index: 2;
+  z-index: 200;
   text-align: center;
   color: white;
-  
   background: ${props => props.background || "rgba(255,0,0,1)"};`
 
 const BerriesContainer = styled.div`
@@ -413,5 +426,59 @@ export const BackButton = ({action}) => {
         <Container onClick={action}>
             <BackIcon/>
         </Container>
+    );
+};
+
+export const PossibleWinnerIcon = () => {
+    return (
+        <LogoBadge viewBox={'0 0 25 25'} size={'50px'}>
+            <svg fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g>
+                    <path fill='#FFFFFF' d="M18.97,6.83c-0.22-0.19-0.53-0.23-0.79-0.1l-1.73,0.84c-0.17,1.58-1.05,3.15-2.47,4.39
+		c-0.5,0.43-1.05,0.81-1.64,1.11v1.19c0,0.51-0.16,0.97-0.43,1.36c0.27,0.39,0.42,0.86,0.42,1.36c0,0.05-0.01,0.1-0.02,0.16h3.43
+		c0.32,0,0.6-0.21,0.69-0.51l2.75-9.04C19.28,7.32,19.19,7.02,18.97,6.83z"/>
+                    <path fill='#FFFFFF' d="M7.53,16.99c0-0.51,0.16-0.98,0.43-1.36c-0.27-0.39-0.42-0.85-0.42-1.36v-2.72c0-0.32,0.06-0.64,0.19-0.93
+		C8.02,9.89,8.68,9.3,9.5,9.06c0.46-0.13,0.94-0.4,1.34-0.75c0.66-0.57,0.84-1.09,0.84-1.29c0-0.91-0.71-1.66-1.62-1.71
+		c0,0-0.01,0-0.01,0c-0.84,0-1.51,0.5-1.72,1.23v0C7.97,7.73,6.98,8.53,5.84,8.53c-0.01,0-0.01,0-0.02,0L5.7,8.66l-0.42-0.2
+		C4.94,8.38,4.63,8.22,4.36,8.01L1.74,6.73c-0.26-0.13-0.57-0.09-0.79,0.1C0.74,7.02,0.65,7.32,0.74,7.6l2.75,9.04
+		c0.09,0.3,0.37,0.51,0.69,0.51h3.37C7.54,17.1,7.53,17.05,7.53,16.99z"/>
+                </g>
+                <g>
+                    <path fill='#FFFFFF' d="M6.88,6.13c-0.14,0.48-0.53,0.9-1.03,0.9c-0.5,0-0.92-0.41-0.83-0.9C5.44,3.78,7.49,2,9.96,2l0,0
+		c2.78,0,5.03,2.25,5.03,5.03c0,1.5-0.9,2.86-1.99,3.8c-0.62,0.54-1.37,0.99-2.16,1.28v2.16c0,0.5-0.41,0.91-0.91,0.91
+		c-0.5,0-0.91-0.41-0.91-0.91v-2.73c0-0.12,0.02-0.24,0.07-0.35c0.14-0.33,0.46-0.59,0.82-0.7c0.64-0.18,1.31-0.55,1.89-1.05
+		c0.87-0.75,1.36-1.65,1.36-2.42l0,0l0,0c0-1.72-1.35-3.12-3.05-3.2c-0.05,0-0.09,0-0.14,0H9.96l0,0C8.5,3.81,7.27,4.79,6.88,6.13z"
+                    />
+                    <circle fill='#FFFFFF' cx="9.93" cy="16.99" r="0.91"/>
+                </g>
+            </svg>
+        </LogoBadge>
+    );
+};
+
+export const WinnerIcon = () => {
+    return (
+        <LogoBadge viewBox={'0 0 25 25'} size={'50px'}>
+            <svg fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g>
+                    <path fill='#FFFFFF' d="M19.17,5.97c-0.23-0.19-0.54-0.23-0.81-0.1l-4.08,1.99l-3.83-4.42c-0.14-0.16-0.35-0.26-0.56-0.26
+		c-0.22,0-0.42,0.09-0.56,0.26L5.49,7.85L1.41,5.86C1.14,5.73,0.83,5.77,0.6,5.97c-0.23,0.19-0.32,0.5-0.23,0.78l2.83,9.32
+		c0.1,0.31,0.39,0.53,0.71,0.53h11.94c0.33,0,0.62-0.21,0.71-0.53l2.83-9.32C19.49,6.47,19.4,6.16,19.17,5.97z"/>
+                </g>
+            </svg>
+        </LogoBadge>
+    );
+};
+
+export const DrawIcon = () => {
+    return (
+        <LogoBadge viewBox={'0 0 25 25'} size={'50px'}>
+            <svg fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill='#FFFFFF' d="M2.29,8.68h15.45c0.84,0,1.29-0.56,1.29-1.26c0-0.69-0.43-1.26-1.29-1.26H2.29c-0.75,0-1.2,0.56-1.2,1.26
+	S1.56,8.68,2.29,8.68z"/>
+                <path  fill='#FFFFFF' d="M2.29,14.71h15.45c0.84,0,1.29-0.56,1.29-1.26c0-0.69-0.43-1.26-1.29-1.26H2.29c-0.75,0-1.2,0.56-1.2,1.26
+	C1.09,14.14,1.56,14.71,2.29,14.71z"/>
+            </svg>
+        </LogoBadge>
     );
 };

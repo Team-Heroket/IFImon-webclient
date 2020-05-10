@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import React from "react";
 import {BackIcon, LeaderboardIcon, QuickplayIcon, SettingsIcon, SocialIcon, TutorialIcon} from "./Icons";
 
@@ -124,14 +124,6 @@ export const PageButton = styled.button`
   
   z-index: 6;
 `
-
-export const nextPage = ({disabled}) =>{
-    return(
-        <PageButton disabled={disabled}>
-            <BackIcon/>
-        </PageButton>
-    )
-}
 
 
 export const TransparentButton = styled.button`
@@ -291,7 +283,7 @@ export const PokedexGenerationButton = styled.button`
   font-weight: ${props => (props.disabled ? '700' : null)};
   width: ${props => props.width || 10}px;
   border-top-left-radius: ${props => (props.gen == 'I' ? '25px' : "0px")};
-  border-top-right-radius: ${props => (props.gen == 'VIII' ? '25px' : "0px")};
+  border-top-right-radius: ${props => (props.gen == 'VII' ? '25px' : "0px")};
   border: ${props => (props.disabled ? '2px solid rgba(255,255,255,1)' : '2px solid rgba(255,255,255,0.3)')};
   transition: all 0.3s ease;
   opacity: ${props => (props.disabled ? '100%' : "90%")};

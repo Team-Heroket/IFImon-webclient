@@ -12,16 +12,16 @@ import React from "react";
 import {api, handleError} from "../../../../../helpers/api";
 import {ButtonContainer, PlayerContainer, SimpleColumnContainer} from "../../../../../helpers/layout";
 import {PlayerGame} from "../../../../../views/Player";
-import styled from "styled-components";
 import {LogOutButton, EvolveButton, ActiveEvolveButton} from "../../../../../views/design/Button";
-import {BerriesIconWithBadge} from "../../../../../views/design/Icons";
+import {AmountOfBerries, BerriesIconWithBadge, PossibleWinnerIcon, WinnerIcon} from "../../../../../views/design/Icons";
 import {FocusedPokemonCard} from "../../../../../views/design/PokemonCard";
 import Grid from "@material-ui/core/Grid";
 import {ColorlibConnector, ColorlibStepIcon} from "../../../../../views/design/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
-import Badge from "@material-ui/core/Badge";
+import {FlippedCard} from "./FlippedCard";
+import {FlippedCardEvolve} from "./FlippedCardEvolve";
 
 
 
@@ -141,9 +141,11 @@ export let Evolve = ({masterState, history, parentMethod}) => {
                 }
 
 
-                <Badge color={'primary'} badgeContent={'Current winner'}>
-                 {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username, null ,false, true)}
-                </Badge>
+                <FlippedCardEvolve front = {<SimpleColumnContainer align='left'>
+                    <AmountOfBerries width={'50px'} style={{ marginBottom: '-45px', marginLeft: '-5px',paddingLeft: '10px', background: 'radial-gradient(174.31% 329.79% at -6.61% -61.9%, #00D1FF 0%, rgba(255, 255, 255, 0) 100%), #5259FF', zIndex: '100'}} > <PossibleWinnerIcon/> </AmountOfBerries>
+                    {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username, null ,false, true)}
+                </SimpleColumnContainer>}/>
+
             </Grid>
         </div>
 

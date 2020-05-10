@@ -10,7 +10,7 @@ import React from "react";
 import {ButtonContainer, PlayerContainer, SimpleColumnContainer} from "../../../../../helpers/layout";
 import {PlayerGame, PlayersCard} from "../../../../../views/Player";
 import {LogOutButton} from "../../../../../views/design/Button";
-import {BerriesIconWithBadge} from "../../../../../views/design/Icons";
+import {AmountOfBerries, BerriesIconWithBadge, DrawIcon, WinnerIcon} from "../../../../../views/design/Icons";
 import {FocusedPokemonCard} from "../../../../../views/design/PokemonCard";
 import Grid from "@material-ui/core/Grid";
 import {ColorlibConnector, ColorlibStepIcon} from "../../../../../views/design/Stepper";
@@ -18,6 +18,8 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import Badge from "@material-ui/core/Badge";
+import {FlippedCardResult} from "./FlippedCardResult";
+import {FlippedCardResultOur} from "./FlippedCardResultOur";
 
 
 
@@ -52,7 +54,7 @@ export let Result = ({masterState, history}) => {
                     }else{
                     if(masterState.winners[0].user.id === player.user.id){
                         return (
-                            <Badge color={"secondary"} badgeContent={"Winner"}>
+                            <Badge color={"secondary"} badgeContent={'Winner'}>
                             <PlayerContainer>
                                 <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
                             </PlayerContainer>
@@ -94,7 +96,7 @@ export let Result = ({masterState, history}) => {
 
                 <Stepper alternativeLabel activeStep={2} connector={<ColorlibConnector />} style={{ backgroundColor: "transparent" }} style={{padding: '0px', margin: '0px', marginTop: '25px', marginBottom: '25px', background: 'transparent', width: '280px'}}>
                     {steps.map((label) => (
-                        <Step key={label}>
+                        <Step key={label} >
                             <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
                         </Step>
                     ))}
@@ -123,14 +125,24 @@ export let Result = ({masterState, history}) => {
             style={{marginTop: '50px'}}
         >
             {showLeaderboard()}
-            {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', null ,false, true)}
+            <FlippedCardResultOur front = {
+                FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', null ,false, true)
+            }/>
             {showCards()}
-            <div>
-                <Badge color={masterState.winners.length >1 ?'primary': 'secondary'} badgeContent={masterState.winners.length >1 ?'Draw': 'Winner'}>
-                    {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, winnersUsername, null ,true, localStorage.getItem('playedSound')=='true' ? true : masterState.mute , localStorage.getItem('SFXVol')/100) }
-                </Badge>
+            <FlippedCardResult front = {
+                    <SimpleColumnContainer align='left'>
+                        <AmountOfBerries width={'50px'} style={{
+                            marginBottom: '-45px',
+                            marginLeft: '-5px',
+                            paddingLeft: '10px',
+                            background: masterState.winners.length >1 ?'radial-gradient(174.31% 329.79% at -6.61% -61.9%, #00D1FF 0%, rgba(255, 255, 255, 0) 100%), #5259FF': 'linear-gradient(227.89deg, #F53E28 1.67%, rgba(255, 255, 255, 0) 322.73%), #FCE93A',
+                            zIndex: '100'}} >
+                            {masterState.winners.length >1 ? <DrawIcon/> : <WinnerIcon/> }
+                        </AmountOfBerries>
+                        {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, winnersUsername, null ,true, localStorage.getItem('playedSound')=='true' ? true : masterState.mute , localStorage.getItem('SFXVol')/100) }
+                    </SimpleColumnContainer>
+            }/>
 
-            </div>
 
         </Grid>
 

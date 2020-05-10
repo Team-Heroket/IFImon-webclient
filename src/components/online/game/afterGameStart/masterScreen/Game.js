@@ -13,6 +13,8 @@ import {Result} from "../subScreens/Result";
 import {Clock} from "../Clock";
 import {Spectator} from "../subScreens/Spectator";
 import Grid from "@material-ui/core/Grid";
+import {RandomPokemonFact} from "../../../mainmenu/RandomPokemonFact";
+
 
 
 
@@ -112,6 +114,7 @@ class Game extends React.Component {
             currentCard: null,
             oldCard: null,
             state: null,
+            totalCards: null,
             mute: (localStorage.getItem('VolumeMuted') ? (localStorage.getItem('VolumeMuted')=='true' ? true : false) : false)
         }
         localStorage.setItem('SelectedCat',0);
@@ -198,10 +201,8 @@ class Game extends React.Component {
                 }
                 else {
                     currentPeriod = this.period.RESULT;
-                    oldCard = this.state.oldCard;
                 }
             }
-
 
 
             this.setState({
@@ -223,8 +224,9 @@ class Game extends React.Component {
 
 
             if (this.state.justInitialized) {
+                let totalCards = usersList[0].deck.cards.length;
                 let startTime = Number.parseInt(resp2.startTime,10);
-                this.setState({'startTime': startTime}, this.startGame);
+                this.setState({'startTime': startTime, totalCards: totalCards}, this.startGame);
             }
 
 
@@ -258,8 +260,26 @@ class Game extends React.Component {
 
         if (!this.state.remainingTime) {
             return <Spinner/>
+
         } else {
-            return <Clock remainingTime={this.state.remainingTime} totalTime={15000} type={this.clock.GAMESTART} />
+            return (
+                <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                >
+                    <FormContainer width={'500px'}>
+                        <Clock remainingTime={this.state.remainingTime} totalTime={15000} type={this.clock.GAMESTART} />
+                    </FormContainer>
+                    <FormContainer width={'500px'}>
+                        <RandomPokemonFact/>
+                    </FormContainer>
+                </Grid>
+
+        );
+
+
         }
     }
 
@@ -271,9 +291,10 @@ class Game extends React.Component {
                 amount: localStorage.getItem('evolveTo'),
                 id: this.state.player_me.user.id
             });
-            const response = await api.put('/games/' + this.state.pokeCode + '/berries', requestBody, {headers: {'Token': localStorage.getItem('token')}});
             let currentBerries = this.state.berries;
             this.setState({berries: currentBerries - this.state.evolveBerries, evolved: true})
+            const response = await api.put('/games/' + this.state.pokeCode + '/berries', requestBody, {headers: {'Token': localStorage.getItem('token')}});
+
 
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
@@ -358,6 +379,7 @@ class Game extends React.Component {
         }
         else if (this.state.currentPeriod == this.period.RESULT) {
             localStorage.setItem('evolveTo', 0);
+            this.getGameInfo()
             this.timer_waitForNextTurn= setInterval(() => {
                 this.getGameInfo()
             }, 2000)
@@ -532,6 +554,7 @@ class Game extends React.Component {
     }
 
     async leaveGame() {
+        localStorage.setItem('generation', null);
         try {
             const requestBody = JSON.stringify({
                 id: this.state.player_me.user.id,
@@ -610,6 +633,7 @@ class Game extends React.Component {
                     <FormContainer><Space/>{this.startClock()}</FormContainer> :
                     this.renderPeriod()
                 }
+
             </GameContainer>
         );
     }

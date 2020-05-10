@@ -16,20 +16,9 @@ import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin} from "../../../../views
 import {Spinner} from "../../../../views/design/Spinner";
 import {CenterContainer} from "./Lobby";
 import Grid from "@material-ui/core/Grid";
+import Slider from "@material-ui/core/Slider";
+import withStyles from "@material-ui/core/styles/withStyles";
 
-const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 60%;
-  height: auto;
-  font-size: 16px;
-  font-weight: 700;
-  padding-left: 37px;
-  padding-right: 37px;
-  border-radius: 5px;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-`;
 
 const Label = styled.label`
   position: relative;
@@ -77,8 +66,87 @@ const InputField = styled.input`
   padding-left:10px;
   background: rgba(255, 255, 255, 0.2);
   color: white;
-  
 `;
+
+
+const PrettoSlider = withStyles({
+    root: {
+        color: '#FFFFFF',
+        height: 8,
+    },
+    thumb: {
+        height: 15,
+        width: 15,
+        backgroundColor: '#FFFFFF',
+        border: '2px solid currentColor',
+        marginTop: -5,
+        marginLeft: -7,
+        '&:focus, &:hover, &$active': {
+            boxShadow: 'inherit',
+        },
+    },
+    mark: {
+        backgroundColor: 'white',
+        height: 15,
+        width: 1,
+        marginTop: -5,
+    },
+    markActive: {
+        opacity: 1,
+        backgroundColor: 'currentColor',
+    },
+    active: {},
+    valueLabel: {
+        color: 'white',
+
+        '& *': {
+            background: 'white',
+            color: 'green',
+        },
+    },
+
+    track: {
+        height: 5,
+        borderRadius: 4,
+    },
+    rail: {
+        height: 5,
+        borderRadius: 4,
+    },
+
+})(Slider);
+
+const marks = [
+    {
+        value: 1,
+        label: '1',
+    },
+    {
+        value: 2,
+        label: '2',
+    },
+    {
+        value: 3,
+        label: '3',
+    },
+    {
+        value: 4,
+        label: '4',
+    },
+    {
+        value: 5,
+        label: '5',
+    },
+    {
+        value: 6,
+        label: '6',
+    },
+    {
+        value: 7,
+        label: '7',
+    },
+];
+
 
 
 
@@ -102,7 +170,8 @@ class CreateGame extends React.Component {
             state: null,
             amIAdmin: true,
             creationTime: null,
-            startingGame: false
+            startingGame: false,
+            generation: 4
         };
 
         this.requestPokeCode();
@@ -198,11 +267,13 @@ class CreateGame extends React.Component {
     async startGame() {
         console.log("entred startGame")
         console.log("Amount of NPC's: "+this.state.amountOfNPC)
+        localStorage.setItem('generation', this.state.generation);
         try {
 
             const requestBody = JSON.stringify({
                 npc: this.state.amountOfNPC,
                 card: this.state.amountOfCards,
+                generation: this.state.generation
             });
             this.setState({startingGame: true})
             await api.put('/games/' + this.state.pokeCode.toString(), requestBody, {headers: {'Token': localStorage.getItem('token')}});
@@ -348,12 +419,12 @@ class CreateGame extends React.Component {
         let playerBox = null;
         if (player.username === this.state.user.username) {
             if (player.username === this.state.admin.username) {
-                playerBox = <PlayerMeAndAdmin user={player}/>
+                playerBox = <PlayerMeAndAdmin user={player} style={{width: '330px'}}/>
             } else {
                 playerBox = <PlayerMe user={player}/>
             }
         } else if (player.username === this.state.admin.username) {
-            playerBox = <PlayerAdmin user={player}/>
+            playerBox = <PlayerAdmin user={player} style={{width: '330px'}}/>
         } else {
             playerBox = <Player user={player}/>
         }
@@ -403,6 +474,9 @@ class CreateGame extends React.Component {
         this.props.history.push('/createGame');
     }
 
+
+
+
     render() {
 
         function SelectAll(id) {
@@ -431,17 +505,39 @@ class CreateGame extends React.Component {
                             this.forceUpdate()}} />
                     }
                 </Grid>
-                <FormContainer>
-                    {(!this.state.users || !this.state.admin || this.state.startingGame) ? (
-                        <Spinner/>) : <Form>
+
+                    {(!this.state.users || !this.state.admin) ? (
+                        <Spinner/>) : <div>
+                        {(this.state.startingGame) ? <div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <Spinner/>
+                        </div> : <div>
                         <ErrorMessage> {this.state.message ? (
                             this.state.message
                         ) : <br/>
                         } </ErrorMessage>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="center"
+                            alignItems="center"
+                        >
+                        <FormContainer width={'500px'}>
                         <Label>Your Lobby's PokeCode</Label>
                         <PokeCodeContainer
                             onClick={this.copyTextToClipboard(this.state.pokeCode.toString())}
-                            width="55%"
+                            width="330px"
                         >
                             {this.state.pokeCode}
 
@@ -484,8 +580,29 @@ class CreateGame extends React.Component {
                                     +
                                 </TextRoundContainer>
                             </Column>
+
+
                         </SimpleContainer>
                         <br/>
+                        <Label>Generation(s): </Label>
+                        <SimpleContainer width={"320px"} defFloat={"center"}>
+                            <PrettoSlider
+                                color = "white"
+                                aria-labelledby="discrete-slider-small-steps"
+                                marks = {marks}
+                                min={1}
+                                max={7}
+                                valueLabelDisplay="auto"
+                                defaultValue={4}
+                                aria-labelledby="discrete-slider-restrict"
+                                onChange={(e,val)=> {this.setState({generation: val})}}
+                            />
+                        </SimpleContainer>
+                            </FormContainer>
+
+
+
+                        <FormContainer width={'500px'}>
                         <Label>Waiting for Players ({this.state.users.length}/{this.state.amountOfPlayers})</Label>
                         <ButtonContainer>
                             {
@@ -499,7 +616,7 @@ class CreateGame extends React.Component {
                                         }}>
                                             {this.displayPlayer(player)}
                                         </PlayerContainer>
-                                            { (player.id == localStorage.getItem('id')) ? <SimpleContainer width={"40px"}/> :
+                                            { (player.id == localStorage.getItem('id')) ? null :
                                                 <KickContainer onClick={()=> this.kick(player)}>
                                                     <KickIcon/>
                                                 </KickContainer>
@@ -512,11 +629,10 @@ class CreateGame extends React.Component {
                         </ButtonContainer>
 
                         <CenterContainer>
-
                             <Spinner/>
                             {this.state.amIAdmin ?
                                 <MenuButton
-                                    width="55%"
+                                    width="330px"
                                     disabled={this.state.users.length + this.state.amountOfNPC < 2}
                                     onClick={() => {
                                         this.startGame();
@@ -525,19 +641,24 @@ class CreateGame extends React.Component {
                                 </MenuButton>
                                 : null}
                             <LogOutButton
-                                width="55%"
+                                width="100%"
                                 onClick={() => {
                                     this.goBack();
                                 }}>
                                 Leave Lobby
                             </LogOutButton>
                         </CenterContainer>
-                    </Form>
+                        </FormContainer>
+                        </Grid>
+                            </div> }
+                    </div>
                     }
-                </FormContainer>
+
             </BaseContainer>
         );
+
     }
+
 }
 
 export default withRouter(CreateGame);

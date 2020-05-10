@@ -7,6 +7,12 @@ import {
     InnerContainerPokedex, PokedexContainer,
     SimpleContainer
 } from '../../../helpers/layout';
+
+import {FocusedPokemonCard, PlaceholderCard} from "../../../views/design/PokemonCard";
+
+import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
+import "react-popupbox/dist/react-popupbox.css"
+
 import { api, handleError } from '../../../helpers/api';
 import { withRouter } from 'react-router-dom';
 import {
@@ -14,7 +20,7 @@ import {
     MenuButtonIcon, DotButton, PokedexGenerationButton, PageButton,
 } from '../../../views/design/Button';
 import Header from "../../../views/Header";
-import {EncounteredPokemonSprite, ForwardIcon, NewPokemonSprite, NextIcon} from "../../../views/design/Icons";
+import {EncounteredPokemonSprite, ForwardIcon, PokemonSprite, NextIcon} from "../../../views/design/Icons";
 import {Spinner} from "../../../views/design/Spinner";
 import Grid from "@material-ui/core/Grid";
 import {RandomPokemonFact} from "./RandomPokemonFact";
@@ -44,12 +50,13 @@ class MainMenu extends React.Component {
         IV: [387,493],
         V: [494, 649],
         VI: [650, 721],
-        VII: [722, 809],
-        VIII: [810,894]
+        VII: [722, 809]
     }
 
     constructor() {
         super();
+
+        this.handleClick = this.handleClick.bind(this);
         if(!localStorage.getItem('SFXVol')){
             console.log('entered SFXVOL non existing')
             localStorage.setItem('SFXVol', 33);
@@ -58,6 +65,7 @@ class MainMenu extends React.Component {
         }
         this.state = {
             pokeCode: "asdasas",
+            displayPokemon: null,
             amountOfPlayers: 6,
             amountOfNPC: 0,
             user: null,
@@ -72,7 +80,7 @@ class MainMenu extends React.Component {
             this.setState({justInitialized: true});
             setTimeout(() => {
                 this.setState({justInitialized: false})
-            }, 3000)
+            }, 4000)
         }
 
         localStorage.setItem('justLoggedIn', 'false');
@@ -203,18 +211,42 @@ class MainMenu extends React.Component {
 
             case(this.genPokemon.VII):
                 if(stepSize){
-                    return this.genPokemon.VIII
+                    return this.genPokemon.VII
                 }
                 else return this.genPokemon.VI
+        }
+    }
 
-            case(this.genPokemon.VIII):
-                if(stepSize){
-                    return this.genPokemon.VIII
-                }
-                else return this.genPokemon.VII
+    async handleClick(event) {
+        console.log('Previous val: '+this.state.displayPokemon);
+        console.log("Clicked Pokemon: "+event.currentTarget.id);
 
+        try {
+            const resp = await api.get('/cards/'+event.currentTarget.id, { headers: {'Token': localStorage.getItem('token')}});
+            let response = resp.data;
+            await this.setState({displayPokemon: response});
 
         }
+        catch (e) {
+        }
+
+        const content = <SimpleContainer>
+            {this.state.displayPokemon ? FocusedPokemonCard(this.state.displayPokemon, true, '0', '', null, false,localStorage.getItem('VolumeMuted')=='true', localStorage.getItem('SFXVol')/100) : <Spinner/>}
+        </SimpleContainer>
+
+            PopupboxManager.open({
+                content,
+                config: {
+                    titleBar: {
+                        enable: true,
+                        text: this.state.displayPokemon.name
+                    },
+                    fadeIn: true,
+                    fadeInSpeed: 500,
+                    onClosed: this.setState({'displayPokemon': null})
+                }
+            })
+
     }
 
     SpritesGenerator () {
@@ -227,12 +259,14 @@ class MainMenu extends React.Component {
             for(let i = start; i<=end ; i++){
                 if(this.state.user.statistics.encounteredPokemon.includes(i)){
                     pokemon_list.push(
-                        <EncounteredPokemonSprite alt="avatar" src={'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+i+'.png'} size={"92px"} index = {i}/>
-                    )
+                        <EncounteredPokemonSprite size={"92px"} id={i} onClick={this.handleClick}>
+                            <PokemonSprite alt="avatar" src={'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+i+'.png'} size={"92px"} index = {i}/>
+                        </EncounteredPokemonSprite>
+                        )
                 }
                 else{
                     pokemon_list.push(
-                        <NewPokemonSprite src={require('../../shared/images/pokemonTypesSVG/unknown.svg')} size={"92px"} index = {i}/>
+                        <PokemonSprite src={require('../../shared/images/pokemonTypesSVG/unknown.svg')} size={"92px"} index = {i}/>
                     )
 
                 }
@@ -270,14 +304,23 @@ class MainMenu extends React.Component {
                     {windowButtons}
                 </HorizontalButtonContainer>
             </PokedexContainer>)
+    }
 
+    emptyPokedex() {
+        return(
+            <PokedexContainer height={'550px'} width={'500px'} margin={"0px"}>
+                <SimpleContainer heigth={500} color={'#FFFFFF'} >
+                    Your Pokèdex will start working after your first game!
+                </SimpleContainer>
+            </PokedexContainer>
+        )
     }
 
     generationTabs() {
         return (<HorizontalButtonContainer align={'top'}>
             {Object.keys(this.genPokemon).map((key,index) => {
                 return (
-                    <PokedexGenerationButton gen={key} width={500/8} margin={"0px"} disabled={this.state.generation == (this.genPokemon[key])} onClick={() => {
+                    <PokedexGenerationButton gen={key} width={500/7} margin={"0px"} disabled={this.state.generation == (this.genPokemon[key])} onClick={() => {
                         this.goToGeneration(this.genPokemon[key])
                     }}>
                         {key}
@@ -303,7 +346,20 @@ class MainMenu extends React.Component {
                 {console.log(localStorage.getItem('token'))}
                 {console.log(localStorage.getItem('id'))}
                 <Header height={140} top={33}/>
-                {this.state.justInitialized ? <RandomPokemonFact/>
+                {this.state.justInitialized ?
+                    <div>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <RandomPokemonFact/>
+                        <Spinner/>
+                    </div>
+
                     :
 
                     <Grid
@@ -356,8 +412,9 @@ class MainMenu extends React.Component {
                             </Form>
                         </FormContainer>
                         <div><br/><br/>
+                            <PopupboxContainer style={{color: '#FFFFFF', background: 'transparent', justifyContent: 'center', alignContent: 'center', boxShadow: '0px 0px 0px -200px rgba(0,0,0,0)'}}/>
                             {
-                                this.state.user ? this.SpritesGenerator() : <Spinner/>
+                                this.state.user ? this.SpritesGenerator() : this.emptyPokedex()
                             }
                         </div>
                     </Grid>
