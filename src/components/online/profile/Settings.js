@@ -95,6 +95,7 @@ class Settings extends React.Component {
             SFXVol :  (localStorage.getItem('SFXVol') ?  localStorage.getItem('SFXVol') : 50),
             MusicVol :  (localStorage.getItem('MusicVol') ?  localStorage.getItem('MusicVol') : 50),
             runningSample: false,
+            saveClicked: false
         };
     }
 
@@ -187,9 +188,12 @@ class Settings extends React.Component {
 
             await api.put('/users/'+localStorage.getItem('id'), response, { headers: {'Token': localStorage.getItem('token')}});
             let reload = this.state.newUsername || this.state.newPassword || this.state.newAvatarId;
-            this.state.newUsername=null;
-            this.state.newPassword=null;
-            this.state.newAvatarId=null;
+
+            this.setState({
+                newUsername: null,
+                newPassword: null,
+                newAvatarId: null
+            })
             this.goToSettings();
             if (reload) {
                 window.location.reload()
@@ -224,7 +228,7 @@ class Settings extends React.Component {
                 newAvatarId: null,
                 avatarClicked: null
             })
-            window.location.reload();
+
         }
 
     }
@@ -372,6 +376,7 @@ class Settings extends React.Component {
                                     <ButtonContainer>
                                     <Button
                                     width="150px"
+                                    disabled = {!this.state.newUsername && !this.state.newPassword && !this.state.newAvatarId}
                                     onClick={() => {
                                     this.setState({editClicked: false});
                                     this.save();
