@@ -242,13 +242,14 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
     let formattedPokemon = {}
     let formattedPokemon2 = {}
     formattedPokemon = PokemonFormatter((pokemon.elements[0]).toLowerCase());
-
-    if(pokemon.elements.length==1) {
+    if(pokemon.elements.length>1) {
+        formattedPokemon2 = PokemonFormatter((pokemon.elements[1]).toLowerCase())
+    }
         return (
             <CardContainer color={formattedPokemon.mainColor}>
 
                 <PlayerName>{Trainer}</PlayerName>
-                <CircleContainer color={formattedPokemon.secondaryColor}>
+                <CircleContainer color={pokemon.elements.length>1? formattedPokemon2.secondaryColor : formattedPokemon.secondaryColor}>
                     {Winner ?
                         <PokemonGifContainer
                             src={'https://play.pokemonshowdown.com/sprites/xyani/' + pokemon.name.toString().toLowerCase() + '.gif'}/>
@@ -310,13 +311,25 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
                         </Statistics>
                     </InternalContainer>
                 </Rectangle>
-                <IconContainer>
-                    <PokemonType src={formattedPokemon.icon}/>
-                    <PokemonNumber>
-                        #{pokemon.pokemonId}
-                    </PokemonNumber>
+                {pokemon.elements.length>1 ?
+                    <IconContainer>
+                        <PokemonType src={formattedPokemon.icon} size={'30px'} style={{top: '40%', left: '33%'}}/>
+                        <PokemonType src={formattedPokemon2.icon} size={'30px'}style={{top: '60%', left: '33%'}}/>
+                        <PokemonNumber>
+                            #{pokemon.pokemonId}
+                        </PokemonNumber>
 
-                </IconContainer>
+                    </IconContainer>
+                    :
+                    <IconContainer>
+
+                        <PokemonType src={formattedPokemon.icon}/>
+                        <PokemonNumber>
+                            #{pokemon.pokemonId}
+                        </PokemonNumber>
+
+                    </IconContainer>
+                }
                 {mute ? console.log('Mute: ' + mute) : (
                     <div style={{width: '0px', height: '0px', margin: '0px', fontSize: '0'}}>
                         <audio src={pokemon.cryURL} id="SFXaudio"/>
@@ -333,101 +346,7 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
                 }
             </CardContainer>
         );
-    }
-    else{
 
-        let formattedPokemon2 = PokemonFormatter((pokemon.elements[1]).toLowerCase());
-        return (
-            <CardContainer color={formattedPokemon.mainColor}>
-
-                <PlayerName>{Trainer}</PlayerName>
-                <CircleContainer color={formattedPokemon2.secondaryColor}>
-                    {Winner ?
-                        <PokemonGifContainer
-                            src={'https://play.pokemonshowdown.com/sprites/xyani/' + pokemon.name.toString().toLowerCase() + '.gif'}/>
-                        :
-                        <PokemonImageContainer src={pokemon.spriteURL}/>}
-                </CircleContainer>
-                <Rectangle>
-                    <InternalContainer>
-                        <PokemonName reversed={formattedPokemon.inverted}>
-                            {pokemon.name}
-                        </PokemonName>
-                        <Statistics toBeFocused={toFocus == 'ATK'} color={formattedPokemon.mainColor}
-                                    disabled={disabled} onClick={() => {
-                            localStorage.setItem('SelectedCat', 'ATK');
-                            parentMethod()
-                        }}>
-                            <StatName>Attack</StatName>
-                            <StatValue>{pokemon.categories.ATK}</StatValue>
-                        </Statistics>
-                        <Statistics toBeFocused={toFocus == 'DEF'} color={formattedPokemon.mainColor}
-                                    disabled={disabled} onClick={() => {
-                            localStorage.setItem('SelectedCat', 'DEF');
-                            parentMethod()
-                        }}>
-                            <StatName>Defense</StatName>
-                            <StatValue>{pokemon.categories.DEF}</StatValue>
-                        </Statistics>
-                        <Statistics toBeFocused={toFocus == 'SPEED'} color={formattedPokemon.mainColor}
-                                    disabled={disabled} onClick={() => {
-                            localStorage.setItem("SelectedCat", 'SPEED');
-                            parentMethod()
-                        }}>
-                            <StatName>Speed</StatName>
-                            <StatValue>{pokemon.categories.SPEED}</StatValue>
-                        </Statistics>
-                        <Statistics toBeFocused={toFocus == 'CAPTURE_RATING'} color={formattedPokemon.mainColor}
-                                    disabled={disabled} onClick={() => {
-                            localStorage.setItem("SelectedCat", 'CAPTURE_RATING');
-                            parentMethod()
-                        }}>
-                            <StatName>Capture rate</StatName>
-                            <StatValue>{pokemon.categories.CAPTURE_RATING}</StatValue>
-                        </Statistics>
-                        <Statistics toBeFocused={toFocus == 'HP'} color={formattedPokemon.mainColor} disabled={disabled}
-                                    onClick={() => {
-                                        localStorage.setItem("SelectedCat", 'HP');
-                                        parentMethod()
-                                    }}>
-                            <StatName>HP</StatName>
-                            <StatValue>{pokemon.categories.HP}</StatValue>
-                        </Statistics>
-                        <Statistics toBeFocused={toFocus == 'WEIGHT'} color={formattedPokemon.mainColor}
-                                    disabled={disabled} onClick={() => {
-                            localStorage.setItem("SelectedCat", 'WEIGHT');
-                            parentMethod()
-                        }}>
-                            <StatName>Weight</StatName>
-                            <StatValue>{pokemon.categories.WEIGHT.valueOf() / 10} kg</StatValue>
-                        </Statistics>
-                    </InternalContainer>
-                </Rectangle>
-                <IconContainer>
-                    <PokemonType src={formattedPokemon.icon} size={'30px'} style={{top: '40%', left: '33%'}}/>
-                    <PokemonType src={formattedPokemon2.icon} size={'30px'}style={{top: '60%', left: '33%'}}/>
-                    <PokemonNumber>
-                        #{pokemon.pokemonId}
-                    </PokemonNumber>
-
-                </IconContainer>
-                {mute ? console.log('Mute: ' + mute) : (
-                    <div style={{width: '0px', height: '0px', margin: '0px', fontSize: '0'}}>
-                        <audio src={pokemon.cryURL} id="SFXaudio"/>
-                        {
-                            setTimeout(() => {
-                                try {
-                                    document.getElementById("SFXaudio").volume = volume;
-                                    document.getElementById("SFXaudio").play();
-                                    localStorage.setItem('playedSound', 'true');
-                                } catch {
-                                }
-                            }, 500)}
-                    </div>)
-                }
-            </CardContainer>
-        );
-    }
 };
 
 const PokeballContainer = styled.div`
