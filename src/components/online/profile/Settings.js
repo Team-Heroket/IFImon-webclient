@@ -208,8 +208,6 @@ class Settings extends React.Component {
         this.props.history.push('/settings/'+localStorage.getItem('id'))
     }
 
-
-
     handleInputChange(key, value) {
         // Example: if the key is username, this statement is the equivalent to the following one:
         // this.setState({'username': value});

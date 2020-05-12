@@ -88,6 +88,9 @@ class MainMenu extends React.Component {
             const resp = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
 
             let response = resp.data;
+            if(!response.seenTutorial){
+                this.props.history.push('/tutorial')
+            }
             await this.setState({user: response,
                 avatarClicked: response.avatarId});
 

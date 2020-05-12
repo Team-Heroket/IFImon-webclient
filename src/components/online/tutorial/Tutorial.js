@@ -16,7 +16,7 @@ import {
 } from "../../../views/design/Icons";
 import Grid from "@material-ui/core/Grid";
 import Typewriter from 'typewriter-effect';
-import {api} from "../../../helpers/api";
+import {api, handleError} from "../../../helpers/api";
 import {TutorialPokemonCard} from "../../../views/design/PokemonCard";
 import {ActiveEvolveButton, Button, EvolveButton} from "../../../views/design/Button";
 import Settings from "../profile/Settings";
@@ -103,10 +103,6 @@ class Tutorial extends React.Component {
         }
     }
 
-    goBack() {
-        this.props.history.push('/menu')
-    }
-
     iconExplainer(icon, explainer){
         return(
             <SimpleRowContainer align='left' style={{marginBottom: '10px'}}>
@@ -149,7 +145,15 @@ class Tutorial extends React.Component {
         return evolutions;
     }
 
-    goToMainMenu(){
+    async goToMainMenu(){
+
+        try {
+
+            await api.put('/users/'+localStorage.getItem('id'), {seenTutorial: true}, { headers: {'Token': localStorage.getItem('token')}});
+
+        } catch (error) {
+            alert(`Something went wrong: \n${handleError(error)}`);
+        }
 
         this.props.history.push('/menu/')
     }
@@ -165,7 +169,7 @@ class Tutorial extends React.Component {
                     justify="flex-start"
                     alignItems="flex-start"
                 >
-                    <BackButton action={() => {this.goBack()}}/>
+                    <BackButton action={() => {this.goToMainMenu()}}/>
                 </Grid>
             <br/>
                 <Grid
