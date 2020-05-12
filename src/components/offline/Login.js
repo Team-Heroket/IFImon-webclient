@@ -130,6 +130,7 @@ class Login extends React.Component {
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('id', data.id)
+      localStorage.setItem('username', this.state.username)
       localStorage.setItem("justLoggedIn", "true")
 
       // Login successfully worked --> navigate to the route /game in the GameRouter

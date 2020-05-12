@@ -13,14 +13,13 @@ import {api, handleError} from "../../../../../helpers/api";
 import {ButtonContainer, PlayerContainer, SimpleColumnContainer} from "../../../../../helpers/layout";
 import {PlayerGame} from "../../../../../views/Player";
 import {LogOutButton, EvolveButton, ActiveEvolveButton} from "../../../../../views/design/Button";
-import {AmountOfBerries, BerriesIconWithBadge, PossibleWinnerIcon, WinnerIcon} from "../../../../../views/design/Icons";
+import {AmountOfBerries, BerriesIconWithBadge, PossibleWinnerIcon} from "../../../../../views/design/Icons";
 import {FocusedPokemonCard} from "../../../../../views/design/PokemonCard";
 import Grid from "@material-ui/core/Grid";
 import {ColorlibConnector, ColorlibStepIcon} from "../../../../../views/design/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
-import {FlippedCard} from "./FlippedCard";
 import {FlippedCardEvolve} from "./FlippedCardEvolve";
 
 

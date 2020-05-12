@@ -294,7 +294,7 @@ class MainMenu extends React.Component {
                 <PageButton disabled={this.state.step==0 && this.state.generation == this.genPokemon.I} alignment={'left'} onClick={()=>this.previousPage()}>
                     <NextIcon size={'33%'}/>
                 </PageButton>
-                <PageButton disabled={this.state.step==3 && this.state.generation == this.genPokemon.VIII} alignment={'right'} onClick={()=>this.nextPage()}>
+                <PageButton disabled={this.state.step==3 && this.state.generation == this.genPokemon.VII} alignment={'right'} onClick={()=>this.nextPage()}>
                     <ForwardIcon size={'33%'}/>
                 </PageButton>
                 <InnerContainerPokedex>
