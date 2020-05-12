@@ -367,6 +367,7 @@ class MainMenu extends React.Component {
                         direction="row"
                         justify="center"
                         alignItems="center"
+                        style={{marginTop: '100px'}}
                     >
                         <FormContainer width={'500px'}>
                             <Form>

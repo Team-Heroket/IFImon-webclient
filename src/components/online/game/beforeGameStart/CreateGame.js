@@ -285,7 +285,7 @@ class CreateGame extends React.Component {
     }
 
     goToGame() {
-        this.props.history.push('/game/'+this.state.pokeCode)
+        this.props.history.push(`/lobby/`+this.state.pokeCode);
     }
 
     async kick(player) {
