@@ -93,12 +93,19 @@ class Login extends React.Component {
    */
   constructor() {
     super();
+    this.keyPress = this.keyPress.bind(this);
     this.state = {
       password: null,
       username: null,
       openError: false,
       openSuccess: false
     };
+  }
+
+  keyPress(e){
+    if(e.keyCode == 13 && this.state.username && this.state.password){
+      this.login();
+    }
   }
 
   componentDidMount() {
@@ -216,6 +223,7 @@ class Login extends React.Component {
               onChange={e => {
                 this.handleInputChange('username', e.target.value);
               }}
+              onKeyDown={this.keyPress}
             />
             <Label>Password</Label>
             <PasswordField
@@ -223,6 +231,7 @@ class Login extends React.Component {
               onChange={e => {
                 this.handleInputChange('password', e.target.value);
               }}
+              onKeyDown={this.keyPress}
             />
             <ButtonContainer>
               <Button
