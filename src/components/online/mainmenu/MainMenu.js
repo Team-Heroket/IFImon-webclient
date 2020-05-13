@@ -249,7 +249,6 @@ class MainMenu extends React.Component {
                     onClosed: this.setState({'displayPokemon': null})
                 }
             })
-
     }
 
     SpritesGenerator () {
@@ -370,7 +369,7 @@ class MainMenu extends React.Component {
                         direction="row"
                         justify="center"
                         alignItems="center"
-                        style={{marginTop: '100px'}}
+                        style={{marginTop: '50px'}}
                     >
                         <FormContainer width={'500px'}>
                             <Form>

@@ -1,18 +1,26 @@
 import React from 'react';
 import {withRouter} from "react-router-dom";
-import {BaseContainer, ButtonContainer, FormContainer, PokeCodeContainer, PlayerContainer} from "../../../../helpers/layout";
+import {
+    BaseContainer,
+    ButtonContainer,
+    FormContainer,
+    PokeCodeContainer,
+    PlayerContainer,
+    SimpleContainer
+} from "../../../../helpers/layout";
 import Header from "../../../../views/Header";
 import styled from "styled-components";
-import {MenuButton} from "../../../../views/design/Button";
+import {ButtonRow, MenuButton} from "../../../../views/design/Button";
 import {BackButton, SoundButton} from "../../../../views/design/Icons";
 import {api, handleError} from "../../../../helpers/api";
 import {Spinner} from "../../../../views/design/Spinner";
-import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin} from "../../../../views/Player";
+import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin, PlayerStatCard} from "../../../../views/Player";
 import Grid from "@material-ui/core/Grid";
 import {Alert} from "@material-ui/lab";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Collapse from "@material-ui/core/Collapse";
+import {PopupboxContainer, PopupboxManager} from "react-popupbox";
 
 
 
@@ -69,7 +77,7 @@ class Lobby extends React.Component {
 
     constructor() {
         super();
-
+        this.handleClick = this.handleClick.bind(this);
         this.state = {
             pokeCode: null,
             users: null,
@@ -81,7 +89,8 @@ class Lobby extends React.Component {
             //timestamp: "2020-04-09 21:09:00",
             npcs: 0,
             state: null,
-            creationTime: null
+            creationTime: null,
+            displayPlayer: null
         };
     }
 
@@ -270,6 +279,30 @@ class Lobby extends React.Component {
 
     }
 
+    async handleClick(event) {
+        try {
+            const resp = await api.get('/users/'+event.currentTarget.id, { headers: {'Token': localStorage.getItem('token')}});
+            let response = resp.data;
+            await this.setState({displayPlayer: response});
+        }
+        catch (e) {
+        }
+
+        const content = <SimpleContainer>
+            {this.state.displayPlayer ? <PlayerStatCard user={this.state.displayPlayer} /> : <Spinner/>}
+        </SimpleContainer>
+
+        PopupboxManager.open({
+            content,
+            config: {
+
+                fadeIn: true,
+                fadeInSpeed: 500,
+                onClosed: this.setState({'displayPlayer': null})
+            }
+        })
+    }
+
 
     render() {
 
@@ -337,24 +370,22 @@ class Lobby extends React.Component {
                             <Label2>
                                 Waiting for Players ({this.state.users.length}/{this.state.amount})
                             </Label2>}
-
                         <ButtonContainer>
                             {
                                 this.state.users.map(player => {
                                     return (
+                                        <ButtonRow id={player.id} onClick={this.handleClick}>
+                                            <PlayerContainer onClick={() => {
 
-                                        <PlayerContainer onClick={() => {
+                                            }}>
+                                                {this.displayPlayer(player)}
 
-                                        }}>
-                                            {this.displayPlayer(player)}
-
-                                        </PlayerContainer>
-
+                                            </PlayerContainer>
+                                        </ButtonRow>
 
                                     );
                                 })
                             }
-
                         </ButtonContainer>
 
                         <CenterContainer>
@@ -373,6 +404,7 @@ class Lobby extends React.Component {
                         </CenterContainer>
 
                     </Form>
+                    <PopupboxContainer style={{color: '#FFFFFF', background: 'transparent', justifyContent: 'center', alignContent: 'center', boxShadow: '0px 0px 0px -200px rgba(0,0,0,0)'}}/>
                 </FormContainer>
 
                 </div>
