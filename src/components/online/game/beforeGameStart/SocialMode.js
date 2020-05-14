@@ -4,7 +4,7 @@ import {BaseContainer, ButtonContainer, FormContainer} from "../../../../helpers
 import Header from "../../../../views/Header";
 import styled from "styled-components";
 import {Button, TransparentButton} from "../../../../views/design/Button";
-import {BackButton, SoundButton} from "../../../../views/design/Icons";
+import {BackButton, OrSeparation, SoundButton} from "../../../../views/design/Icons";
 import {api, handleError} from "../../../../helpers/api";
 import Grid from "@material-ui/core/Grid";
 import Collapse from "@material-ui/core/Collapse";
@@ -141,11 +141,11 @@ class SocialMode extends React.Component {
                     >
                         <BackButton action={() => {this.goBack()}}/>
                         {localStorage.getItem('VolumeMuted')=='true'?
-                            <SoundButton mute={false} action={()=>{
+                            <SoundButton mute={true} action={()=>{
                                 localStorage.setItem('VolumeMuted', 'false');
                                 this.forceUpdate()}} />
                             :
-                            <SoundButton mute={true} action={() => {
+                            <SoundButton mute={false} action={() => {
                                 localStorage.setItem('VolumeMuted', 'true');
                                 this.forceUpdate()}} />
                         }
@@ -190,7 +190,7 @@ class SocialMode extends React.Component {
                            >
                                Join
                            </Button>
-                           <Line>OR</Line>
+                           <OrSeparation />
                            <TransparentButton
                                width = "55%"
                                onClick={() => {

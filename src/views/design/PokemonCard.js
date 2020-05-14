@@ -113,6 +113,7 @@ const PokemonName = styled.div`
   font-weight: 700;
   text-transform: uppercase;
   font-size: 16px;
+  ${props => props.reversed ? '' : 'text-shadow: -1px 0 #3D3D3D, 0 1px #3D3D3D, 1px 0 #3D3D3D, 0 -1px #3D3D3D'};
   color: ${props => props.reversed ? "#3D3D3D": "#FFFFFF"};
 `
 
@@ -465,18 +466,21 @@ export let TutorialPokemonCard = (pokemon, toFocus, Trainer, parentMethod = ()=>
 
                 </IconContainer>
             }
+            {mute ? null :
                 <div style={{width: '0px', height: '0px', margin: '0px', fontSize: '0'}}>
                     <audio src={pokemon.cryURL} id="SFXaudio"/>
                     {
                         setTimeout(() => {
                             try {
-                                document.getElementById("SFXaudio").volume = mute ? 0 : 0.33;
+                                console.log(pokemon.cryURL)
+                                document.getElementById("SFXaudio").volume = 0.33;
                                 document.getElementById("SFXaudio").play();
                                 localStorage.setItem('playedSound', 'true');
                             } catch {
                             }
                         }, 750)}
                 </div>
+            }
         </CardContainer>
         </TutorialContainer>
     );

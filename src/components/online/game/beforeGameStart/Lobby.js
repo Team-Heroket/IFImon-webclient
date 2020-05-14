@@ -329,11 +329,11 @@ class Lobby extends React.Component {
                         <BackButton
                             action={() => {this.goBack()}}/>
                         {localStorage.getItem('VolumeMuted')=='true'?
-                            <SoundButton mute={false} action={()=>{
+                            <SoundButton mute={true} action={()=>{
                                 localStorage.setItem('VolumeMuted', 'false');
                                 this.forceUpdate()}} />
                             :
-                            <SoundButton mute={true} action={() => {
+                            <SoundButton mute={false} action={() => {
                                 localStorage.setItem('VolumeMuted', 'true');
                                 this.forceUpdate()}} />
                         }

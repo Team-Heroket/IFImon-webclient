@@ -9,6 +9,7 @@ import {Alert} from "@material-ui/lab";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Collapse from "@material-ui/core/Collapse";
+import {OrSeparation} from "../../views/design/Icons";
 
 
 const Form = styled.div`
@@ -178,7 +179,7 @@ class Login extends React.Component {
     return (
       <BaseContainer>
         <Header height={195} top={66} />
-        <FormContainer>
+        <FormContainer margin={'100px'}>
           <Form>
             <Collapse in={this.state.openSuccess}>
               <Alert severity="success"
@@ -244,6 +245,9 @@ class Login extends React.Component {
               >
                 Login
               </Button>
+
+              <OrSeparation />
+
               <Button
                   width="55%"
                   onClick={() => {

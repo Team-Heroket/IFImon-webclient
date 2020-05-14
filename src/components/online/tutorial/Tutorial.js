@@ -76,6 +76,7 @@ class Tutorial extends React.Component {
             page: 0,
             pokemonCard: [{"pokemonId":4,"categories":{"SPEED":65,"ATK":52,"HP":39,"CAPTURE_RATING":45,"WEIGHT":85,"DEF":43},"name":"Charmander","spriteURL":"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png","cryURL":"https://play.pokemonshowdown.com/audio/cries/charmander.mp3","elements":["FIRE"],"evolutionNames":["Charmeleon","Charizard"]}],
             mute: false,
+            mutePage3: false,
             berries: 2,
             evolveTo: 0,
         }
@@ -283,10 +284,10 @@ class Tutorial extends React.Component {
                                     <br/> As you can see by evolving your card some statistics have other values.
                                 </Text>
                                     <SimpleColumnContainer align='left' style={{paddingTop: '50px'}}>
-                                        {TutorialPokemonCard(this.state.pokemonCard[0], '0', localStorage.getItem('username'), () => {this.forceUpdate(); this.setState({'mute': true})}, this.state.mute)}
+                                        {TutorialPokemonCard(this.state.pokemonCard[0], '0', localStorage.getItem('username'), () => {this.forceUpdate(); this.setState({'mutePage3': true})}, true)}
                                     </SimpleColumnContainer>
                                     <SimpleColumnContainer align='left' style={{paddingTop: '50px'}}>
-                                        {TutorialPokemonCard(this.state.pokemonCard[0+this.state.evolveTo], '0', localStorage.getItem('username'), () => {this.forceUpdate(); this.setState({'mute': true})}, this.state.mute)}
+                                        {TutorialPokemonCard(this.state.pokemonCard[0+this.state.evolveTo], '0', localStorage.getItem('username'), () => {this.forceUpdate(); this.setState({'mutePage3': true})}, this.state.mutePage3)}
                                     </SimpleColumnContainer>
                                 </Grid>
                         </FormContainer> : null}

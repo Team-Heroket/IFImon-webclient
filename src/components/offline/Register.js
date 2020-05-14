@@ -305,7 +305,7 @@ class Register extends React.Component {
                             </Label>
 
                             <br/>
-                        <Label>Enter Password Again</Label>
+                        <Label style={{marginTop: '-25px'}}>Enter Password Again</Label>
                         <PasswordField
                             placeholder="Enter here.."
 
