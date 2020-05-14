@@ -400,7 +400,7 @@ class Lobby extends React.Component {
 
                             <MenuButton
                                 width = "50%"
-
+                                disabled={this.state.admin && this.state.admin.id == localStorage.getItem('id')}
                                 onClick={() => {
                                     this.leaveGame();
                                     this.goToSocialMode();

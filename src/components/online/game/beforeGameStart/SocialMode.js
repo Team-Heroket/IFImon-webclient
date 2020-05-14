@@ -65,6 +65,7 @@ const InputField = styled.input`
 class SocialMode extends React.Component {
     constructor() {
         super();
+        this.keyPress = this.keyPress.bind(this);
         this.state = {
             pokeCode: null,
             openInfo: false,
@@ -92,14 +93,19 @@ class SocialMode extends React.Component {
 
 
     handleInputChange(key, value) {
-        // Example: if the key is username, this statement is the equivalent to the following one:
-        // this.setState({'username': value});
         this.setState({ [key]: value });
     }
 
     goBack() {
         this.setState({pokeCode: null});
         this.props.history.push('/menu');
+    }
+
+
+    keyPress(e){
+        if(e.keyCode == 13 && this.state.pokeCode){
+            this.join();
+        }
     }
 
     async join() {
@@ -200,7 +206,8 @@ class SocialMode extends React.Component {
                            width={"55%"}
                            onChange={e => {
                                this.handleInputChange('pokeCode', e.target.value);
-                           }}/>
+                           }}
+                           onKeyDown={this.keyPress}/>
                        <ButtonContainer>
                            <Button
                                disabled={!this.state.pokeCode}
