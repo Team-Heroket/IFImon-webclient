@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import {LeaderboardIcon, LogoPokeball, PlaceholderIcon, QuickplayIcon, SettingsIcon, SocialIcon} from "./Icons";
-import {ButtonContainer, SimpleContainer} from "../../helpers/layout";
+import ReactTooltip from "react-tooltip";
+import {AmountOfBerries, PlaceholderIcon, PossibleWinnerIcon} from "./Icons";
+import {SimpleColumnContainer} from "../../helpers/layout";
 
 const Statistics = styled.button`
   width: 230px;
@@ -143,6 +144,14 @@ const CircleContainer = styled.div`
   background: ${props => props.color};
   z-index: 1;
 `
+const TutorialContainer = styled.div`
+  position: relative;
+  width: 315px;
+  height: 440px;
+  background: ${props => props.color};
+  border-radius: 25px;
+  z-index: 0;
+`
 
 const CardContainer = styled.div`
   position: relative;
@@ -242,13 +251,14 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
     let formattedPokemon = {}
     let formattedPokemon2 = {}
     formattedPokemon = PokemonFormatter((pokemon.elements[0]).toLowerCase());
-
-    if(pokemon.elements.length==1) {
+    if(pokemon.elements.length>1) {
+        formattedPokemon2 = PokemonFormatter((pokemon.elements[1]).toLowerCase())
+    }
         return (
             <CardContainer color={formattedPokemon.mainColor}>
 
                 <PlayerName>{Trainer}</PlayerName>
-                <CircleContainer color={formattedPokemon.secondaryColor}>
+                <CircleContainer color={pokemon.elements.length>1? formattedPokemon2.secondaryColor : formattedPokemon.secondaryColor}>
                     {Winner ?
                         <PokemonGifContainer
                             src={'https://play.pokemonshowdown.com/sprites/xyani/' + pokemon.name.toString().toLowerCase() + '.gif'}/>
@@ -310,13 +320,25 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
                         </Statistics>
                     </InternalContainer>
                 </Rectangle>
-                <IconContainer>
-                    <PokemonType src={formattedPokemon.icon}/>
-                    <PokemonNumber>
-                        #{pokemon.pokemonId}
-                    </PokemonNumber>
+                {pokemon.elements.length>1 ?
+                    <IconContainer>
+                        <PokemonType src={formattedPokemon.icon} size={'30px'} style={{top: '40%', left: '33%'}}/>
+                        <PokemonType src={formattedPokemon2.icon} size={'30px'}style={{top: '60%', left: '33%'}}/>
+                        <PokemonNumber>
+                            #{pokemon.pokemonId}
+                        </PokemonNumber>
 
-                </IconContainer>
+                    </IconContainer>
+                    :
+                    <IconContainer>
+
+                        <PokemonType src={formattedPokemon.icon}/>
+                        <PokemonNumber>
+                            #{pokemon.pokemonId}
+                        </PokemonNumber>
+
+                    </IconContainer>
+                }
                 {mute ? console.log('Mute: ' + mute) : (
                     <div style={{width: '0px', height: '0px', margin: '0px', fontSize: '0'}}>
                         <audio src={pokemon.cryURL} id="SFXaudio"/>
@@ -333,77 +355,98 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
                 }
             </CardContainer>
         );
+
+};
+
+export let TutorialPokemonCard = (pokemon, toFocus, Trainer, parentMethod = ()=>{}, mute) =>{
+    try{
+        toFocus = localStorage.getItem('SelectedCat')
+    }catch (e) {
+
     }
-    else{
+    let formattedPokemon2 = {}
+    let formattedPokemon = PokemonFormatter((pokemon.elements[0]).toLowerCase());
+    if(pokemon.elements.length>1) {
+        formattedPokemon2 = PokemonFormatter((pokemon.elements[1]).toLowerCase())
+    }
+    return (
+        <TutorialContainer>
+             <ReactTooltip place="right" type="dark" effect="solid" multiline={true}/>
+        <CardContainer color={formattedPokemon.mainColor}>
 
-        let formattedPokemon2 = PokemonFormatter((pokemon.elements[1]).toLowerCase());
-        return (
-            <CardContainer color={formattedPokemon.mainColor}>
+            <PlayerName
+                data-tip='Here the player`s name is visible'>
+                {Trainer}</PlayerName>
+            <CircleContainer color={pokemon.elements.length>1? formattedPokemon2.secondaryColor : formattedPokemon.secondaryColor}
+                             data-tip='This is your Pokèmon`s sprite'>
+                    <PokemonImageContainer src={pokemon.spriteURL}/>
+            </CircleContainer>
+            <Rectangle>
+                <InternalContainer>
+                    <PokemonName reversed={formattedPokemon.inverted} data-tip="This is the Pokemon's name ">
+                        {pokemon.name}
+                    </PokemonName>
 
-                <PlayerName>{Trainer}</PlayerName>
-                <CircleContainer color={formattedPokemon2.secondaryColor}>
-                    {Winner ?
-                        <PokemonGifContainer
-                            src={'https://play.pokemonshowdown.com/sprites/xyani/' + pokemon.name.toString().toLowerCase() + '.gif'}/>
-                        :
-                        <PokemonImageContainer src={pokemon.spriteURL}/>}
-                </CircleContainer>
-                <Rectangle>
-                    <InternalContainer>
-                        <PokemonName reversed={formattedPokemon.inverted}>
-                            {pokemon.name}
-                        </PokemonName>
-                        <Statistics toBeFocused={toFocus == 'ATK'} color={formattedPokemon.mainColor}
-                                    disabled={disabled} onClick={() => {
-                            localStorage.setItem('SelectedCat', 'ATK');
-                            parentMethod()
-                        }}>
-                            <StatName>Attack</StatName>
-                            <StatValue>{pokemon.categories.ATK}</StatValue>
-                        </Statistics>
-                        <Statistics toBeFocused={toFocus == 'DEF'} color={formattedPokemon.mainColor}
-                                    disabled={disabled} onClick={() => {
-                            localStorage.setItem('SelectedCat', 'DEF');
-                            parentMethod()
-                        }}>
-                            <StatName>Defense</StatName>
-                            <StatValue>{pokemon.categories.DEF}</StatValue>
-                        </Statistics>
-                        <Statistics toBeFocused={toFocus == 'SPEED'} color={formattedPokemon.mainColor}
-                                    disabled={disabled} onClick={() => {
-                            localStorage.setItem("SelectedCat", 'SPEED');
-                            parentMethod()
-                        }}>
-                            <StatName>Speed</StatName>
-                            <StatValue>{pokemon.categories.SPEED}</StatValue>
-                        </Statistics>
-                        <Statistics toBeFocused={toFocus == 'CAPTURE_RATING'} color={formattedPokemon.mainColor}
-                                    disabled={disabled} onClick={() => {
-                            localStorage.setItem("SelectedCat", 'CAPTURE_RATING');
-                            parentMethod()
-                        }}>
-                            <StatName>Capture rate</StatName>
-                            <StatValue>{pokemon.categories.CAPTURE_RATING}</StatValue>
-                        </Statistics>
-                        <Statistics toBeFocused={toFocus == 'HP'} color={formattedPokemon.mainColor} disabled={disabled}
-                                    onClick={() => {
-                                        localStorage.setItem("SelectedCat", 'HP');
-                                        parentMethod()
-                                    }}>
-                            <StatName>HP</StatName>
-                            <StatValue>{pokemon.categories.HP}</StatValue>
-                        </Statistics>
-                        <Statistics toBeFocused={toFocus == 'WEIGHT'} color={formattedPokemon.mainColor}
-                                    disabled={disabled} onClick={() => {
-                            localStorage.setItem("SelectedCat", 'WEIGHT');
-                            parentMethod()
-                        }}>
-                            <StatName>Weight</StatName>
-                            <StatValue>{pokemon.categories.WEIGHT.valueOf() / 10} kg</StatValue>
-                        </Statistics>
-                    </InternalContainer>
-                </Rectangle>
-                <IconContainer>
+                    <Statistics toBeFocused={toFocus == 'ATK'} color={formattedPokemon.mainColor}
+                                disabled={false} onClick={() => {
+                        localStorage.setItem('SelectedCat', 'ATK');
+                        parentMethod();
+                                }}
+
+                                data-tip='The Attack Statistic ranges from 0 to 255 <br /> Evolving usually increases this value'>
+                        <StatName>Attack</StatName>
+                        <StatValue>{pokemon.categories.ATK}</StatValue>
+                    </Statistics>
+                    <Statistics toBeFocused={toFocus == 'DEF'} color={formattedPokemon.mainColor}
+                                disabled={false} onClick={() => {
+                        localStorage.setItem('SelectedCat', 'DEF');
+                        parentMethod();
+                    }}
+                                data-tip='The Defense Statistic ranges from 0 to 255 <br /> Evolving usually increases this value'>
+                        <StatName>Defense</StatName>
+                        <StatValue>{pokemon.categories.DEF}</StatValue>
+                    </Statistics>
+                    <Statistics toBeFocused={toFocus == 'SPEED'} color={formattedPokemon.mainColor}
+                                disabled={false} onClick={() => {
+                        localStorage.setItem("SelectedCat", 'SPEED');
+                        parentMethod();
+                    }}
+                                data-tip='The Speed Statistic ranges from 0 to 255 <br /> Evolving usually increases this value'>
+                        <StatName>Speed</StatName>
+                        <StatValue>{pokemon.categories.SPEED}</StatValue>
+                    </Statistics>
+                    <Statistics toBeFocused={toFocus == 'CAPTURE_RATING'} color={formattedPokemon.mainColor}
+                                disabled={false} onClick={() => {
+                        localStorage.setItem("SelectedCat", 'CAPTURE_RATING');
+                        parentMethod();
+                    }}
+                                data-tip='The Attack Statistic ranges from 0 to 255 <br /> Evolving usually decreases this value'>
+                        <StatName>Capture rate</StatName>
+                        <StatValue>{pokemon.categories.CAPTURE_RATING}</StatValue>
+                    </Statistics>
+                    <Statistics toBeFocused={toFocus == 'HP'} color={formattedPokemon.mainColor} disabled={false}
+                                onClick={() => {
+                                    localStorage.setItem("SelectedCat", 'HP');
+                                    parentMethod();
+                                }}
+                                data-tip='Health Points [HP] ranges from 0 to 255 <br /> Evolving usually increases this value'>
+                        <StatName>HP</StatName>
+                        <StatValue>{pokemon.categories.HP}</StatValue>
+                    </Statistics>
+                    <Statistics toBeFocused={toFocus == 'WEIGHT'} color={formattedPokemon.mainColor}
+                                disabled={false} onClick={() => {
+                        localStorage.setItem("SelectedCat", 'WEIGHT');
+                        parentMethod();
+                    }}
+                                data-tip='The Weigth Statistic ranges from 0 to 255 <br /> Evolving usually increases this value'>
+                        <StatName>Weight</StatName>
+                        <StatValue>{pokemon.categories.WEIGHT.valueOf() / 10} kg</StatValue>
+                    </Statistics>
+                </InternalContainer>
+            </Rectangle>
+            {pokemon.elements.length>1 ?
+                <IconContainer
+                    data-tip='This is the Pokemon`s type <br /> there are 18 types and Pokemon can have up to 2 types<br /> Evolving usually doesnt change this value'>
                     <PokemonType src={formattedPokemon.icon} size={'30px'} style={{top: '40%', left: '33%'}}/>
                     <PokemonType src={formattedPokemon2.icon} size={'30px'}style={{top: '60%', left: '33%'}}/>
                     <PokemonNumber>
@@ -411,24 +454,33 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
                     </PokemonNumber>
 
                 </IconContainer>
-                {mute ? console.log('Mute: ' + mute) : (
-                    <div style={{width: '0px', height: '0px', margin: '0px', fontSize: '0'}}>
-                        <audio src={pokemon.cryURL} id="SFXaudio"/>
-                        {
-                            setTimeout(() => {
-                                try {
-                                    document.getElementById("SFXaudio").volume = volume;
-                                    document.getElementById("SFXaudio").play();
-                                    localStorage.setItem('playedSound', 'true');
-                                } catch {
-                                }
-                            }, 500)}
-                    </div>)
-                }
-            </CardContainer>
-        );
-    }
-};
+                :
+                <IconContainer
+                    data-tip='This is the Pokemon`s type <br /> There are 18 types and Pokemon can have up to 2 types<br /> Evolving usually doesnt change this value <br /> Each Pokemon has a unique id which starts with a #' >
+
+                    <PokemonType src={formattedPokemon.icon}/>
+                    <PokemonNumber>
+                        #{pokemon.pokemonId}
+                    </PokemonNumber>
+
+                </IconContainer>
+            }
+                <div style={{width: '0px', height: '0px', margin: '0px', fontSize: '0'}}>
+                    <audio src={pokemon.cryURL} id="SFXaudio"/>
+                    {
+                        setTimeout(() => {
+                            try {
+                                document.getElementById("SFXaudio").volume = mute ? 0 : 0.33;
+                                document.getElementById("SFXaudio").play();
+                                localStorage.setItem('playedSound', 'true');
+                            } catch {
+                            }
+                        }, 750)}
+                </div>
+        </CardContainer>
+        </TutorialContainer>
+    );
+}
 
 const PokeballContainer = styled.div`
 position: absolute;

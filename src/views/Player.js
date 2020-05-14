@@ -202,9 +202,9 @@ export let PlayerAdmin = ({ user, lobby = false }) => {
     );
 };
 
-export let PlayerMeAndAdmin = ({ user }) => {
+export let PlayerMeAndAdmin = ({ user, lobby = false }) => {
     return (
-        <ContainerMe style={{width: '330px'}}>
+        <ContainerMe style={lobby ? ({width: '280px'}) : ({width: '330px'})}>
             <Rank>{user.statistics.rating}.</Rank> <UserName>{user.username} (Admin)</UserName>
             <Id>{user.statistics.gamesWon}</Id>
         </ContainerMe>

@@ -88,6 +88,9 @@ class MainMenu extends React.Component {
             const resp = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
 
             let response = resp.data;
+            if(!response.seenTutorial){
+                this.props.history.push('/tutorial')
+            }
             await this.setState({user: response,
                 avatarClicked: response.avatarId});
 
@@ -246,7 +249,6 @@ class MainMenu extends React.Component {
                     onClosed: this.setState({'displayPokemon': null})
                 }
             })
-
     }
 
     SpritesGenerator () {
@@ -294,7 +296,7 @@ class MainMenu extends React.Component {
                 <PageButton disabled={this.state.step==0 && this.state.generation == this.genPokemon.I} alignment={'left'} onClick={()=>this.previousPage()}>
                     <NextIcon size={'33%'}/>
                 </PageButton>
-                <PageButton disabled={this.state.step==3 && this.state.generation == this.genPokemon.VIII} alignment={'right'} onClick={()=>this.nextPage()}>
+                <PageButton disabled={this.state.step==3 && this.state.generation == this.genPokemon.VII} alignment={'right'} onClick={()=>this.nextPage()}>
                     <ForwardIcon size={'33%'}/>
                 </PageButton>
                 <InnerContainerPokedex>
@@ -367,6 +369,7 @@ class MainMenu extends React.Component {
                         direction="row"
                         justify="center"
                         alignItems="center"
+                        style={{marginTop: '50px'}}
                     >
                         <FormContainer width={'500px'}>
                             <Form>

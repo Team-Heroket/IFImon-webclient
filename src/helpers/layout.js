@@ -86,6 +86,19 @@ export const SimpleColumnContainer = styled.div`
   flex-direction: column;
 `;
 
+export const SimpleRowContainer = styled.div`
+  width: ${props => props.width || null};
+  float: ${props => props.defFloat || null};
+  color: ${props => props.color || null};;
+  justify-content: center;
+  align-items: ${props => props.align || 'center'};
+  margin-top: ${props => (props.heigth/2-5)+'px' || null};
+  margin-left: ${props => (props.sideMargin)|| null};
+  margin-right: ${props => (props.sideMargin)|| null};
+  display: flex;
+  flex-direction: row;
+`;
+
 export const PokeCodeContainer = styled.label`
   &:hover {
     transform: translateY(${props => (props.disabled ? 0 : 2)}px);

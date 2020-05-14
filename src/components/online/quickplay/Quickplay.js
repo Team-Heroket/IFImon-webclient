@@ -33,7 +33,7 @@ class Quickplay extends React.Component {
 
             });
             const request = await api.post('/games', requestBody, {headers: {'Token': localStorage.getItem('token')}});
-            this.props.history.push('/game/'+(request.data).token);
+            this.props.history.push(`/lobby/`+(request.data).token);
         } catch (error) {
             alert(`Something went wrong during the quickplay creation: \n${handleError(error)}`);
         }

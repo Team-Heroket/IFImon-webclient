@@ -67,7 +67,7 @@ export function ColorlibStepIcon(props) {
     switch (props.icon) {
         case 1: {
             if (props.active) {
-                icons["1"] = (<Clock type={"period"} remainingTime={13000} totalTime={13000}/>)
+                icons["1"] = (<Clock type={"period"} remainingTime={14000} totalTime={14000}/>)
             }
         }
         case 2: {

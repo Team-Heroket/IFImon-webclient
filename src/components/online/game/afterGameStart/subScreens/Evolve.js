@@ -2,7 +2,6 @@
     This component is displayed from 15 to 30 seconds
 
     I can click on evolve. If I do so a put request is sent to the server. I save it to the local storage
-    If by the end of this I haven't clicked on evolve, the Game component sends a put request with evolveBerries = 0
 
     Next screen displayed is "Result"
  */
@@ -13,15 +12,15 @@ import {api, handleError} from "../../../../../helpers/api";
 import {ButtonContainer, PlayerContainer, SimpleColumnContainer} from "../../../../../helpers/layout";
 import {PlayerGame} from "../../../../../views/Player";
 import {LogOutButton, EvolveButton, ActiveEvolveButton} from "../../../../../views/design/Button";
-import {AmountOfBerries, BerriesIconWithBadge, PossibleWinnerIcon, WinnerIcon} from "../../../../../views/design/Icons";
+import {AmountOfBerries, BerriesIconWithBadge, PossibleWinnerIcon} from "../../../../../views/design/Icons";
 import {FocusedPokemonCard} from "../../../../../views/design/PokemonCard";
 import Grid from "@material-ui/core/Grid";
 import {ColorlibConnector, ColorlibStepIcon} from "../../../../../views/design/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
-import {FlippedCard} from "./FlippedCard";
 import {FlippedCardEvolve} from "./FlippedCardEvolve";
+import {FlippedCard} from "./FlippedCard";
 
 
 
@@ -123,8 +122,9 @@ export let Evolve = ({masterState, history, parentMethod}) => {
                 style={{marginTop: '50px'}}
             >
                 {showLeaderboard()}
-
-                {FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', null, false, true)}
+                {masterState.turnPlayer.user.npc ?
+                <FlippedCard front={FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', null, false, true)}/>
+                : FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', null, false, true)}
 
                 {
                     masterState.deck.cards[0].evolutionNames.length == 0 ?

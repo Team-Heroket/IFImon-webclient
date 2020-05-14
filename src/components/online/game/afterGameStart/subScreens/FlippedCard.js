@@ -17,7 +17,7 @@ export class FlippedCard extends React.Component {
     componentDidMount() {
         setTimeout(() => {
             this.setState({isFlipped: false})
-        }, 1000)
+        }, 100)
     }
 
     render() {

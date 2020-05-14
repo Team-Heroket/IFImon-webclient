@@ -79,6 +79,7 @@ class Register extends React.Component {
     constructor() {
         super();
         this.handleClick = this.handleClick.bind(this)
+        this.keyPress = this.keyPress.bind(this);
         localStorage.setItem('accountCreation', 'false');
         this.state = {
             open: false,
@@ -90,10 +91,17 @@ class Register extends React.Component {
         };
     }
 
+
     handleClick(event) {
         this.setState({avatarId: event.currentTarget.id,
             avatarClicked: event.currentTarget.id});
         console.log("New id: "+event.currentTarget.id);
+    }
+
+    keyPress(e){
+        if(e.keyCode == 13 && this.state.username && this.state.password && this.state.avatarId){
+            this.register();
+        }
     }
 
     createAvatarList() {
@@ -117,6 +125,7 @@ class Register extends React.Component {
                     enabled={enable}
                     id = {i}
                     onClick={this.handleClick}
+                    onKeyDown={this.keyPress}
                 >
                     <SimpleContainer index = {i}>
                         <img alt="avatar" src={require('../shared/images/avatarSVG/0'+s+'-avatar.svg')} height={"66px"} width={"66px"} index = {i}/>
@@ -154,6 +163,8 @@ class Register extends React.Component {
     goToLogin() {
         this.props.history.push('/login');
     }
+
+
 
 
     handleInputChange(key, value) {
@@ -198,6 +209,7 @@ class Register extends React.Component {
                                 onChange={e => {
                                     this.handleInputChange('username', e.target.value);
                                 }}
+                                onKeyDown={this.keyPress}
                             />
                             <br/>
 
@@ -207,6 +219,7 @@ class Register extends React.Component {
                                 onChange={e => {
                                     this.handleInputChange('password', e.target.value);
                                 }}
+                                onKeyDown={this.keyPress}
                             />
                                 <Button
                                     disabled={!this.state.username || !this.state.password || !this.state.avatarId}

@@ -12,12 +12,15 @@ import {
 } from "../../../../views/design/Button";
 import {BackButton, KickIcon, SoundButton} from "../../../../views/design/Icons";
 import {api, handleError} from "../../../../helpers/api";
-import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin} from "../../../../views/Player";
+import {Player, PlayerAdmin, PlayerMe, PlayerMeAndAdmin, PlayerStatCard} from "../../../../views/Player";
 import {Spinner} from "../../../../views/design/Spinner";
 import {CenterContainer} from "./Lobby";
 import Grid from "@material-ui/core/Grid";
 import Slider from "@material-ui/core/Slider";
 import withStyles from "@material-ui/core/styles/withStyles";
+
+import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
+import "react-popupbox/dist/react-popupbox.css"
 
 
 const Label = styled.label`
@@ -49,6 +52,10 @@ const Column = styled.div`
 }
     }
 `
+const PlayerButton = styled.button`
+
+`
+
 
 const InputField = styled.input`
   &::placeholder {
@@ -154,6 +161,7 @@ class CreateGame extends React.Component {
 
     constructor() {
         super();
+        this.handleClick = this.handleClick.bind(this);
         this.state = {
             pokeCode: null,
             amountOfPlayers: 6,
@@ -171,7 +179,8 @@ class CreateGame extends React.Component {
             amIAdmin: true,
             creationTime: null,
             startingGame: false,
-            generation: 4
+            generation: 4,
+            displayPlayer: null
         };
 
         this.requestPokeCode();
@@ -285,7 +294,7 @@ class CreateGame extends React.Component {
     }
 
     goToGame() {
-        this.props.history.push('/game/'+this.state.pokeCode)
+        this.props.history.push(`/lobby/`+this.state.pokeCode);
     }
 
     async kick(player) {
@@ -474,6 +483,31 @@ class CreateGame extends React.Component {
         this.props.history.push('/createGame');
     }
 
+    async handleClick(event) {
+
+        try {
+            const resp = await api.get('/users/'+event.currentTarget.id, { headers: {'Token': localStorage.getItem('token')}});
+            let response = resp.data;
+            await this.setState({displayPlayer: response});
+        }
+        catch (e) {
+        }
+
+        const content = <SimpleContainer>
+            {this.state.displayPlayer ? <PlayerStatCard user={this.state.displayPlayer} /> : <Spinner/>}
+        </SimpleContainer>
+
+        PopupboxManager.open({
+            content,
+            config: {
+
+                fadeIn: true,
+                fadeInSpeed: 500,
+                onClosed: this.setState({'displayPlayer': null})
+            }
+        })
+    }
+
 
 
 
@@ -608,12 +642,8 @@ class CreateGame extends React.Component {
                             {
                                 this.state.users.map(player => {
                                     return (
-                                        <ButtonRow>
-                                        <PlayerContainer onClick={() => {
-                                            console.log('Player Clicked:', player);
-                                            this.setState({selectedUser: player.user});
-                                            console.log(this.state.selectedUser);
-                                        }}>
+                                        <ButtonRow id={player.id} onClick={this.handleClick}>
+                                        <PlayerContainer >
                                             {this.displayPlayer(player)}
                                         </PlayerContainer>
                                             { (player.id == localStorage.getItem('id')) ? null :
@@ -649,6 +679,7 @@ class CreateGame extends React.Component {
                             </LogOutButton>
                         </CenterContainer>
                         </FormContainer>
+                            <PopupboxContainer style={{color: '#FFFFFF', background: 'transparent', justifyContent: 'center', alignContent: 'center', boxShadow: '0px 0px 0px -200px rgba(0,0,0,0)'}}/>
                         </Grid>
                             </div> }
                     </div>

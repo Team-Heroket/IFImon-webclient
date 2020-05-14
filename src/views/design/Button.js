@@ -101,11 +101,11 @@ export const ActiveEvolveButton = styled.button`
 
 export const PageButton = styled.button`
   &:hover {
-    transform: ${props => (props.disabled ? 'scale(1)' : 'scale(2.5)')};
+    ${props => (props.disabled ? '' : 'transform: scale(2.5)')};
     transition: all 0.3s ease;
   }
   &:active {
-    transform: ${props => (props.alignment=='left' ? 'translateX(-10px)' : 'translateX(10px)')};
+    ${props => (props.disabled ? '' : props.alignment=='left'? 'transform: translateX(-10px)' : 'transform: translateX(10px)')};
     transition: all 0.3s ease;
   }
   position: absolute;
