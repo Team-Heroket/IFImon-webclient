@@ -307,7 +307,7 @@ class Settings extends React.Component {
         if (this.state.openSuccess ==true) {
             setTimeout(() => {
                 this.setState({openSuccess: false})
-            },3000)
+            },5000)
         }
     }
 

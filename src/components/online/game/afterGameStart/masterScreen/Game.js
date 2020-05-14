@@ -189,6 +189,8 @@ class Game extends React.Component {
                 currentPeriod = this.period.CHOOSECATEGORY;
                 clearInterval(this.timer_waitForNextTurn);
                 this.timer_waitForNextTurn= null;
+                clearInterval(this.timer_listenToAdmin);
+                this.timer_listenToAdmin=null;
 
                 oldCard = user_me.deck.cards[0];
             }
@@ -358,12 +360,14 @@ class Game extends React.Component {
                 }, 13000)
                 this.timeout_waitForCategoryResult = setTimeout(() => {
                     this.timer_waitForCategory= setInterval(() => {
+                        console.log('getGame made in waitForCategory with pokeCode: '+this.state.pokeCode)
                         this.getGameInfo()
                     }, 1000)
                 }, 12000)
             }
             else {
                 this.timer_waitForCategory= setInterval(() => {
+                    console.log('getGame made in waitForCategory with pokeCode: '+this.state.pokeCode)
                     this.getGameInfo()
                 }, 2000)
             }
@@ -380,6 +384,7 @@ class Game extends React.Component {
         }
         else if (this.state.currentPeriod == this.period.RESULT) {
             localStorage.setItem('evolveTo', 0);
+            console.log('getGame made in result with pokeCode: '+this.state.pokeCode)
             this.getGameInfo()
             this.timer_waitForNextTurn= setInterval(() => {
                 this.getGameInfo()
@@ -462,12 +467,14 @@ class Game extends React.Component {
 
         if (this.state.amIAdmin) {
             this.timer_listenToAdmin = setInterval(() => {
+                console.log('getGame made in listenToAdmin with pokeCode: '+this.state.pokeCode)
                 this.getGameWaitForAdmin();
             }, 2000)
         }
         else {
 
             this.timer_listenToAdmin = setInterval(() => {
+                console.log('getGame made in listenToAdmin with pokeCode: '+this.state.pokeCode)
                 this.getGameWaitForAdmin();
             }, 2000)
         }
