@@ -14,6 +14,7 @@ import {Clock} from "../Clock";
 import {Spectator} from "../subScreens/Spectator";
 import Grid from "@material-ui/core/Grid";
 import {RandomPokemonFact} from "../../../mainmenu/RandomPokemonFact";
+import {FinishedTest} from "../subScreens/FinishedTest";
 
 
 
@@ -460,18 +461,11 @@ class Game extends React.Component {
         this.recurrentTimer = null;
 
         if (this.state.amIAdmin) {
-            this.timeout_waitForAdmin = setTimeout(() => {
-                this.props.history.push('/menu')
-            }, 15000)
-
             this.timer_listenToAdmin = setInterval(() => {
                 this.getGameWaitForAdmin();
             }, 2000)
         }
         else {
-            this.timeout_waitForAdmin = setTimeout(() => {
-                this.props.history.push('/menu')
-            }, 15000)
 
             this.timer_listenToAdmin = setInterval(() => {
                 this.getGameWaitForAdmin();
@@ -585,7 +579,7 @@ class Game extends React.Component {
         } else if (this.state.currentPeriod == this.period.SPECTATOR) {
             return <Spectator masterState={this.state} history={this.props.history}/>
         } else if (this.state.currentPeriod == this.period.FINISHED) {
-            return <Finished masterState={this.state} history={this.props.history}/>
+            return <FinishedTest masterState={this.state} history={this.props.history}/>
         } else if (this.state.currentPeriod == this.period.NEWROUNDTIMER) {
             return <Clock remainingTime={this.state.remainingTime} totalTime={5000} type={this.clock.NEWROUND}/>
 
