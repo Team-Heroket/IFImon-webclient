@@ -260,6 +260,7 @@ class Register extends React.Component {
                     alignItems="flex-start"
                 >
                     <FormContainer margin={'100px'}>
+
                             <Collapse in={this.state.open}>
                                 <Alert severity="error"
                                     action={
@@ -289,7 +290,7 @@ class Register extends React.Component {
                             />
                             <br/>
 
-                            <Label>Enter Password</Label>
+                            <Label style={{marginTop: '10px'}}>Enter Password</Label>
                             <PasswordField
                                 placeholder="Enter here.."
                                 onChange={e => {
@@ -305,7 +306,7 @@ class Register extends React.Component {
                             </Label>
 
                             <br/>
-                        <Label style={{marginTop: '-25px'}}>Enter Password Again</Label>
+                        <Label style={{marginTop: '10px'}}>Enter Password Again</Label>
                         <PasswordField
                             placeholder="Enter here.."
 
@@ -316,9 +317,15 @@ class Register extends React.Component {
                             }}
                             onKeyDown={this.keyPress}
                         />
-                                <Button
+                        <Grid
+                            container
+                            direction="row"
+                            justify="space-between"
+                            alignItems="center"
+                        >
+                                <Button style={{marginLeft: '7px', marginTop: '27px'}}
                                     disabled={!this.state.username || !this.state.password || !this.state.avatarId || !this.state.passwordRepeat || !(this.state.password == this.state.passwordRepeat) || this.checkPassword()}
-                                    width="250px"
+                                    width="50%"
                                     onClick={() => {
                                         this.register();
                                     }}
@@ -326,13 +333,14 @@ class Register extends React.Component {
                                     Sign Up
                                 </Button>
                                 <LogOutButton
-                                    width="250px"
+                                    width="33%"
                                     onClick={() => {
                                         this.goToLogin();
                                     }}
                                 >
                                     Cancel
                                 </LogOutButton>
+                        </Grid>
                     </FormContainer>
                     <FormContainer margin={'100px'}>
                         <Label>Choose your Avatar</Label>
