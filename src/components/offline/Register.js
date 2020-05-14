@@ -49,7 +49,7 @@ const PasswordField = styled.input`
   left: 50%;
   border: none;
   border-radius: 25px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   padding-left:10px;
   background: rgba(255, 255, 255, 0.2);
   color: white;
@@ -88,7 +88,8 @@ class Register extends React.Component {
             passwordRepeat: null,
             username: null,
             avatarId: null,
-            avatarClicked: null
+            avatarClicked: null,
+            openNetworkError: false
         };
     }
 
@@ -106,7 +107,16 @@ class Register extends React.Component {
     }
 
     componentDidUpdate() {
-
+        if (this.state.openNetworkError ==true) {
+            setTimeout(() => {
+                this.setState({openNetworkError: false})
+            }, 5000)
+        }
+        else if (this.state.open ==true) {
+            setTimeout(() => {
+                this.setState({open: false, errorCode: false})
+            }, 5000)
+        }
     }
 
     createAvatarList() {
@@ -155,13 +165,18 @@ class Register extends React.Component {
             this.goToLogin();
 
         } catch (error) {
-            if(error.response.data.status == '400'){
-                this.setState({open: true, errorCode: 400});
-            }else if(error.response.data.status == '500'){
-                this.setState({open: true, errorCode: 500});
+            if (error.response) {
+                if(error.response.data.status == '400'){
+                    this.setState({open: true, errorCode: 400});
+                }else if(error.response.data.status == '500'){
+                    this.setState({open: true, errorCode: 500});
+                }
+                else{
+                    alert(`Something went wrong during the login: \n${handleError(error)}`);}
             }
-            else{
-            alert(`Something went wrong during the login: \n${handleError(error)}`);}
+            else {
+                this.setState({openNetworkError: true})
+            }
         }
     }
 
@@ -279,6 +294,25 @@ class Register extends React.Component {
                                 </Alert>
                                 <br/>
                             </Collapse>
+                        <Collapse in={this.state.openNetworkError}>
+                            <Alert severity="error"
+                                   action={
+                                       <IconButton
+                                           aria-label="close"
+                                           color="inherit"
+                                           size="small"
+                                           onClick={() => {
+                                               this.setState({openNetworkError: false});
+                                           }}
+                                       >
+                                           <CloseIcon fontSize="inherit"/>
+                                       </IconButton>
+                                   }
+                            >
+                                Network Error - Server is Offline
+                            </Alert>
+                            <br/>
+                        </Collapse>
                             <Label>Enter Username</Label>
                             <InputField
                                 placeholder="Enter here.."
@@ -295,11 +329,12 @@ class Register extends React.Component {
                                 onChange={e => {
                                     this.handleInputChange('password', e.target.value);
                                 }}
-                                style={this.checkPassword() ? ({'margin-bottom': '6px'}) : ({'margin-bottom': '20px'})}
+                                style={this.checkPassword() ? ({'margin-bottom': '4px'}) : ({'margin-bottom': '30px'})}
                                 onKeyDown={this.keyPress}
                             />
                             <Label
-                                style={{'font-size': '13px', color: 'red', 'font-weight': '400'}}
+                                style={this.checkPassword() ? ({'margin-bottom': '11px','font-size': '13px', color: 'red', 'font-weight': '400'}) : ({'margin-bottom': '0px'})}
+
                             >
                                 {this.state.password ? this.checkPassword(): null}
                             </Label>

@@ -99,7 +99,8 @@ class Login extends React.Component {
       password: null,
       username: null,
       openError: false,
-      openSuccess: false
+      openSuccess: false,
+      openNetworkError: false
     };
   }
 
@@ -145,18 +146,24 @@ class Login extends React.Component {
       // Login successfully worked --> navigate to the route /game in the GameRouter
       this.props.history.push(`/menu`);
     } catch (error) {
-      if(error.response.data.error == 'User not found'){
-        this.setState({openError: true, errorCode: 404});
-      }
-      else if(error.response.status == 401){
-        this.setState({openError: true, errorCode: 401});
-      }
-      else if(error.response.status == 500){
-        this.setState({open: true, errorCode: 500});
+      if (error.response) {
+        if(error.response.data.error == 'User not found'){
+          this.setState({openError: true, errorCode: 404});
+        }
+        else if(error.response.status == 401){
+          this.setState({openError: true, errorCode: 401});
+        }
+        else if(error.response.status == 500){
+          this.setState({open: true, errorCode: 500});
+        }
+        else {
+          alert(`Something went wrong during the login: \n${handleError(error)}`);
+        }
       }
       else {
-        alert(`Something went wrong during the login: \n${handleError(error)}`);
+        this.setState({openNetworkError: true})
       }
+
     }
   }
 
@@ -173,6 +180,22 @@ class Login extends React.Component {
     // Example: if the key is username, this statement is the equivalent to the following one:
     // this.setState({'username': value});
     this.setState( {[key]: value} );
+  }
+
+  componentDidUpdate() {
+    if (this.state.openNetworkError == true) {
+      setTimeout(() => {
+        this.setState({openNetworkError: false})
+      }, 5000)
+    } else if (this.state.open == true) {
+      setTimeout(() => {
+        this.setState({open: false, errorCode: false})
+      }, 5000)
+    } else if (this.state.openError == true) {
+      setTimeout(() => {
+        this.setState({openError: false, errorCode: false})
+      }, 5000)
+    }
   }
 
   render() {
@@ -216,6 +239,25 @@ class Login extends React.Component {
                      }
               >
                 {this.state.errorCode == 404 ?  'User does not exist!' : (this.state.errorCode ==500 ? 'Internal Server Error': 'Wrong password!')}
+              </Alert>
+              <br/>
+            </Collapse>
+            <Collapse in={this.state.openNetworkError}>
+              <Alert severity="error"
+                     action={
+                       <IconButton
+                           aria-label="close"
+                           color="inherit"
+                           size="small"
+                           onClick={() => {
+                             this.setState({openNetworkError: false});
+                           }}
+                       >
+                         <CloseIcon fontSize="inherit"/>
+                       </IconButton>
+                     }
+              >
+                Network Error - Server is Offline
               </Alert>
               <br/>
             </Collapse>
