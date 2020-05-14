@@ -20,6 +20,10 @@ import Grid from "@material-ui/core/Grid";
 import UIFx from 'uifx';
 import pokeCry from '../../shared/pikachu.mp3';
 import music from '../../shared/musicSample.mp3';
+import {Alert} from "@material-ui/lab";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Collapse from "@material-ui/core/Collapse";
 
 const Label = styled.label`
   position: relative;
@@ -117,7 +121,8 @@ class Settings extends React.Component {
             SFXVol :  (localStorage.getItem('SFXVol') ?  localStorage.getItem('SFXVol') : 50),
             MusicVol :  (localStorage.getItem('MusicVol') ?  localStorage.getItem('MusicVol') : 50),
             runningSample: false,
-            saveClicked: false
+            saveClicked: false,
+            openSuccess: false
         };
     }
 
@@ -233,7 +238,7 @@ class Settings extends React.Component {
         return avatar_list;
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         //Checks if id in URL corresponds with our id. If it does, we can see edit button
         let url_id = this.props.match.params.id;
 
@@ -242,6 +247,10 @@ class Settings extends React.Component {
         }
         console.log('Token: '+localStorage.getItem('token'))
         console.log('Id in params: '+url_id)
+        this.getUserInfo();
+    }
+
+    async getUserInfo() {
         try {
             const resp = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
 
@@ -251,7 +260,7 @@ class Settings extends React.Component {
                 response.avatarId = 1;
             }
             await this.setState({user: response,
-            avatarClicked: response.avatarId});
+                avatarClicked: response.avatarId});
 
 
         }
@@ -280,26 +289,29 @@ class Settings extends React.Component {
         try {
 
             await api.put('/users/'+localStorage.getItem('id'), response, { headers: {'Token': localStorage.getItem('token')}});
-            let reload = this.state.newUsername || this.state.newPassword || this.state.newAvatarId;
 
             this.setState({
                 newUsername: null,
                 newPassword: null,
                 newAvatarId: null
             })
-            this.goToSettings();
-            if (reload) {
-                window.location.reload()
-            }
+            this.getUserInfo();
+            this.setState({editClicked: false, openSuccess: true})
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
         }
 
     }
 
-    goToSettings() {
-        this.props.history.push('/settings/'+localStorage.getItem('id'))
+    componentDidUpdate() {
+        if (this.state.openSuccess ==true) {
+            setTimeout(() => {
+                this.setState({openSuccess: false})
+            },5000)
+        }
     }
+
+
 
     handleInputChange(key, value) {
         // Example: if the key is username, this statement is the equivalent to the following one:
@@ -379,6 +391,25 @@ class Settings extends React.Component {
                                     alignItems="center"
                                 >
                                     <SimpleColumnContainer width={'400px'}>
+                                        <Collapse in={this.state.openSuccess}>
+                                            <Alert severity="success"
+                                                   action={
+                                                       <IconButton
+                                                           aria-label="close"
+                                                           color="inherit"
+                                                           size="small"
+                                                           onClick={() => {
+                                                               this.setState({openSuccess: false});
+                                                           }}
+                                                       >
+                                                           <CloseIcon fontSize="inherit"/>
+                                                       </IconButton>
+                                                   }
+                                            >
+                                                Account successfully updated!
+                                            </Alert>
+                                            <br/>
+                                        </Collapse>
                                         <SimpleColumnContainer width={'300px'}>
                                             <Label transform={true} width={'100%'}>
                                                 Sound Effects Volume

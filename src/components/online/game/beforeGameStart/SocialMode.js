@@ -12,6 +12,7 @@ import {Alert} from "@material-ui/lab";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import {CenterContainer} from "./Lobby";
+import "./StylesheetSocialMode.css";
 
 const Form = styled.div`
   display: flex;
@@ -34,7 +35,18 @@ const Row = styled.div`
     display: table "";
     }
     `;
-
+const Label2 = styled.label`
+  position: relative;
+  transform : translate(-50%, 0%);
+  width: 400px;
+  left: 50%;
+  color: white;
+  
+  
+  text-align: center;
+  font-weight: 300;
+  font-size: 20px;
+`;
 
 
 const InputField = styled.input`
@@ -79,7 +91,8 @@ class SocialMode extends React.Component {
         super();
         this.state = {
             pokeCode: null,
-            openInfo: false
+            openInfo: false,
+            openError: false
         };
     }
 
@@ -89,6 +102,14 @@ class SocialMode extends React.Component {
             setTimeout(() => {
                 this.setState({openInfo: false})
                 localStorage.setItem('info', 0)
+            }, 5000)
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.state.openError==true) {
+            setTimeout(() => {
+                this.setState({openError: false, errorCode: null})
             }, 5000)
         }
     }
@@ -119,7 +140,12 @@ class SocialMode extends React.Component {
             // Login successfully worked --> navigate to the route /game in the GameRouter
             this.props.history.push(`/lobby/`+this.state.pokeCode);
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            if(error.response.status == 404){
+                this.setState({openError: true, errorCode: 404});
+            }
+            else if(error.response.status == 500){
+                this.setState({openError: true, errorCode: 500});
+            }
         }
     }
 
@@ -162,7 +188,7 @@ class SocialMode extends React.Component {
                                               color="inherit"
                                               size="small"
                                               onClick={() => {
-                                                  this.setState({openSuccess: false});
+                                                  this.setState({openInfo: false});
                                               }}
                                           >
                                               <CloseIcon fontSize="inherit"/>
@@ -170,6 +196,25 @@ class SocialMode extends React.Component {
                                       }
                                >
                                    {localStorage.getItem('info')}
+                               </Alert>
+                               <br/>
+                           </Collapse>
+                           <Collapse in={this.state.openError}>
+                               <Alert severity="error"
+                                      action={
+                                          <IconButton
+                                              aria-label="close"
+                                              color="inherit"
+                                              size="small"
+                                              onClick={() => {
+                                                  this.setState({openError: false, errorCode: null});
+                                              }}
+                                          >
+                                              <CloseIcon fontSize="inherit"/>
+                                          </IconButton>
+                                      }
+                               >
+                                   {this.state.errorCode == 404 ? 'PokeCode does not exist!' : (this.state.errorCode == 500 ? 'Internal Server Error' : null)}
                                </Alert>
                                <br/>
                            </Collapse>
