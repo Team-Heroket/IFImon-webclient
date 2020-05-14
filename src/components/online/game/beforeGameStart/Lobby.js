@@ -400,7 +400,7 @@ class Lobby extends React.Component {
 
                             <MenuButton
                                 width = "50%"
-                                disabled={this.state.bots || this.state.admin.id == this.state.user.id}
+
                                 onClick={() => {
                                     this.leaveGame();
                                     this.goToSocialMode();

@@ -85,6 +85,7 @@ class Register extends React.Component {
             open: false,
             errorCode: null,
             password: null,
+            passwordRepeat: null,
             username: null,
             avatarId: null,
             avatarClicked: null
@@ -102,6 +103,10 @@ class Register extends React.Component {
         if(e.keyCode == 13 && this.state.username && this.state.password && this.state.avatarId){
             this.register();
         }
+    }
+
+    componentDidUpdate() {
+
     }
 
     createAvatarList() {
@@ -164,6 +169,77 @@ class Register extends React.Component {
         this.props.history.push('/login');
     }
 
+    checkPassword() {
+        if (this.state.password) {
+            if (this.state.password.length < 8) {
+                return "Password must be at least 8 characters long";
+            }
+
+            else if (!this.hasUpperCase(this.state.password)) {
+                return "Password must contain at least one capital letter"
+            }
+            else if (!this.hasLowerCase(this.state.password)) {
+                return "Password must contain at least one lower case letter"
+            }
+            else if (!this.hasNumber(this.state.password)) {
+                return "Password must contain at least one number"
+            }
+            else {
+                return null;
+            }
+        }
+
+    }
+    hasUpperCase(word) {
+        let hasUpper = false
+        console.log("word length is: "+word.length)
+        let i=0;
+        while (i<word.length) {
+            let character = word.charAt(i);
+            if (!isNaN(character * 1)){
+            }else{
+                if (character == character.toUpperCase()) {
+                    hasUpper = true;
+                    return hasUpper;
+                }
+            }
+            i++;
+        }
+        return hasUpper;
+    }
+
+    hasLowerCase(word) {
+        let hasLower = false
+        let i=0;
+        while (i<word.length) {
+            let character = word.charAt(i);
+            if (!isNaN(character * 1)){
+
+            }else{
+                if (character == character.toLowerCase()) {
+                    hasLower = true;
+                    return hasLower;
+                }
+            }
+            i++;
+        }
+        return false;
+    }
+
+    hasNumber(word) {
+        let hasLower = false
+        let i=0;
+        while (i<word.length) {
+            let character = word.charAt(i);
+            if (!isNaN(character * 1)){
+                hasLower = true;
+                return hasLower
+            }
+            i++;
+        }
+        return false;
+    }
+
 
 
 
@@ -219,10 +295,29 @@ class Register extends React.Component {
                                 onChange={e => {
                                     this.handleInputChange('password', e.target.value);
                                 }}
+                                style={this.checkPassword() ? ({'margin-bottom': '6px'}) : ({'margin-bottom': '20px'})}
                                 onKeyDown={this.keyPress}
                             />
+                            <Label
+                                style={{'font-size': '13px', color: 'red', 'font-weight': '400'}}
+                            >
+                                {this.state.password ? this.checkPassword(): null}
+                            </Label>
+
+                            <br/>
+                        <Label>Enter Password Again</Label>
+                        <PasswordField
+                            placeholder="Enter here.."
+
+                            style = {this.state.password ? ((this.state.password == this.state.passwordRepeat) ? ({background: 'rgba(27, 253, 78, 0.3)'}) : ({background: 'rgba(255, 0, 0, 0.3)'}))
+                                : ({background: 'rgba(255, 255, 255, 0.2)'})}
+                            onChange={e => {
+                                this.handleInputChange('passwordRepeat', e.target.value);
+                            }}
+                            onKeyDown={this.keyPress}
+                        />
                                 <Button
-                                    disabled={!this.state.username || !this.state.password || !this.state.avatarId}
+                                    disabled={!this.state.username || !this.state.password || !this.state.avatarId || !this.state.passwordRepeat || !(this.state.password == this.state.passwordRepeat) || this.checkPassword()}
                                     width="250px"
                                     onClick={() => {
                                         this.register();
