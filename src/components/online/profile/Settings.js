@@ -44,6 +44,27 @@ const Row = styled.div`
     
     `;
 
+const PasswordField = styled.input`
+  &::placeholder {
+    color: rgba(255, 255, 255, 1.0);
+  }
+  position: relative;
+  transform : translate(-50%, 0%);
+  height: 35px;
+  width: 400px;
+  left: 50%;
+  border: none;
+  border-radius: 25px;
+  margin-bottom: 20px;
+  padding-left:10px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 16px;
+  font-weight: 300;
+  -Webkit-text-security: disc;
+  text-security: disc;
+`;
+
 
 const InputField = styled.input`
   &::placeholder {
@@ -89,6 +110,7 @@ class Settings extends React.Component {
             editClicked: false,
             newUsername: null,
             newPassword: null,
+            passwordRepeat: null,
             newAvatarId: null,
             avatarClicked: null,
             mute: localStorage.getItem('VolumeMuted') ? localStorage.getItem('VolumeMuted') : 'false',
@@ -97,6 +119,77 @@ class Settings extends React.Component {
             runningSample: false,
             saveClicked: false
         };
+    }
+
+    checkPassword() {
+        if (this.state.newPassword) {
+            if (this.state.newPassword.length < 8) {
+                return "Password must be at least 8 characters long";
+            }
+
+            else if (!this.hasUpperCase(this.state.newPassword)) {
+                return "Password must contain at least one capital letter"
+            }
+            else if (!this.hasLowerCase(this.state.newPassword)) {
+                return "Password must contain at least one lower case letter"
+            }
+            else if (!this.hasNumber(this.state.newPassword)) {
+                return "Password must contain at least one number"
+            }
+            else {
+                return null;
+            }
+        }
+
+    }
+    hasUpperCase(word) {
+        let hasUpper = false
+        console.log("word length is: "+word.length)
+        let i=0;
+        while (i<word.length) {
+            let character = word.charAt(i);
+            if (!isNaN(character * 1)){
+            }else{
+                if (character == character.toUpperCase()) {
+                    hasUpper = true;
+                    return hasUpper;
+                }
+            }
+            i++;
+        }
+        return hasUpper;
+    }
+
+    hasLowerCase(word) {
+        let hasLower = false
+        let i=0;
+        while (i<word.length) {
+            let character = word.charAt(i);
+            if (!isNaN(character * 1)){
+
+            }else{
+                if (character == character.toLowerCase()) {
+                    hasLower = true;
+                    return hasLower;
+                }
+            }
+            i++;
+        }
+        return false;
+    }
+
+    hasNumber(word) {
+        let hasLower = false
+        let i=0;
+        while (i<word.length) {
+            let character = word.charAt(i);
+            if (!isNaN(character * 1)){
+                hasLower = true;
+                return hasLower
+            }
+            i++;
+        }
+        return false;
     }
 
     handleClick(event) {
@@ -364,17 +457,37 @@ class Settings extends React.Component {
                                         this.handleInputChange('newUsername', e.target.value);
                                     }}
                                     />
-                                    <Label>Enter new Password</Label>
-                                    <InputField
-                                    placeholder="Enter here.."
-                                    onChange={e => {
-                                    this.handleInputChange('newPassword', e.target.value);
-                                }}
+                                    <Label>Enter New Password</Label>
+                                    <PasswordField
+                                        placeholder="Enter here.."
+                                        onChange={e => {
+                                            this.handleInputChange('newPassword', e.target.value);
+                                        }}
+                                        style={this.checkPassword() ? ({'margin-bottom': '5px'}) : ({'margin-bottom': '20px'})}
+                                        onKeyDown={this.keyPress}
+                                    />
+
+                                    <Label
+                                        style={{'font-size': '13px', color: 'red', 'font-weight': '400'}}
+                                    >
+                                        {this.state.newPassword ? this.checkPassword(): null}
+                                    </Label>
+
+                                    <Label>Enter New Password Again</Label>
+                                    <PasswordField
+                                        placeholder="Enter here.."
+
+                                        style = {this.state.newPassword ? ((this.state.newPassword == this.state.passwordRepeat) ? ({background: 'rgba(27, 253, 78, 0.3)'}) : ({background: 'rgba(255, 0, 0, 0.3)'}))
+                                            : ({background: 'rgba(255, 255, 255, 0.2)'})}
+                                        onChange={e => {
+                                            this.handleInputChange('passwordRepeat', e.target.value);
+                                        }}
+                                        onKeyDown={this.keyPress}
                                     />
                                     <ButtonContainer>
                                     <Button
                                     width="150px"
-                                    disabled = {!this.state.newUsername && !this.state.newPassword && !this.state.newAvatarId}
+                                    disabled = {!((this.state.newPassword && this.state.newPassword==this.state.passwordRepeat && !this.checkPassword()) || (!this.state.newPassword && (this.state.newUsername || this.state.newAvatarId)))}
                                     onClick={() => {
                                     this.setState({editClicked: false});
                                     this.save();
