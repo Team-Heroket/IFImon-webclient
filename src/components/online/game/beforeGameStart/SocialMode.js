@@ -12,7 +12,6 @@ import {Alert} from "@material-ui/lab";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import {CenterContainer} from "./Lobby";
-import "./StylesheetSocialMode.css";
 
 const Form = styled.div`
   display: flex;
@@ -35,18 +34,7 @@ const Row = styled.div`
     display: table "";
     }
     `;
-const Label2 = styled.label`
-  position: relative;
-  transform : translate(-50%, 0%);
-  width: 400px;
-  left: 50%;
-  color: white;
-  
-  
-  text-align: center;
-  font-weight: 300;
-  font-size: 20px;
-`;
+
 
 
 const InputField = styled.input`
@@ -69,18 +57,6 @@ const InputField = styled.input`
   
 `;
 
-
-const Line = styled.div`
-  width: 400px;
-  color: white;
-  text-align: center;
-  border-bottom: 1px solid #000;
-  line-height: 0.01em;
-  margin: 10px 0 20px;
-  backgroundColour: white;
-  background: white;
-  padding: 0 10px;
-`;
 
 
 
