@@ -174,7 +174,7 @@ export class FinishedTest extends React.Component {
                                         }
                                         <Space/>
                                         <Spinner/>
-                                        
+
                                         <LogOutButton
                                             width = "50%"
                                             onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) this.props.history.push('/menu') }} > Leave

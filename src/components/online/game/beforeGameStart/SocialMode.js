@@ -7,6 +7,11 @@ import {Button, TransparentButton} from "../../../../views/design/Button";
 import {BackButton, SoundButton} from "../../../../views/design/Icons";
 import {api, handleError} from "../../../../helpers/api";
 import Grid from "@material-ui/core/Grid";
+import Collapse from "@material-ui/core/Collapse";
+import {Alert} from "@material-ui/lab";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import {CenterContainer} from "./Lobby";
 
 const Form = styled.div`
   display: flex;
@@ -73,8 +78,19 @@ class SocialMode extends React.Component {
     constructor() {
         super();
         this.state = {
-            pokeCode: null
+            pokeCode: null,
+            openInfo: false
         };
+    }
+
+    componentDidMount() {
+        if (localStorage.getItem('info')!= 0) {
+            this.setState({openInfo: true})
+            setTimeout(() => {
+                this.setState({openInfo: false})
+                localStorage.setItem('info', 0)
+            }, 5000)
+        }
     }
 
 
@@ -137,6 +153,27 @@ class SocialMode extends React.Component {
                 </Row>
                 <FormContainer>
                    <Form>
+                       <CenterContainer >
+                           <Collapse in={this.state.openInfo}>
+                               <Alert severity="info"
+                                      action={
+                                          <IconButton
+                                              aria-label="close"
+                                              color="inherit"
+                                              size="small"
+                                              onClick={() => {
+                                                  this.setState({openSuccess: false});
+                                              }}
+                                          >
+                                              <CloseIcon fontSize="inherit"/>
+                                          </IconButton>
+                                      }
+                               >
+                                   {localStorage.getItem('info')}
+                               </Alert>
+                               <br/>
+                           </Collapse>
+                       </CenterContainer>
                        <InputField
                            placeholder="Enter PokeCode"
                            width={"55%"}

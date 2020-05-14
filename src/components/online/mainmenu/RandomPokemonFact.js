@@ -180,7 +180,7 @@ export class RandomPokemonFact extends React.Component {
                 }}
             >
                 <LabelTop>
-                    Pokemon Fact #{this.state.factIndex+1}
+                    Pokémon Fact #{this.state.factIndex+1}
                 </LabelTop>
             </div>
             <ButtonContainer>

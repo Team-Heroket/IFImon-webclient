@@ -109,6 +109,7 @@ class Login extends React.Component {
   }
 
   componentDidMount() {
+    localStorage.setItem('info', 0)
     localStorage.setItem("justLoggedIn", "false")
     if (localStorage.getItem('accountCreation') == 'true') {
       this.setState({openSuccess: true});
