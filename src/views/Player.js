@@ -1,5 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import {AmountOfBerries, PossibleWinnerIcon, SettingsIcon, SocialIcon, WinnerIcon} from "./design/Icons";
+import Grid from "@material-ui/core/Grid";
+import {ButtonContainer, SimpleColumnContainer} from "../helpers/layout";
 
 const Container = styled.button`
     &:hover {
@@ -8,7 +11,7 @@ const Container = styled.button`
   }
   margin-bottom:10px;
   width: 280px;
-  height: 35px;
+  height: ${props => props.heigth || "35px"};
   padding-left: 5px;
   padding-right: 5px;
   border-radius: 25px;
@@ -84,7 +87,7 @@ const Column = styled.div`
 
 const UserName = styled.div`
   color: #FFFFFF
-  margin-left: 5px;
+  margin-left: ${props => props.marginLeft || "5px"};
 `;
 
 const Rank = styled.div`
@@ -126,7 +129,66 @@ export let PlayerMe = ({ user }) => {
     );
 }
 
+const EmotePlayerContainer = styled.div`
+  height: 175px;
+  width: 135px; 
+  padding: 5px;
+  
+  z-index: 200;
+`;
 
+export const EmoteContainer = styled.div`
+  height: 125px;
+  width: 125px; 
+  padding: 0px;
+ 
+  z-index: 200;
+`;
+
+
+
+export let PlayerEmote = ({player, addOn, winner}) => {
+    if(winner)
+    {
+        return (
+                <EmotePlayerContainer>
+                <EmoteContainer>
+                    <img src={require('../../src/components/shared/images/emotes/'+ player.emote +'.svg')} />
+                </EmoteContainer>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="space-between"
+                        alignItems="center"
+                    >
+                        {player.user.avatarId.valueOf() < 10 ? <img alt="avatar" src={require('../../src/components/shared/images/avatarSVG/00'+(player.user.avatarId)+'-avatar.svg')} style={{width: '30px', marginTop: '7px', marginLeft: '5px', zIndex: 200}}/>
+                            : <img alt="avatar" src={require('../../src/components/shared/images/avatarSVG/0'+(player.user.avatarId)+'-avatar.svg')} style={{width: '30px', marginTop: '7px', marginLeft: '5px', zIndex: 200}}/>}
+                        <UserName style={{width: '80px', float: 'left', marginTop: '12px'}}>{player.user.username} {addOn}</UserName>
+                    </Grid>
+                </EmotePlayerContainer>
+        );
+    }
+    else{
+        return (
+            <EmotePlayerContainer>
+                <EmoteContainer>
+                    <img src={require('../../src/components/shared/images/emotes/'+ player.emote +'.svg')} />
+                </EmoteContainer>
+                <Grid
+                    container
+                    direction="row"
+                    justify="space-between"
+                    alignItems="center"
+                >
+                    {player.user.avatarId.valueOf() < 10 ? <img alt="avatar" src={require('../../src/components/shared/images/avatarSVG/00'+(player.user.avatarId)+'-avatar.svg')} style={{width: '30px', marginTop: '7px', marginLeft: '5px', zIndex: 200}}/>
+                        : <img alt="avatar" src={require('../../src/components/shared/images/avatarSVG/0'+(player.user.avatarId)+'-avatar.svg')} style={{width: '30px', marginTop: '7px', marginLeft: '5px', zIndex: 200}}/>}
+                    <UserName style={{width: '80px', float: 'left', marginTop: '12px'}}>{player.user.username} {addOn}</UserName>
+                </Grid>
+            </EmotePlayerContainer>
+
+        );
+    }
+}
 
 export let PlayerGame = ({ player, addOn}) => {
 

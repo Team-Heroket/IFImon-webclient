@@ -2,15 +2,24 @@ import React from "react";
 import styled from "styled-components";
 import {
     ButtonContainer,
-    FormContainer
+    FormContainer, PlayerContainer, SimpleColumnContainer
 } from "../../../../../helpers/layout";
-import {EvolveButton, LogOutButton} from "../../../../../views/design/Button";
+import {AvatarButton, EvolveButton, LogOutButton} from "../../../../../views/design/Button";
 import Confetti from "../../../../shared/Confetti";
 import Grid from "@material-ui/core/Grid";
 import {Clock} from "../Clock";
 import {api, handleError} from "../../../../../helpers/api";
 import {Spinner} from "../../../../../views/design/Spinner";
 import {RandomPokemonFact} from "../../../mainmenu/RandomPokemonFact";
+import {EmoteContainer, PlayerEmote, PlayerGame} from "../../../../../views/Player";
+import Stepper from "@material-ui/core/Stepper";
+import {ColorlibConnector, ColorlibStepIcon} from "../../../../../views/design/Stepper";
+import Step from "@material-ui/core/Step";
+import StepLabel from "@material-ui/core/StepLabel";
+import {BerriesIconWithBadge} from "../../../../../views/design/Icons";
+import {FlippedCard} from "./FlippedCard";
+import {PlaceholderCard} from "../../../../../views/design/PokemonCard";
+import ReactCardFlip from "react-card-flip";
 
 
 const Label = styled.label`
@@ -53,14 +62,41 @@ export class FinishedTest extends React.Component {
         super();
         this.state = {
             rematchClicked: false,
-            timerOver: false
+            timerOver: false,
+            isFlipped: false
         };
+    }
+
+    showLeaderboard() {
+
+        return (
+            <div style={{width: '420px'}}>
+            <Grid
+                container
+                direction="row"
+                justify="space-between"
+                alignItems="center"
+            >
+                {this.props.masterState.players.map(player => {
+                    return (
+                        <PlayerContainer>
+                            {player.user.id == localStorage.getItem('id') ?
+                                (<PlayerEmote player={player} addOn = "(Me)" winner={this.props.masterState.winners[0].id == player.id}/>) :
+                                (<PlayerEmote player={player} addOn = "" winner={this.props.masterState.winners[0].id == player.id}/>)
+                            }
+                        </PlayerContainer>
+
+                    );
+                })}
+            </Grid>
+                </div>
+        );
     }
 
     componentDidMount() {
         this.timeout_leave = setTimeout(() => {
             this.setState({timerOver: true})
-        }, 15000)
+        }, 3000000)
     }
 
 
@@ -103,6 +139,45 @@ export class FinishedTest extends React.Component {
         }
     }
 
+    emotes = [1, 2, 3, 4, 5]
+
+    showEmotes(){
+
+        return (
+            <div style={{width: '420px'}}>
+                <Grid
+                    container
+                    direction="row"
+                    justify="space-between"
+                    alignItems="center"
+                >
+                    {
+
+                        this.emotes.map(emote => {
+                        return (
+                            <AvatarButton style={{margin: '20px'}} onClick={() => this.sendEmote(emote)}>
+                                <EmoteContainer>
+                                    <img src={require('../../../../shared/images/emotes/'+emote+'.svg')} />
+                                </EmoteContainer>
+                            </AvatarButton>
+
+                        );
+                    })}
+                </Grid>
+            </div>
+        );
+    }
+
+    async sendEmote(emote){
+        try {
+
+            await api.put('/games/' + this.props.masterState.pokeCode.toString()+'/emotes', JSON.stringify({
+                emote: emote}), {headers: {'Token': localStorage.getItem('token')}});
+
+        } catch (error) {
+            alert(`Something went wrong: \n${handleError(error)}`);
+        }
+    }
 
     render() {
         {console.log("rematchClicked is: "+this.state.rematchClicked)}
@@ -125,12 +200,12 @@ export class FinishedTest extends React.Component {
                             <RandomPokemonFact/>
                         </div>
                         :
-                        <div>
                             <Grid
                                 container
                                 direction="row"
-                                justify="space-evenly"
-                                alignItems="center">
+                                justify="space-around"
+                                alignItems="center"
+                            >
                                 <div>
                                     <ButtonContainer>
                                         {this.props.masterState.winners[0].user.avatarId.valueOf() < 10 ? <img alt="avatar" src={require('../../../../../components/shared/images/avatarSVG/00'+(this.props.masterState.winners[0].user.avatarId)+'-avatar.svg')} height={"150px"} width={"150px"}/>
@@ -141,6 +216,12 @@ export class FinishedTest extends React.Component {
                                         {this.winnerText()}
                                     </Label>
                                 </div>
+                                <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection='vertical'>
+                                    {this.showLeaderboard()}
+
+                                    {this.showEmotes()}
+                                </ReactCardFlip>
+
                                 {this.props.masterState.amIAdmin && !this.state.rematchClicked?
                                     <ButtonContainer>
                                         <Clock remainingTime={15000} totalTime={15000} type={this.clock.REMATCH} />
@@ -153,6 +234,10 @@ export class FinishedTest extends React.Component {
                                             </EvolveButton>
 
                                         </div>
+                                        <EvolveButton
+                                            width = "150px"
+                                            onClick={() => {this.setState({isFlipped: !this.state.isFlipped})}} > flipped
+                                        </EvolveButton>
                                         <div>
                                             <LogOutButton
                                                 width = "100px"
@@ -183,7 +268,6 @@ export class FinishedTest extends React.Component {
                                 }
 
                             </Grid>
-                        </div>
                     }
 
 

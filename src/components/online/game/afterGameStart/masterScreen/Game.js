@@ -447,6 +447,7 @@ class Game extends React.Component {
             let state = resp2.state;
 
             this.setState({startTime: startTime, state: state})
+            this.setState({})
 
 
         } catch (error) {

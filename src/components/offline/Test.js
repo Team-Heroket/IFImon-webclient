@@ -21,6 +21,7 @@ import {
 } from "../../views/design/Icons";
 import {Result} from "../online/game/afterGameStart/subScreens/Result";
 import Grid from "@material-ui/core/Grid";
+import {FinishedTest} from "../online/game/afterGameStart/subScreens/FinishedTest";
 
 /**
  * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
@@ -719,6 +720,516 @@ class Test extends React.Component {
             },
             {
                 user:{
+                    username:"asd",
+                    avatarId:1,
+                    statistics:{
+                        encounteredPokemon:[
+                            1,
+                            4,
+                            25,
+                            27,
+                            29,
+                            32,
+                            37,
+                            46,
+                            48,
+                            54,
+                            58,
+                            63,
+                            72,
+                            74,
+                            77,
+                            79,
+                            81,
+                            83,
+                            86,
+                            90,
+                            95,
+                            100,
+                            102,
+                            106,
+                            107,
+                            111,
+                            113,
+                            116,
+                            123,
+                            129,
+                            132,
+                            138,
+                            140,
+                            145
+                        ],
+                        gamesWon:1,
+                        gamesPlayed:1,
+                        rating:2,
+                        storyProgress:0
+                    },
+                    creationDate:"26.04.2020",
+                    online:true,
+                    id:2,
+                    npc:false
+                },
+                id:43,
+                berries:1,
+                deck:{
+                    id:37,
+                    cards:[
+                        {
+                            id:424,
+                            pokemonId:139,
+                            categories:{
+                                "SPEED":55,
+                                "HP":70,
+                                "DEF":125,
+                                "ATK":60,
+                                "WEIGHT":350,
+                                "CAPTURE_RATING":45
+                            },
+                            name:"Omastar1",
+                            spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                            cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                            elements:[
+                                "WATER",
+                                "ROCK"
+                            ],
+                            evolutionNames:[
+
+                            ]
+                        },
+                        {
+                            id:424,
+                            pokemonId:139,
+                            categories:{
+                                "SPEED":55,
+                                "HP":70,
+                                "DEF":125,
+                                "ATK":60,
+                                "WEIGHT":350,
+                                "CAPTURE_RATING":45
+                            },
+                            name:"Omastar2",
+                            spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                            cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                            elements:[
+                                "WATER",
+                                "ROCK"
+                            ],
+                            evolutionNames:[
+
+                            ]
+                        },
+                        {
+                            id:424,
+                            pokemonId:139,
+                            categories:{
+                                "SPEED":55,
+                                "HP":70,
+                                "DEF":125,
+                                "ATK":60,
+                                "WEIGHT":350,
+                                "CAPTURE_RATING":45
+                            },
+                            name:"Omastar3",
+                            spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                            cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                            elements:[
+                                "WATER",
+                                "ROCK"
+                            ],
+                            evolutionNames:[
+
+                            ]
+                        },
+                        {
+                            id:424,
+                            pokemonId:139,
+                            categories:{
+                                "SPEED":55,
+                                "HP":70,
+                                "DEF":125,
+                                "ATK":60,
+                                "WEIGHT":350,
+                                "CAPTURE_RATING":45
+                            },
+                            name:"Omastar4",
+                            spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                            cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                            elements:[
+                                "WATER",
+                                "ROCK"
+                            ],
+                            evolutionNames:[
+
+                            ]
+                        },
+                        {
+                            id:424,
+                            pokemonId:139,
+                            categories:{
+                                "SPEED":55,
+                                "HP":70,
+                                "DEF":125,
+                                "ATK":60,
+                                "WEIGHT":350,
+                                "CAPTURE_RATING":45
+                            },
+                            name:"Omastar5",
+                            spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                            cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                            elements:[
+                                "WATER",
+                                "ROCK"
+                            ],
+                            evolutionNames:[
+
+                            ]
+                        }
+                    ],
+                    empty:false
+                }
+            },
+            {
+                user:{
+                    username:"asd",
+                    avatarId:1,
+                    statistics:{
+                        encounteredPokemon:[
+                            1,
+                            4,
+                            25,
+                            27,
+                            29,
+                            32,
+                            37,
+                            46,
+                            48,
+                            54,
+                            58,
+                            63,
+                            72,
+                            74,
+                            77,
+                            79,
+                            81,
+                            83,
+                            86,
+                            90,
+                            95,
+                            100,
+                            102,
+                            106,
+                            107,
+                            111,
+                            113,
+                            116,
+                            123,
+                            129,
+                            132,
+                            138,
+                            140,
+                            145
+                        ],
+                        gamesWon:1,
+                        gamesPlayed:1,
+                        rating:2,
+                        storyProgress:0
+                    },
+                    creationDate:"26.04.2020",
+                    online:true,
+                    id:2,
+                    npc:false
+                },
+                id:43,
+                berries:1,
+                deck:{
+                    id:37,
+                    cards:[
+                        {
+                            id:424,
+                            pokemonId:139,
+                            categories:{
+                                "SPEED":55,
+                                "HP":70,
+                                "DEF":125,
+                                "ATK":60,
+                                "WEIGHT":350,
+                                "CAPTURE_RATING":45
+                            },
+                            name:"Omastar1",
+                            spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                            cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                            elements:[
+                                "WATER",
+                                "ROCK"
+                            ],
+                            evolutionNames:[
+
+                            ]
+                        },
+                        {
+                            id:424,
+                            pokemonId:139,
+                            categories:{
+                                "SPEED":55,
+                                "HP":70,
+                                "DEF":125,
+                                "ATK":60,
+                                "WEIGHT":350,
+                                "CAPTURE_RATING":45
+                            },
+                            name:"Omastar2",
+                            spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                            cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                            elements:[
+                                "WATER",
+                                "ROCK"
+                            ],
+                            evolutionNames:[
+
+                            ]
+                        },
+                        {
+                            id:424,
+                            pokemonId:139,
+                            categories:{
+                                "SPEED":55,
+                                "HP":70,
+                                "DEF":125,
+                                "ATK":60,
+                                "WEIGHT":350,
+                                "CAPTURE_RATING":45
+                            },
+                            name:"Omastar3",
+                            spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                            cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                            elements:[
+                                "WATER",
+                                "ROCK"
+                            ],
+                            evolutionNames:[
+
+                            ]
+                        },
+                        {
+                            id:424,
+                            pokemonId:139,
+                            categories:{
+                                "SPEED":55,
+                                "HP":70,
+                                "DEF":125,
+                                "ATK":60,
+                                "WEIGHT":350,
+                                "CAPTURE_RATING":45
+                            },
+                            name:"Omastar4",
+                            spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                            cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                            elements:[
+                                "WATER",
+                                "ROCK"
+                            ],
+                            evolutionNames:[
+
+                            ]
+                        },
+                        {
+                            id:424,
+                            pokemonId:139,
+                            categories:{
+                                "SPEED":55,
+                                "HP":70,
+                                "DEF":125,
+                                "ATK":60,
+                                "WEIGHT":350,
+                                "CAPTURE_RATING":45
+                            },
+                            name:"Omastar5",
+                            spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                            cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                            elements:[
+                                "WATER",
+                                "ROCK"
+                            ],
+                            evolutionNames:[
+
+                            ]
+                        }
+                    ],
+                    empty:false
+                }
+            },
+            {
+                user:{
+                    username:"asd",
+                    avatarId:1,
+                    statistics:{
+                        encounteredPokemon:[
+                            1,
+                            4,
+                            25,
+                            27,
+                            29,
+                            32,
+                            37,
+                            46,
+                            48,
+                            54,
+                            58,
+                            63,
+                            72,
+                            74,
+                            77,
+                            79,
+                            81,
+                            83,
+                            86,
+                            90,
+                            95,
+                            100,
+                            102,
+                            106,
+                            107,
+                            111,
+                            113,
+                            116,
+                            123,
+                            129,
+                            132,
+                            138,
+                            140,
+                            145
+                        ],
+                        gamesWon:1,
+                        gamesPlayed:1,
+                        rating:2,
+                        storyProgress:0
+                    },
+                    creationDate:"26.04.2020",
+                    online:true,
+                    id:2,
+                    npc:false
+                },
+                id:43,
+                berries:1,
+                deck:{
+                    id:37,
+                    cards:[
+                        {
+                            id:424,
+                            pokemonId:139,
+                            categories:{
+                                "SPEED":55,
+                                "HP":70,
+                                "DEF":125,
+                                "ATK":60,
+                                "WEIGHT":350,
+                                "CAPTURE_RATING":45
+                            },
+                            name:"Omastar1",
+                            spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                            cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                            elements:[
+                                "WATER",
+                                "ROCK"
+                            ],
+                            evolutionNames:[
+
+                            ]
+                        },
+                        {
+                            id:424,
+                            pokemonId:139,
+                            categories:{
+                                "SPEED":55,
+                                "HP":70,
+                                "DEF":125,
+                                "ATK":60,
+                                "WEIGHT":350,
+                                "CAPTURE_RATING":45
+                            },
+                            name:"Omastar2",
+                            spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                            cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                            elements:[
+                                "WATER",
+                                "ROCK"
+                            ],
+                            evolutionNames:[
+
+                            ]
+                        },
+                        {
+                            id:424,
+                            pokemonId:139,
+                            categories:{
+                                "SPEED":55,
+                                "HP":70,
+                                "DEF":125,
+                                "ATK":60,
+                                "WEIGHT":350,
+                                "CAPTURE_RATING":45
+                            },
+                            name:"Omastar3",
+                            spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                            cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                            elements:[
+                                "WATER",
+                                "ROCK"
+                            ],
+                            evolutionNames:[
+
+                            ]
+                        },
+                        {
+                            id:424,
+                            pokemonId:139,
+                            categories:{
+                                "SPEED":55,
+                                "HP":70,
+                                "DEF":125,
+                                "ATK":60,
+                                "WEIGHT":350,
+                                "CAPTURE_RATING":45
+                            },
+                            name:"Omastar4",
+                            spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                            cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                            elements:[
+                                "WATER",
+                                "ROCK"
+                            ],
+                            evolutionNames:[
+
+                            ]
+                        },
+                        {
+                            id:424,
+                            pokemonId:139,
+                            categories:{
+                                "SPEED":55,
+                                "HP":70,
+                                "DEF":125,
+                                "ATK":60,
+                                "WEIGHT":350,
+                                "CAPTURE_RATING":45
+                            },
+                            name:"Omastar5",
+                            spriteURL:"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/139.png",
+                            cryURL:"https://play.pokemonshowdown.com/audio/cries/omastar.mp3",
+                            elements:[
+                                "WATER",
+                                "ROCK"
+                            ],
+                            evolutionNames:[
+
+                            ]
+                        }
+                    ],
+                    empty:false
+                }
+            },
+            {
+                user:{
                     username:"Tim2",
                     avatarId:1,
                     statistics:{
@@ -768,7 +1279,7 @@ class Test extends React.Component {
                     id:3,
                     npc:false
                 },
-                id:43,
+                id:44,
                 berries:1,
                 deck:{
                     id:37,
@@ -938,7 +1449,7 @@ class Test extends React.Component {
                     id:4,
                     npc:false
                 },
-                id:43,
+                id:42,
                 berries:1,
                 deck:{
                     id:37,
@@ -1402,7 +1913,7 @@ class Test extends React.Component {
         ],
         mode:"SOCIAL",
         chosenCategory:"DEF",
-        state:"RUNNING",
+        state:"FINISHED",
         creationTime:"1587916419782",
         startTime:"1587916794381",
         turnPlayer:{
@@ -1682,7 +2193,7 @@ class Test extends React.Component {
                 <BackButton action={() => {this.goBack()}}/>
             </Grid>
             <BaseContainer>
-                    <Result masterState={this.masterState} history={this.props.history}/>
+                    <FinishedTest masterState={this.masterState} history={this.props.history}/>
             </BaseContainer>
             </GameContainer>
         );
