@@ -124,7 +124,7 @@ class Game extends React.Component {
 
     async getGameInfo() {
         try {
-            console.log("Tried getting game info");
+            console.log("getGameInfo called");
 
             const response2 = await api.get('/games/' + this.props.match.params.pokeCode.toString(), {headers: {'Token': localStorage.getItem('token')}});
             const resp2 = response2.data;
@@ -439,7 +439,7 @@ class Game extends React.Component {
 
     async getGameWaitForAdmin() {
         try {
-            console.log("Tried getting game info");
+            console.log("getGameWaitForAdmin called");
 
             const response2 = await api.get('/games/' + this.props.match.params.pokeCode.toString(), {headers: {'Token': localStorage.getItem('token')}});
             const resp2 = response2.data;
@@ -469,14 +469,14 @@ class Game extends React.Component {
             this.timer_listenToAdmin = setInterval(() => {
                 console.log('getGame made in listenToAdmin with pokeCode: '+this.state.pokeCode)
                 this.getGameWaitForAdmin();
-            }, 2000)
+            }, 1000)
         }
         else {
 
             this.timer_listenToAdmin = setInterval(() => {
                 console.log('getGame made in listenToAdmin with pokeCode: '+this.state.pokeCode)
                 this.getGameWaitForAdmin();
-            }, 2000)
+            }, 1000)
         }
 
     }
@@ -569,7 +569,6 @@ class Game extends React.Component {
             if (error.response.status != 404) {
                 alert(`Something went wrong: \n${handleError(error)}`);
             }
-
         }
     }
 

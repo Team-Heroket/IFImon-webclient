@@ -60,7 +60,7 @@ export class FinishedTest extends React.Component {
     componentDidMount() {
         this.timeout_leave = setTimeout(() => {
             this.setState({timerOver: true})
-        }, 10000)
+        }, 15000)
     }
 
 
@@ -143,7 +143,7 @@ export class FinishedTest extends React.Component {
                                 </div>
                                 {this.props.masterState.amIAdmin && !this.state.rematchClicked?
                                     <ButtonContainer>
-                                        <Clock remainingTime={10000} totalTime={10000} type={this.clock.REMATCH} />
+                                        <Clock remainingTime={15000} totalTime={15000} type={this.clock.REMATCH} />
                                         <Space/>
                                         <div>
                                             <EvolveButton
