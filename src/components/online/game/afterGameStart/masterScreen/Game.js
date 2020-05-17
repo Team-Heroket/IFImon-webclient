@@ -446,7 +446,7 @@ class Game extends React.Component {
             let startTime = parseInt(resp2.startTime,10);
             let state = resp2.state;
 
-            this.setState({startTime: startTime, state: state})
+            this.setState({startTime: startTime, state: state, players: resp2.players, winners: resp2.winners})
             this.setState({})
 
 

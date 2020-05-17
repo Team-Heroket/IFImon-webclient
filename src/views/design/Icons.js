@@ -23,7 +23,7 @@ const OrLogo = styled.svg`
     padding: 0px;
 `;
 
-const LogoBadge = styled.svg`
+export const LogoBadge = styled.svg`
     
     position: relative;
     z-index: 100;  

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import {
     ButtonContainer,
-    FormContainer, PlayerContainer, SimpleColumnContainer
+    FormContainer, PlayerContainer, SimpleColumnContainer, SimpleRowContainer
 } from "../../../../../helpers/layout";
 import {AvatarButton, EvolveButton, LogOutButton} from "../../../../../views/design/Button";
 import Confetti from "../../../../shared/Confetti";
@@ -11,16 +11,12 @@ import {Clock} from "../Clock";
 import {api, handleError} from "../../../../../helpers/api";
 import {Spinner} from "../../../../../views/design/Spinner";
 import {RandomPokemonFact} from "../../../mainmenu/RandomPokemonFact";
-import {EmoteContainer, PlayerEmote, PlayerGame} from "../../../../../views/Player";
-import Stepper from "@material-ui/core/Stepper";
-import {ColorlibConnector, ColorlibStepIcon} from "../../../../../views/design/Stepper";
-import Step from "@material-ui/core/Step";
-import StepLabel from "@material-ui/core/StepLabel";
-import {BerriesIconWithBadge} from "../../../../../views/design/Icons";
-import {FlippedCard} from "./FlippedCard";
-import {PlaceholderCard} from "../../../../../views/design/PokemonCard";
+import {EmoteContainer, PlayerEmote} from "../../../../../views/Player";
+import SpeedDial from "@material-ui/lab/SpeedDial";
+import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
+import SpeedDialIcon from "@material-ui/lab/SpeedDialIcon";
+import TelegramIcon from '@material-ui/icons/Telegram';
 import ReactCardFlip from "react-card-flip";
-
 
 const Label = styled.label`
   position: relative;
@@ -49,6 +45,7 @@ const Space = styled.div`
   width: 100%
 `;
 
+
 export class FinishedTest extends React.Component {
     clock = {
         GAMESTART: "gamestart",
@@ -63,7 +60,6 @@ export class FinishedTest extends React.Component {
         this.state = {
             rematchClicked: false,
             timerOver: false,
-            isFlipped: false
         };
     }
 
@@ -71,7 +67,7 @@ export class FinishedTest extends React.Component {
 
         return (
             <div style={{width: '420px'}}>
-            <Grid
+                <Grid
                 container
                 direction="row"
                 justify="space-between"
@@ -96,7 +92,7 @@ export class FinishedTest extends React.Component {
     componentDidMount() {
         this.timeout_leave = setTimeout(() => {
             this.setState({timerOver: true})
-        }, 3000000)
+        }, 30000)
     }
 
 
@@ -139,35 +135,6 @@ export class FinishedTest extends React.Component {
         }
     }
 
-    emotes = [1, 2, 3, 4, 5]
-
-    showEmotes(){
-
-        return (
-            <div style={{width: '420px'}}>
-                <Grid
-                    container
-                    direction="row"
-                    justify="space-between"
-                    alignItems="center"
-                >
-                    {
-
-                        this.emotes.map(emote => {
-                        return (
-                            <AvatarButton style={{margin: '20px'}} onClick={() => this.sendEmote(emote)}>
-                                <EmoteContainer>
-                                    <img src={require('../../../../shared/images/emotes/'+emote+'.svg')} />
-                                </EmoteContainer>
-                            </AvatarButton>
-
-                        );
-                    })}
-                </Grid>
-            </div>
-        );
-    }
-
     async sendEmote(emote){
         try {
 
@@ -179,11 +146,29 @@ export class FinishedTest extends React.Component {
         }
     }
 
+    actions = [
+        { icon:
+                <img src={require('../../../../shared/images/emotes/1.svg')} style={{width: '40px', height: '40px', margin: '0px', padding: '0px'}}/>, name: 1 },
+        { icon:
+                <img src={require('../../../../shared/images/emotes/2.svg')} style={{width: '40px', height: '40px', margin: '0px', padding: '0px'}}/>,
+             name: 2 },
+        { icon:
+                <img src={require('../../../../shared/images/emotes/3.svg')} style={{width: '40px', height: '40px', margin: '0px', padding: '0px'}}/>,
+             name: 3 },
+        { icon:
+                <img src={require('../../../../shared/images/emotes/4.svg')} style={{width: '40px', height: '40px', margin: '0px', padding: '0px'}}/>
+            , name: 4 },
+        { icon:
+                <img src={require('../../../../shared/images/emotes/5.svg')} style={{width: '40px', height: '40px', margin: '0px', padding: '0px'}}/>
+           , name: 5 }
+    ]
+
+
     render() {
         {console.log("rematchClicked is: "+this.state.rematchClicked)}
         return (
             <FormContainer margin={'5em'}>
-                {this.props.masterState.winners[0].id == this.props.masterState.player_me.id && !this.state.rematchClicked ?
+                {this.props.masterState.winners.length != 0 && this.props.masterState.winners[0].id == this.props.masterState.player_me.id && !this.state.rematchClicked ?
                     <Confetti/> : null}
                 <Grid
                     container
@@ -191,40 +176,75 @@ export class FinishedTest extends React.Component {
                     justify="space-evenly"
                     alignItems="center">
 
-                    {this.rematchClicked ?
-                        <div>
-                            <LabelSmall>
+                    {this.rematchClicked || this.props.masterState.winners.length == 0 ?
+                        <SimpleColumnContainer width={'750px'}>
+                            <Label style={{width: '100%', marginBottom: '25px'}}>
                                 Game will start shortly
-                            </LabelSmall>
+                            </Label>
+                            <br/>
+
+                            <br/>
                             <Spinner/>
-                            <RandomPokemonFact/>
-                        </div>
+
+                        <br/>
+                            <RandomPokemonFact style={{marginTop: '50px'}}/>
+                        </SimpleColumnContainer>
                         :
                             <Grid
                                 container
                                 direction="row"
                                 justify="space-around"
                                 alignItems="center"
-                            >
+                            >{ this.props.masterState.winners.length !=0 ?
                                 <div>
                                     <ButtonContainer>
-                                        {this.props.masterState.winners[0].user.avatarId.valueOf() < 10 ? <img alt="avatar" src={require('../../../../../components/shared/images/avatarSVG/00'+(this.props.masterState.winners[0].user.avatarId)+'-avatar.svg')} height={"150px"} width={"150px"}/>
-                                            : <img alt="avatar" src={require('../../../../../components/shared/images/avatarSVG/0'+(this.props.masterState.winners[0].user.avatarId)+'-avatar.svg')} height={"150px"} width={"150px"}/>}
+                                        {this.props.masterState.winners[0].user.avatarId.valueOf() < 10 ?
+                                            <img alt="avatar"
+                                                 src={require('../../../../../components/shared/images/avatarSVG/00' + (this.props.masterState.winners[0].user.avatarId) + '-avatar.svg')}
+                                                 height={"150px"} width={"150px"}/>
+                                            : <img alt="avatar"
+                                                   src={require('../../../../../components/shared/images/avatarSVG/0' + (this.props.masterState.winners[0].user.avatarId) + '-avatar.svg')}
+                                                   height={"150px"} width={"150px"}/>}
                                     </ButtonContainer>
                                     <Space/>
                                     <Label>
                                         {this.winnerText()}
                                     </Label>
-                                </div>
-                                <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection='vertical'>
-                                    {this.showLeaderboard()}
+                                </div> : null}
 
-                                    {this.showEmotes()}
-                                </ReactCardFlip>
+                                <SimpleRowContainer>
+                                            {this.showLeaderboard()}
+                                            <SpeedDial
+                                            ariaLabel="SpeedDial tooltip example"
+                                            hidden={false}
+                                            icon={<SpeedDialIcon openIcon={<TelegramIcon/>}/>}
+                                            onClose={() => {
+                                            this.setState({open: false})
+                                        }}
+                                            onOpen={() => {
+                                            this.setState({open: true})
+                                        }}
+                                            open={this.state.open}
+                                            style={{right: '0px'}}
+                                            >
+                                            {this.actions.map((action) => (
+                                                <SpeedDialAction
+                                                    key={action.name}
+                                                    icon={action.icon}
+                                                    tooltipTitle={'send'}
+                                                    onClick={() => {
+                                                        this.setState({open: false});
+                                                        this.sendEmote(action.name)
+                                                    }}
+                                                />
+                                            ))}}
+                                        </SpeedDial>
+
+                                </SimpleRowContainer>
 
                                 {this.props.masterState.amIAdmin && !this.state.rematchClicked?
                                     <ButtonContainer>
-                                        <Clock remainingTime={15000} totalTime={15000} type={this.clock.REMATCH} />
+                                        <Clock remainingTime={30000} totalTime={30000} type={this.clock.REMATCH} />
                                         <Space/>
                                         <div>
                                             <EvolveButton
@@ -234,10 +254,6 @@ export class FinishedTest extends React.Component {
                                             </EvolveButton>
 
                                         </div>
-                                        <EvolveButton
-                                            width = "150px"
-                                            onClick={() => {this.setState({isFlipped: !this.state.isFlipped})}} > flipped
-                                        </EvolveButton>
                                         <div>
                                             <LogOutButton
                                                 width = "100px"
@@ -276,4 +292,3 @@ export class FinishedTest extends React.Component {
         )
     }
 }
-

@@ -40,7 +40,7 @@ const renderTimeRematch = ({remainingTime}) => {
 
 const renderTimePeriod = ({remainingTime}) => {
     if (remainingTime === 0) {
-        return <div className="timer"></div>;
+        return <div className="timer">...</div>;
     }
 
     return (
