@@ -13,7 +13,17 @@ const Logo = styled.svg`
    
 `;
 
-const LogoBadge = styled.svg`
+const OrLogo = styled.svg`
+    
+    position: relative;
+    z-index: 100;  
+    width: ${props => props.size ? props.size : '10px'};
+    height: 25px;
+    margin-top: 7px;
+    padding: 0px;
+`;
+
+export const LogoBadge = styled.svg`
     
     position: relative;
     z-index: 100;  
@@ -259,6 +269,22 @@ export const QuickplayIcon = ({margin, width=20, transform='translate(-60%, 0%)'
 
         </LogoMenu>
     );
+};
+
+export const OrSeparation = () => {
+    return (
+        <OrLogo size={'350px'}>
+            <svg id="orSeparator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 335 8.93">
+                <path fill='#FFFFFF'
+                      d="M169.38,16.1a4.53,4.53,0,0,1-1.79-.34,4.16,4.16,0,0,1-1.4-.94,4.27,4.27,0,0,1-.91-1.42,4.86,4.86,0,0,1,0-3.52,4.27,4.27,0,0,1,.91-1.42,4.16,4.16,0,0,1,1.4-.94,4.86,4.86,0,0,1,3.57,0,4.16,4.16,0,0,1,1.4.94,4.27,4.27,0,0,1,.91,1.42,4.86,4.86,0,0,1,0,3.52,4.27,4.27,0,0,1-.91,1.42,4.16,4.16,0,0,1-1.4.94A4.52,4.52,0,0,1,169.38,16.1Zm0-1.08a3.18,3.18,0,0,0,1.32-.27,3,3,0,0,0,1.65-1.8,3.85,3.85,0,0,0,0-2.62,3,3,0,0,0-1.65-1.8,3.18,3.18,0,0,0-1.32-.27,3.12,3.12,0,0,0-2.33,1,3.18,3.18,0,0,0-.65,1.08,3.85,3.85,0,0,0,0,2.62,3.18,3.18,0,0,0,.65,1.08,3.12,3.12,0,0,0,2.33,1Z"
+                      transform="translate(-5.5 -7.18)"/>
+                <path fill='#FFFFFF'
+                      d="M175.46,7.39h3a3.64,3.64,0,0,1,1.34.22,2.39,2.39,0,0,1,.84.57,1.94,1.94,0,0,1,.42.77,3,3,0,0,1,.12.82,2.29,2.29,0,0,1-.14.78,2.32,2.32,0,0,1-.42.69,2.42,2.42,0,0,1-.66.51,2.26,2.26,0,0,1-.87.26l2.42,3.88h-1.44l-2.16-3.75h-1.29v3.75h-1.15Zm1.15,3.75h1.51a3.71,3.71,0,0,0,.67-.06,1.59,1.59,0,0,0,.59-.2,1,1,0,0,0,.41-.41,1.32,1.32,0,0,0,.16-.7,1.32,1.32,0,0,0-.16-.7,1.1,1.1,0,0,0-.41-.42,2,2,0,0,0-.59-.2,4.91,4.91,0,0,0-.67,0h-1.51Z"
+                      transform="translate(-5.5 -7.18)"/>
+                <line fill='#FFFFFF' stroke='#FFFFFF' strokeLinecap={"round"} strokeLinejoin={"round"} x1="150.5" y1="5.32" x2="0.5" y2="5.32"/>
+                <line fill='#FFFFFF' stroke='#FFFFFF' strokeLinecap={"round"} strokeLinejoin={"round"} x1="334.5" y1="5.32" x2="184.5" y2="5.32"/>
+            </svg>
+        </OrLogo>);
 };
 
 export const TutorialIcon = ({margin, width=20, transform='translate(-60%, 0%)'}) => {

@@ -9,6 +9,7 @@ import {Alert} from "@material-ui/lab";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Collapse from "@material-ui/core/Collapse";
+import {OrSeparation} from "../../views/design/Icons";
 
 
 const Form = styled.div`
@@ -75,22 +76,9 @@ const Label = styled.label`
   text-transform: uppercase;
 `;
 
-/**
- * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
- * You should have a class (instead of a functional component) when:
- * - You need an internal state that cannot be achieved via props from other parent components
- * - You fetch data from the server (e.g., in componentDidMount())
- * - You want to access the DOM via Refs
- * https://reactjs.org/docs/react-component.html
- * @Class
- */
+
 class Login extends React.Component {
-  /**
-   * If you don’t initialize the state and you don’t bind methods, you don’t need to implement a constructor for your React component.
-   * The constructor for a React component is called before it is mounted (rendered).
-   * In this case the initial state is defined in the constructor. The state is a JS object containing two fields: name and username
-   * These fields are then handled in the onChange() methods in the resp. InputFields
-   */
+
   constructor() {
     super();
     this.keyPress = this.keyPress.bind(this);
@@ -98,7 +86,8 @@ class Login extends React.Component {
       password: null,
       username: null,
       openError: false,
-      openSuccess: false
+      openSuccess: false,
+      openNetworkError: false
     };
   }
 
@@ -109,6 +98,7 @@ class Login extends React.Component {
   }
 
   componentDidMount() {
+    localStorage.setItem('info', 0)
     localStorage.setItem("justLoggedIn", "false")
     if (localStorage.getItem('accountCreation') == 'true') {
       this.setState({openSuccess: true});
@@ -118,11 +108,8 @@ class Login extends React.Component {
       }, 5000);
     }
   }
-  /**
-   * HTTP POST request is sent to the backend.
-   * If the request is successful, a new user is returned to the front-end
-   * and its token is stored in the localStorage.
-   */
+
+
   async login() {
     try {
       const requestBody = JSON.stringify({
@@ -143,18 +130,24 @@ class Login extends React.Component {
       // Login successfully worked --> navigate to the route /game in the GameRouter
       this.props.history.push(`/menu`);
     } catch (error) {
-      if(error.response.data.error == 'User not found'){
-        this.setState({openError: true, errorCode: 404});
-      }
-      else if(error.response.status == 401){
-        this.setState({openError: true, errorCode: 401});
-      }
-      else if(error.response.status == 500){
-        this.setState({open: true, errorCode: 500});
+      if (error.response) {
+        if(error.response.data.error == 'User not found'){
+          this.setState({openError: true, errorCode: 404});
+        }
+        else if(error.response.status == 401){
+          this.setState({openError: true, errorCode: 401});
+        }
+        else if(error.response.status == 500){
+          this.setState({open: true, errorCode: 500});
+        }
+        else {
+          alert(`Something went wrong during the login: \n${handleError(error)}`);
+        }
       }
       else {
-        alert(`Something went wrong during the login: \n${handleError(error)}`);
+        this.setState({openNetworkError: true})
       }
+
     }
   }
 
@@ -162,22 +155,34 @@ class Login extends React.Component {
     this.props.history.push('/register');
   }
 
-  /**
-   *  Every time the user enters something in the input field, the state gets updated.
-   * @param key (the key of the state for identifying the field that needs to be updated)
-   * @param value (the value that gets assigned to the identified state key)
-   */
+
   handleInputChange(key, value) {
     // Example: if the key is username, this statement is the equivalent to the following one:
     // this.setState({'username': value});
     this.setState( {[key]: value} );
   }
 
+  componentDidUpdate() {
+    if (this.state.openNetworkError == true) {
+      setTimeout(() => {
+        this.setState({openNetworkError: false})
+      }, 5000)
+    } else if (this.state.open == true) {
+      setTimeout(() => {
+        this.setState({open: false, errorCode: false})
+      }, 5000)
+    } else if (this.state.openError == true) {
+      setTimeout(() => {
+        this.setState({openError: false, errorCode: false})
+      }, 5000)
+    }
+  }
+
   render() {
     return (
       <BaseContainer>
         <Header height={195} top={66} />
-        <FormContainer>
+        <FormContainer margin={'100px'}>
           <Form>
             <Collapse in={this.state.openSuccess}>
               <Alert severity="success"
@@ -217,6 +222,25 @@ class Login extends React.Component {
               </Alert>
               <br/>
             </Collapse>
+            <Collapse in={this.state.openNetworkError}>
+              <Alert severity="error"
+                     action={
+                       <IconButton
+                           aria-label="close"
+                           color="inherit"
+                           size="small"
+                           onClick={() => {
+                             this.setState({openNetworkError: false});
+                           }}
+                       >
+                         <CloseIcon fontSize="inherit"/>
+                       </IconButton>
+                     }
+              >
+                Network Error - Server is Offline
+              </Alert>
+              <br/>
+            </Collapse>
             <Label>Username</Label>
             <InputField
               placeholder="Enter here.."
@@ -243,6 +267,9 @@ class Login extends React.Component {
               >
                 Login
               </Button>
+
+              <OrSeparation />
+
               <Button
                   width="55%"
                   onClick={() => {

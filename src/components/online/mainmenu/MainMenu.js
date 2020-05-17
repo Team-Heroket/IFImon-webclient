@@ -154,7 +154,7 @@ class MainMenu extends React.Component {
 
     nextPage(){
         let temp = this.state.step;
-                if(this.state.generation[1]>(this.state.generation[0]+24*(this.state.step+1)+1)){
+                if(this.state.generation[1]>(this.state.generation[0]+24*(this.state.step+1)+this.state.step)){
                     this.setState({step: temp+1});
                 }else{
                     this.setState({step: 0,
@@ -256,8 +256,8 @@ class MainMenu extends React.Component {
         let pokemon_list = [];
         let amountDisplayed = 24;
         if(this.state.user.statistics.encounteredPokemon.length!=0){
-            let start = this.state.generation[0]+this.state.step*(amountDisplayed)+(this.state.step == 0 ? 0 : 1);
-            let end = Math.min(this.state.generation[0]+(this.state.step+1)*amountDisplayed+(this.state.step == 0 ? 0 : 1), this.state.generation[1])
+            let start = this.state.generation[0]+this.state.step*(amountDisplayed)+(this.state.step);
+            let end = Math.min(this.state.generation[0]+(this.state.step+1)*(amountDisplayed)+(this.state.step ), this.state.generation[1])
             for(let i = start; i<=end ; i++){
                 if(this.state.user.statistics.encounteredPokemon.includes(i)){
                     pokemon_list.push(
@@ -273,7 +273,7 @@ class MainMenu extends React.Component {
 
                 }
             }
-            for(let stepCounter = 0; this.state.generation[0]+(stepCounter)*amountDisplayed+(stepCounter == 0 ? 0 : 1) < this.state.generation[1]; stepCounter++) {
+            for(let stepCounter = 0; this.state.generation[0]+(stepCounter)*(amountDisplayed)+stepCounter-1 < this.state.generation[1]; stepCounter++) {
                 windowButtons.push(
                     <DotButton width={'9px'} disabled={this.state.step == stepCounter} onClick={() => {
                         this.goToStep(stepCounter)

@@ -14,6 +14,7 @@ import {Clock} from "../Clock";
 import {Spectator} from "../subScreens/Spectator";
 import Grid from "@material-ui/core/Grid";
 import {RandomPokemonFact} from "../../../mainmenu/RandomPokemonFact";
+import {FinishedTest} from "../subScreens/FinishedTest";
 
 
 
@@ -123,7 +124,7 @@ class Game extends React.Component {
 
     async getGameInfo() {
         try {
-            console.log("Tried getting game info");
+            console.log("getGameInfo called");
 
             const response2 = await api.get('/games/' + this.props.match.params.pokeCode.toString(), {headers: {'Token': localStorage.getItem('token')}});
             const resp2 = response2.data;
@@ -188,6 +189,8 @@ class Game extends React.Component {
                 currentPeriod = this.period.CHOOSECATEGORY;
                 clearInterval(this.timer_waitForNextTurn);
                 this.timer_waitForNextTurn= null;
+                clearInterval(this.timer_listenToAdmin);
+                this.timer_listenToAdmin=null;
 
                 oldCard = user_me.deck.cards[0];
             }
@@ -357,12 +360,14 @@ class Game extends React.Component {
                 }, 13000)
                 this.timeout_waitForCategoryResult = setTimeout(() => {
                     this.timer_waitForCategory= setInterval(() => {
+                        console.log('getGame made in waitForCategory with pokeCode: '+this.state.pokeCode)
                         this.getGameInfo()
                     }, 1000)
                 }, 12000)
             }
             else {
                 this.timer_waitForCategory= setInterval(() => {
+                    console.log('getGame made in waitForCategory with pokeCode: '+this.state.pokeCode)
                     this.getGameInfo()
                 }, 2000)
             }
@@ -379,6 +384,7 @@ class Game extends React.Component {
         }
         else if (this.state.currentPeriod == this.period.RESULT) {
             localStorage.setItem('evolveTo', 0);
+            console.log('getGame made in result with pokeCode: '+this.state.pokeCode)
             this.getGameInfo()
             this.timer_waitForNextTurn= setInterval(() => {
                 this.getGameInfo()
@@ -433,14 +439,15 @@ class Game extends React.Component {
 
     async getGameWaitForAdmin() {
         try {
-            console.log("Tried getting game info");
+            console.log("getGameWaitForAdmin called");
 
             const response2 = await api.get('/games/' + this.props.match.params.pokeCode.toString(), {headers: {'Token': localStorage.getItem('token')}});
             const resp2 = response2.data;
             let startTime = parseInt(resp2.startTime,10);
             let state = resp2.state;
 
-            this.setState({startTime: startTime, state: state})
+            this.setState({startTime: startTime, state: state, players: resp2.players, winners: resp2.winners})
+            this.setState({})
 
 
         } catch (error) {
@@ -460,22 +467,17 @@ class Game extends React.Component {
         this.recurrentTimer = null;
 
         if (this.state.amIAdmin) {
-            this.timeout_waitForAdmin = setTimeout(() => {
-                this.props.history.push('/menu')
-            }, 15000)
-
             this.timer_listenToAdmin = setInterval(() => {
+                console.log('getGame made in listenToAdmin with pokeCode: '+this.state.pokeCode)
                 this.getGameWaitForAdmin();
-            }, 2000)
+            }, 1000)
         }
         else {
-            this.timeout_waitForAdmin = setTimeout(() => {
-                this.props.history.push('/menu')
-            }, 15000)
 
             this.timer_listenToAdmin = setInterval(() => {
+                console.log('getGame made in listenToAdmin with pokeCode: '+this.state.pokeCode)
                 this.getGameWaitForAdmin();
-            }, 2000)
+            }, 1000)
         }
 
     }
@@ -568,7 +570,6 @@ class Game extends React.Component {
             if (error.response.status != 404) {
                 alert(`Something went wrong: \n${handleError(error)}`);
             }
-
         }
     }
 
@@ -585,7 +586,7 @@ class Game extends React.Component {
         } else if (this.state.currentPeriod == this.period.SPECTATOR) {
             return <Spectator masterState={this.state} history={this.props.history}/>
         } else if (this.state.currentPeriod == this.period.FINISHED) {
-            return <Finished masterState={this.state} history={this.props.history}/>
+            return <FinishedTest masterState={this.state} history={this.props.history}/>
         } else if (this.state.currentPeriod == this.period.NEWROUNDTIMER) {
             return <Clock remainingTime={this.state.remainingTime} totalTime={5000} type={this.clock.NEWROUND}/>
 

@@ -1,5 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import {AmountOfBerries, LogoBadge, PossibleWinnerIcon, SettingsIcon, SocialIcon, WinnerIcon} from "./design/Icons";
+import Grid from "@material-ui/core/Grid";
+import {ButtonContainer, SimpleColumnContainer} from "../helpers/layout";
+import {Spinner} from "./design/Spinner";
+import {MenuButtonIcon} from "./design/Button";
 
 const Container = styled.button`
     &:hover {
@@ -8,7 +13,7 @@ const Container = styled.button`
   }
   margin-bottom:10px;
   width: 280px;
-  height: 35px;
+  height: ${props => props.heigth || "35px"};
   padding-left: 5px;
   padding-right: 5px;
   border-radius: 25px;
@@ -84,7 +89,7 @@ const Column = styled.div`
 
 const UserName = styled.div`
   color: #FFFFFF
-  margin-left: 5px;
+  margin-left: ${props => props.marginLeft || "5px"};
 `;
 
 const Rank = styled.div`
@@ -126,7 +131,76 @@ export let PlayerMe = ({ user }) => {
     );
 }
 
+const EmotePlayerContainer = styled.div`
+  height: 175px;
+  width: 135px; 
+  padding: 5px;
+  
+  z-index: 200;
+`;
 
+export const EmoteContainer = styled.div`
+  height: 125px;
+  display: 'flex', 
+  
+  flex: 1,
+  justifyContent: 'center', 
+  
+  alignItems: 'center'
+  width: 125px; 
+  padding: 0px;
+
+  z-index: 200;
+`;
+
+
+
+
+export let PlayerEmote = ({player, addOn, winner}) => {
+
+        return (
+                <EmotePlayerContainer >
+                    <EmoteContainer>
+                    {player.emote.valueOf() == 0 ?  <div style={{width: '125px', height: '125px', paddingTop: '80px'}}><Spinner style={{ width: '125px'}}/>  </div>:
+                        <img src={require('../../src/components/shared/images/emotes/'+ player.emote +'.svg')} style={{width: '125px', height: '125px'}}/> }
+                        </EmoteContainer>
+
+                    <Grid
+                        container
+                        direction="row"
+                        justify="space-between"
+                        alignItems="center"
+                    >
+                        {winner ?
+                            <LogoBadge viewBox={'0 0 25 25'} size={'25px'} style={{marginTop: '10px'}}>
+                            <svg fill="none"  xmlns="http://www.w3.org/2000/svg">
+                                <g>
+                                    <path fill='#FFFFFF' d="M19.17,5.97c-0.23-0.19-0.54-0.23-0.81-0.1l-4.08,1.99l-3.83-4.42c-0.14-0.16-0.35-0.26-0.56-0.26
+		c-0.22,0-0.42,0.09-0.56,0.26L5.49,7.85L1.41,5.86C1.14,5.73,0.83,5.77,0.6,5.97c-0.23,0.19-0.32,0.5-0.23,0.78l2.83,9.32
+		c0.1,0.31,0.39,0.53,0.71,0.53h11.94c0.33,0,0.62-0.21,0.71-0.53l2.83-9.32C19.49,6.47,19.4,6.16,19.17,5.97z"/>
+                                </g>
+                            </svg>
+                            </LogoBadge>
+                            :
+                            (player.user.avatarId.valueOf() < 10 ? <img alt="avatar"
+                                                                     src={require('../../src/components/shared/images/avatarSVG/00' + (player.user.avatarId) + '-avatar.svg')}
+                                                                     style={{
+                                                                         width: '30px',
+                                                                         marginTop: '7px',
+                                                                         marginLeft: '5px',
+                                                                         zIndex: 200
+                                                                     }}/>
+                                    : <img alt="avatar"
+                                           src={require('../../src/components/shared/images/avatarSVG/0' + (player.user.avatarId) + '-avatar.svg')}
+                                           style={{width: '30px', marginTop: '7px', marginLeft: '5px', zIndex: 200}}/>)
+                        }
+
+                                           <UserName style={{width: '80px', float: 'left', marginTop: '12px'}}>{player.user.username} {addOn}</UserName>
+                    </Grid>
+                </EmotePlayerContainer>
+        );
+
+}
 
 export let PlayerGame = ({ player, addOn}) => {
 

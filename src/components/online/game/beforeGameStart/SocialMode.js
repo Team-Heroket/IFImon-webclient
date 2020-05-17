@@ -4,9 +4,14 @@ import {BaseContainer, ButtonContainer, FormContainer} from "../../../../helpers
 import Header from "../../../../views/Header";
 import styled from "styled-components";
 import {Button, TransparentButton} from "../../../../views/design/Button";
-import {BackButton, SoundButton} from "../../../../views/design/Icons";
+import {BackButton, OrSeparation, SoundButton} from "../../../../views/design/Icons";
 import {api, handleError} from "../../../../helpers/api";
 import Grid from "@material-ui/core/Grid";
+import Collapse from "@material-ui/core/Collapse";
+import {Alert} from "@material-ui/lab";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import {CenterContainer} from "./Lobby";
 
 const Form = styled.div`
   display: flex;
@@ -53,18 +58,6 @@ const InputField = styled.input`
 `;
 
 
-const Line = styled.div`
-  width: 400px;
-  color: white;
-  text-align: center;
-  border-bottom: 1px solid #000;
-  line-height: 0.01em;
-  margin: 10px 0 20px;
-  backgroundColour: white;
-  background: white;
-  padding: 0 10px;
-`;
-
 
 
 
@@ -72,21 +65,47 @@ const Line = styled.div`
 class SocialMode extends React.Component {
     constructor() {
         super();
+        this.keyPress = this.keyPress.bind(this);
         this.state = {
-            pokeCode: null
+            pokeCode: null,
+            openInfo: false,
+            openError: false
         };
+    }
+
+    componentDidMount() {
+        if (localStorage.getItem('info')!= 0) {
+            this.setState({openInfo: true})
+            setTimeout(() => {
+                this.setState({openInfo: false})
+                localStorage.setItem('info', 0)
+            }, 5000)
+        }
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.state.openError==true) {
+            setTimeout(() => {
+                this.setState({openError: false, errorCode: null})
+            }, 5000)
+        }
     }
 
 
     handleInputChange(key, value) {
-        // Example: if the key is username, this statement is the equivalent to the following one:
-        // this.setState({'username': value});
         this.setState({ [key]: value });
     }
 
     goBack() {
         this.setState({pokeCode: null});
         this.props.history.push('/menu');
+    }
+
+
+    keyPress(e){
+        if(e.keyCode == 13 && this.state.pokeCode){
+            this.join();
+        }
     }
 
     async join() {
@@ -103,7 +122,12 @@ class SocialMode extends React.Component {
             // Login successfully worked --> navigate to the route /game in the GameRouter
             this.props.history.push(`/lobby/`+this.state.pokeCode);
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            if(error.response.status == 404){
+                this.setState({openError: true, errorCode: 404});
+            }
+            else if(error.response.status == 500){
+                this.setState({openError: true, errorCode: 500});
+            }
         }
     }
 
@@ -125,11 +149,11 @@ class SocialMode extends React.Component {
                     >
                         <BackButton action={() => {this.goBack()}}/>
                         {localStorage.getItem('VolumeMuted')=='true'?
-                            <SoundButton mute={false} action={()=>{
+                            <SoundButton mute={true} action={()=>{
                                 localStorage.setItem('VolumeMuted', 'false');
                                 this.forceUpdate()}} />
                             :
-                            <SoundButton mute={true} action={() => {
+                            <SoundButton mute={false} action={() => {
                                 localStorage.setItem('VolumeMuted', 'true');
                                 this.forceUpdate()}} />
                         }
@@ -137,12 +161,53 @@ class SocialMode extends React.Component {
                 </Row>
                 <FormContainer>
                    <Form>
+                       <CenterContainer >
+                           <Collapse in={this.state.openInfo}>
+                               <Alert severity="info"
+                                      action={
+                                          <IconButton
+                                              aria-label="close"
+                                              color="inherit"
+                                              size="small"
+                                              onClick={() => {
+                                                  this.setState({openInfo: false});
+                                              }}
+                                          >
+                                              <CloseIcon fontSize="inherit"/>
+                                          </IconButton>
+                                      }
+                               >
+                                   {localStorage.getItem('info')}
+                               </Alert>
+                               <br/>
+                           </Collapse>
+                           <Collapse in={this.state.openError}>
+                               <Alert severity="error"
+                                      action={
+                                          <IconButton
+                                              aria-label="close"
+                                              color="inherit"
+                                              size="small"
+                                              onClick={() => {
+                                                  this.setState({openError: false, errorCode: null});
+                                              }}
+                                          >
+                                              <CloseIcon fontSize="inherit"/>
+                                          </IconButton>
+                                      }
+                               >
+                                   {this.state.errorCode == 404 ? 'PokeCode does not exist!' : (this.state.errorCode == 500 ? 'Internal Server Error' : null)}
+                               </Alert>
+                               <br/>
+                           </Collapse>
+                       </CenterContainer>
                        <InputField
                            placeholder="Enter PokeCode"
                            width={"55%"}
                            onChange={e => {
                                this.handleInputChange('pokeCode', e.target.value);
-                           }}/>
+                           }}
+                           onKeyDown={this.keyPress}/>
                        <ButtonContainer>
                            <Button
                                disabled={!this.state.pokeCode}
@@ -153,7 +218,7 @@ class SocialMode extends React.Component {
                            >
                                Join
                            </Button>
-                           <Line>OR</Line>
+                           <OrSeparation />
                            <TransparentButton
                                width = "55%"
                                onClick={() => {

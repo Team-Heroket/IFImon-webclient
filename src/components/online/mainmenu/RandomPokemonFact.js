@@ -130,7 +130,7 @@ export class RandomPokemonFact extends React.Component {
     fact_59 = {fact: 'Golbat is the first Pokémon in the National Pokédex to gain a new evolution in a later generation', pokemon: ['http://play.pokemonshowdown.com/sprites/ani/golbat.gif']}
     fact_60 = {fact: 'Eternatus is the tallest Pokémon at a staggering 20 m', pokemon: ['http://play.pokemonshowdown.com/sprites/ani/eternatus.gif']}
     fact_61 = {fact: 'Joltik is the smallest Pokémon at just 0.1 m', pokemon: ['http://play.pokemonshowdown.com/sprites/ani/joltik.gif']}
-    fact_62 = {fact: 'Rhydon was the first Pokémon ever created', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/rhydon.gif']}
+    fact_62 = {fact: 'Diglett has been shown to have no feet however it is mentioned as being one of the seven mysteries of Pokémon', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/diglett.gif']}
     fact_63 = {fact: 'Deoxys-Speed is the fastest Pokémon at 180', pokemon: ['http://play.pokemonshowdown.com/sprites/ani/deoxys-speed.gif']}
     fact_64 = {fact: 'Mega Mewtwo X has the highest base Attack of any Pokémon. It has a whopping 190 Attack, and is capable of reaching 526 Attack at level 100', pokemon: ['http://play.pokemonshowdown.com/sprites/ani/mewtwo-megax.gif']}
     fact_65 = {fact: 'Oddish has a scientific name, which is Oddium Wanderus. It was first shown in the FireRed Pokédex entry', pokemon: ['http://play.pokemonshowdown.com/sprites/ani/oddish.gif']}
@@ -140,6 +140,36 @@ export class RandomPokemonFact extends React.Component {
     fact_68 = {fact: 'Parasect has used Sleep Powder in the animé, however it cannot learn this in the games', pokemon: ['http://play.pokemonshowdown.com/sprites/xyani/parasect.gif']}
     fact_69 = {fact: 'Venonat has red eyes and nose, however the shiny Venonat’s eyes and nose are blue', pokemon: ['http://play.pokemonshowdown.com/sprites/xyani/venonat.gif']}
     fact_70 = {fact: 'Venomoth shares the same species name with Dustox. They are both known as Poison Moth Pokémon', pokemon: ['http://play.pokemonshowdown.com/sprites/xyani/venomoth.gif']}
+    fact_71 = {fact: 'Dugtrio is the fastest Ground-type Pokémon at a speed of 120', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/dugtrio.gif']}
+    fact_72 = {fact: 'Meowth is the first Pokémon in the animé to talk', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/meowth.gif']}
+    fact_73 = {fact: 'Persian‘s level-up moves are all Normal-type or Dark-type, except the move Power Gem', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/persian.gif']}
+    fact_74 = {fact: 'Psyduck is the only Pokémon to learn Psychic by breeding', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/psyduck.gif']}
+    fact_75 = {fact: 'Golduck is one of the few Pokémon that is obtainable in every game, including expansion games and remakes', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/golduck.gif']}
+    fact_76 = {fact: 'Mankey is the first Fighting-type Pokémon in National Pokédex order', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/mankey.gif']}
+    fact_77 = {fact: 'Primeape‘s like to eat bananas', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/primeape.gif']}
+    fact_78 = {fact: 'Growlithe is a Puppy Pokémon, the only other Pokémon that has this species name is Lillipup', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/growlithe.gif']}
+    fact_79 = {fact: 'Arcanine is said to be capable of running over 6,200 miles in a single day and night', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/arcanine.gif']}
+    fact_80 = {fact: 'Poliwag has the same cry as Ditto in the games', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/poliwag.gif']}
+    fact_81 = {fact: 'Poliwhirl is the first Pokémon in National Pokédex order to evolve by trading while holding an item', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/poliwhirl.gif']}
+    fact_82 = {fact: 'Poliwrath is a combination the word polliwog, which is a tadpole, and wrath, meaning anger', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/poliwrath.gif']}
+    fact_83 = {fact: 'Abra has the highest Special Attack of all unevolved Pokémon', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/abra.gif']}
+    fact_84 = {fact: 'Kadabra is based on a magician and also a spoon-bender', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/kadabra.gif']}
+    fact_85 = {fact: 'Alakazam‘s have a shorter moustache if they are female', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/alakazam.gif']}
+    fact_86 = {fact: 'Machop can learn Strength, which is the only HM move it can learn', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/machop.gif']}
+    fact_87 = {fact: 'Machoke weighs 70.5 kg', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/machoke.gif']}
+    fact_88 = {fact: 'Machamp is one of the four Pokémon having a total of four arms', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/machamp.gif']}
+    fact_89 = {fact: 'Bellsprout eat insects and takes in nutrients from the soil', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/bellsprout.gif']}
+    fact_90 = {fact: 'Weepinbell first appeared in the animé called The School of Hard Knocks', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/weepinbell.gif']}
+    fact_91 = {fact: 'Victreebel and its pre-evolutions are based on carnivorous pitcher plants', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/victreebel.gif']}
+    fact_92 = {fact: 'Tentacool is weak against Ground, Electric and Psychic type moves', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/tentacool.gif']}
+    fact_93 = {fact: 'Tentacruel is said to have eighty tentacles, however only about ten are often seen', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/tentacruel.gif']}
+    fact_94 = {fact: 'Geodude are often shown to be floating, however it cannot have the Levitate Ability, and it can’t learn Magnet Rise', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/geodude.gif']}
+    fact_95 = {fact: 'Graveler‘s diet mainly consists of moss-covered rocks', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/graveler.gif']}
+    fact_96 = {fact: 'Golem are able to withdraw their head, arms, and legs into their shell and roll at high speeds', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/golem.gif']}
+    fact_97 = {fact: 'Ponyta in shiny form has blue flames', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/ponyta.gif']}
+    fact_98 = {fact: 'Rapidash has no flames for a split second, in the first movie', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/rapidash.gif']}
+    fact_99 = {fact: 'Shuckle looks like a worm in a shell, but this Pokemon can dish out the most damage out of any Pokemon in existence. At level 100, Shuckle candeal 481,266,000 damage in just one single attack', pokemon: ['https://play.pokemonshowdown.com/sprites/xyani/shuckle.gif']}
+    fact_100 = {fact: 'You know Professor Oak from the tutorial. However, there\'s also Professor Birch, Professor Elm, Professor Rowan and Professor Aragari. They\'re all named after trees. In fact, all of the Pokemon professors have tree names', pokemon: ['https://2.bp.blogspot.com/-TzUdpXmoTm8/WZ4zH1537DI/AAAAAAAJhx0/tunyYHsS1ugZazpFS3n_WXdoV3X0gABhACLcBGAs/s1600/AS002997_19.gif']}
 
     constructor() {
         super();
@@ -152,6 +182,9 @@ export class RandomPokemonFact extends React.Component {
                 this.fact_41, this.fact_42, this.fact_43, this.fact_44, this.fact_45, this.fact_46, this.fact_47, this.fact_48, this.fact_49, this.fact_50,
                 this.fact_51, this.fact_52, this.fact_53, this.fact_54, this.fact_55, this.fact_56, this.fact_57, this.fact_58, this.fact_59, this.fact_60,
                 this.fact_61, this.fact_62, this.fact_63, this.fact_64, this.fact_65, this.fact_66, this.fact_67, this.fact_68, this.fact_69, this.fact_70,
+                this.fact_71, this.fact_72, this.fact_73, this.fact_74, this.fact_75, this.fact_76, this.fact_77, this.fact_78, this.fact_79, this.fact_70,
+                this.fact_81, this.fact_82, this.fact_83, this.fact_84, this.fact_85, this.fact_86, this.fact_87, this.fact_88, this.fact_89, this.fact_80,
+                this.fact_91, this.fact_92, this.fact_93, this.fact_94, this.fact_95, this.fact_96, this.fact_97, this.fact_98, this.fact_99, this.fact_100,
             ],
             factIndex: null,
             chosenFact: null,
@@ -180,7 +213,7 @@ export class RandomPokemonFact extends React.Component {
                 }}
             >
                 <LabelTop>
-                    Pokemon Fact #{this.state.factIndex+1}
+                    Pokémon Fact #{this.state.factIndex+1}
                 </LabelTop>
             </div>
             <ButtonContainer>
@@ -210,7 +243,6 @@ export class RandomPokemonFact extends React.Component {
 
             <div>
                 {!this.state.chosenFact ? <Spinner/> : <div>
-
                     {this.randomFactWithPokemon()}
                 </div>}
 

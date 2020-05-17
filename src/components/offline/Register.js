@@ -49,7 +49,7 @@ const PasswordField = styled.input`
   left: 50%;
   border: none;
   border-radius: 25px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   padding-left:10px;
   background: rgba(255, 255, 255, 0.2);
   color: white;
@@ -85,9 +85,11 @@ class Register extends React.Component {
             open: false,
             errorCode: null,
             password: null,
+            passwordRepeat: null,
             username: null,
             avatarId: null,
-            avatarClicked: null
+            avatarClicked: null,
+            openNetworkError: false
         };
     }
 
@@ -101,6 +103,19 @@ class Register extends React.Component {
     keyPress(e){
         if(e.keyCode == 13 && this.state.username && this.state.password && this.state.avatarId){
             this.register();
+        }
+    }
+
+    componentDidUpdate() {
+        if (this.state.openNetworkError ==true) {
+            setTimeout(() => {
+                this.setState({openNetworkError: false})
+            }, 5000)
+        }
+        else if (this.state.open ==true) {
+            setTimeout(() => {
+                this.setState({open: false, errorCode: false})
+            }, 5000)
         }
     }
 
@@ -150,18 +165,94 @@ class Register extends React.Component {
             this.goToLogin();
 
         } catch (error) {
-            if(error.response.data.status == '400'){
-                this.setState({open: true, errorCode: 400});
-            }else if(error.response.data.status == '500'){
-                this.setState({open: true, errorCode: 500});
+            if (error.response) {
+                if(error.response.data.status == '400'){
+                    this.setState({open: true, errorCode: 400});
+                }else if(error.response.data.status == '500'){
+                    this.setState({open: true, errorCode: 500});
+                }
+                else{
+                    alert(`Something went wrong during the login: \n${handleError(error)}`);}
             }
-            else{
-            alert(`Something went wrong during the login: \n${handleError(error)}`);}
+            else {
+                this.setState({openNetworkError: true})
+            }
         }
     }
 
     goToLogin() {
         this.props.history.push('/login');
+    }
+
+    checkPassword() {
+        if (this.state.password) {
+            if (this.state.password.length < 8) {
+                return "Password must be at least 8 characters long";
+            }
+
+            else if (!this.hasUpperCase(this.state.password)) {
+                return "Password must contain at least one capital letter"
+            }
+            else if (!this.hasLowerCase(this.state.password)) {
+                return "Password must contain at least one lower case letter"
+            }
+            else if (!this.hasNumber(this.state.password)) {
+                return "Password must contain at least one number"
+            }
+            else {
+                return null;
+            }
+        }
+
+    }
+    hasUpperCase(word) {
+        let hasUpper = false
+        console.log("word length is: "+word.length)
+        let i=0;
+        while (i<word.length) {
+            let character = word.charAt(i);
+            if (!isNaN(character * 1)){
+            }else{
+                if (character == character.toUpperCase()) {
+                    hasUpper = true;
+                    return hasUpper;
+                }
+            }
+            i++;
+        }
+        return hasUpper;
+    }
+
+    hasLowerCase(word) {
+        let hasLower = false
+        let i=0;
+        while (i<word.length) {
+            let character = word.charAt(i);
+            if (!isNaN(character * 1)){
+
+            }else{
+                if (character == character.toLowerCase()) {
+                    hasLower = true;
+                    return hasLower;
+                }
+            }
+            i++;
+        }
+        return false;
+    }
+
+    hasNumber(word) {
+        let hasLower = false
+        let i=0;
+        while (i<word.length) {
+            let character = word.charAt(i);
+            if (!isNaN(character * 1)){
+                hasLower = true;
+                return hasLower
+            }
+            i++;
+        }
+        return false;
     }
 
 
@@ -184,6 +275,7 @@ class Register extends React.Component {
                     alignItems="flex-start"
                 >
                     <FormContainer margin={'100px'}>
+
                             <Collapse in={this.state.open}>
                                 <Alert severity="error"
                                     action={
@@ -203,6 +295,25 @@ class Register extends React.Component {
                                 </Alert>
                                 <br/>
                             </Collapse>
+                        <Collapse in={this.state.openNetworkError}>
+                            <Alert severity="error"
+                                   action={
+                                       <IconButton
+                                           aria-label="close"
+                                           color="inherit"
+                                           size="small"
+                                           onClick={() => {
+                                               this.setState({openNetworkError: false});
+                                           }}
+                                       >
+                                           <CloseIcon fontSize="inherit"/>
+                                       </IconButton>
+                                   }
+                            >
+                                Network Error - Server is Offline
+                            </Alert>
+                            <br/>
+                        </Collapse>
                             <Label>Enter Username</Label>
                             <InputField
                                 placeholder="Enter here.."
@@ -213,17 +324,43 @@ class Register extends React.Component {
                             />
                             <br/>
 
-                            <Label>Enter Password</Label>
+                            <Label style={{marginTop: '10px'}}>Enter Password</Label>
                             <PasswordField
                                 placeholder="Enter here.."
                                 onChange={e => {
                                     this.handleInputChange('password', e.target.value);
                                 }}
+                                style={this.checkPassword() ? ({'margin-bottom': '4px'}) : ({'margin-bottom': '30px'})}
                                 onKeyDown={this.keyPress}
                             />
-                                <Button
-                                    disabled={!this.state.username || !this.state.password || !this.state.avatarId}
-                                    width="250px"
+                            <Label
+                                style={this.checkPassword() ? ({'margin-bottom': '11px','font-size': '13px', color: 'red', 'font-weight': '400'}) : ({'margin-bottom': '0px'})}
+
+                            >
+                                {this.state.password ? this.checkPassword(): null}
+                            </Label>
+
+                            <br/>
+                        <Label style={{marginTop: '10px'}}>Enter Password Again</Label>
+                        <PasswordField
+                            placeholder="Enter here.."
+
+                            style = {this.state.password ? ((this.state.password == this.state.passwordRepeat) ? ({background: 'rgba(27, 253, 78, 0.3)'}) : ({background: 'rgba(255, 0, 0, 0.3)'}))
+                                : ({background: 'rgba(255, 255, 255, 0.2)'})}
+                            onChange={e => {
+                                this.handleInputChange('passwordRepeat', e.target.value);
+                            }}
+                            onKeyDown={this.keyPress}
+                        />
+                        <Grid
+                            container
+                            direction="row"
+                            justify="space-between"
+                            alignItems="center"
+                        >
+                                <Button style={{marginLeft: '7px', marginTop: '27px'}}
+                                    disabled={!this.state.username || !this.state.password || !this.state.avatarId || !this.state.passwordRepeat || !(this.state.password == this.state.passwordRepeat) || this.checkPassword()}
+                                    width="50%"
                                     onClick={() => {
                                         this.register();
                                     }}
@@ -231,13 +368,14 @@ class Register extends React.Component {
                                     Sign Up
                                 </Button>
                                 <LogOutButton
-                                    width="250px"
+                                    width="33%"
                                     onClick={() => {
                                         this.goToLogin();
                                     }}
                                 >
                                     Cancel
                                 </LogOutButton>
+                        </Grid>
                     </FormContainer>
                     <FormContainer margin={'100px'}>
                         <Label>Choose your Avatar</Label>

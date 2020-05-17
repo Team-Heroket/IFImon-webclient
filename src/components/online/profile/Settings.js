@@ -20,6 +20,10 @@ import Grid from "@material-ui/core/Grid";
 import UIFx from 'uifx';
 import pokeCry from '../../shared/pikachu.mp3';
 import music from '../../shared/musicSample.mp3';
+import {Alert} from "@material-ui/lab";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Collapse from "@material-ui/core/Collapse";
 
 const Label = styled.label`
   position: relative;
@@ -43,6 +47,27 @@ const Row = styled.div`
     }
     
     `;
+
+const PasswordField = styled.input`
+  &::placeholder {
+    color: rgba(255, 255, 255, 1.0);
+  }
+  position: relative;
+  transform : translate(-50%, 0%);
+  height: 35px;
+  width: 400px;
+  left: 50%;
+  border: none;
+  border-radius: 25px;
+  margin-bottom: 20px;
+  padding-left:10px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 16px;
+  font-weight: 300;
+  -Webkit-text-security: disc;
+  text-security: disc;
+`;
 
 
 const InputField = styled.input`
@@ -89,14 +114,87 @@ class Settings extends React.Component {
             editClicked: false,
             newUsername: null,
             newPassword: null,
+            passwordRepeat: null,
             newAvatarId: null,
             avatarClicked: null,
             mute: localStorage.getItem('VolumeMuted') ? localStorage.getItem('VolumeMuted') : 'false',
             SFXVol :  (localStorage.getItem('SFXVol') ?  localStorage.getItem('SFXVol') : 50),
             MusicVol :  (localStorage.getItem('MusicVol') ?  localStorage.getItem('MusicVol') : 50),
             runningSample: false,
-            saveClicked: false
+            saveClicked: false,
+            openSuccess: false
         };
+    }
+
+    checkPassword() {
+        if (this.state.newPassword) {
+            if (this.state.newPassword.length < 8) {
+                return "Password must be at least 8 characters long";
+            }
+
+            else if (!this.hasUpperCase(this.state.newPassword)) {
+                return "Password must contain at least one capital letter"
+            }
+            else if (!this.hasLowerCase(this.state.newPassword)) {
+                return "Password must contain at least one lower case letter"
+            }
+            else if (!this.hasNumber(this.state.newPassword)) {
+                return "Password must contain at least one number"
+            }
+            else {
+                return null;
+            }
+        }
+
+    }
+    hasUpperCase(word) {
+        let hasUpper = false
+        console.log("word length is: "+word.length)
+        let i=0;
+        while (i<word.length) {
+            let character = word.charAt(i);
+            if (!isNaN(character * 1)){
+            }else{
+                if (character == character.toUpperCase()) {
+                    hasUpper = true;
+                    return hasUpper;
+                }
+            }
+            i++;
+        }
+        return hasUpper;
+    }
+
+    hasLowerCase(word) {
+        let hasLower = false
+        let i=0;
+        while (i<word.length) {
+            let character = word.charAt(i);
+            if (!isNaN(character * 1)){
+
+            }else{
+                if (character == character.toLowerCase()) {
+                    hasLower = true;
+                    return hasLower;
+                }
+            }
+            i++;
+        }
+        return false;
+    }
+
+    hasNumber(word) {
+        let hasLower = false
+        let i=0;
+        while (i<word.length) {
+            let character = word.charAt(i);
+            if (!isNaN(character * 1)){
+                hasLower = true;
+                return hasLower
+            }
+            i++;
+        }
+        return false;
     }
 
     handleClick(event) {
@@ -140,7 +238,7 @@ class Settings extends React.Component {
         return avatar_list;
     }
 
-    async componentDidMount() {
+    componentDidMount() {
         //Checks if id in URL corresponds with our id. If it does, we can see edit button
         let url_id = this.props.match.params.id;
 
@@ -149,6 +247,10 @@ class Settings extends React.Component {
         }
         console.log('Token: '+localStorage.getItem('token'))
         console.log('Id in params: '+url_id)
+        this.getUserInfo();
+    }
+
+    async getUserInfo() {
         try {
             const resp = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
 
@@ -158,7 +260,7 @@ class Settings extends React.Component {
                 response.avatarId = 1;
             }
             await this.setState({user: response,
-            avatarClicked: response.avatarId});
+                avatarClicked: response.avatarId});
 
 
         }
@@ -187,26 +289,29 @@ class Settings extends React.Component {
         try {
 
             await api.put('/users/'+localStorage.getItem('id'), response, { headers: {'Token': localStorage.getItem('token')}});
-            let reload = this.state.newUsername || this.state.newPassword || this.state.newAvatarId;
 
             this.setState({
                 newUsername: null,
                 newPassword: null,
                 newAvatarId: null
             })
-            this.goToSettings();
-            if (reload) {
-                window.location.reload()
-            }
+            this.getUserInfo();
+            this.setState({editClicked: false, openSuccess: true})
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
         }
 
     }
 
-    goToSettings() {
-        this.props.history.push('/settings/'+localStorage.getItem('id'))
+    componentDidUpdate() {
+        if (this.state.openSuccess ==true) {
+            setTimeout(() => {
+                this.setState({openSuccess: false})
+            },5000)
+        }
     }
+
+
 
     handleInputChange(key, value) {
         // Example: if the key is username, this statement is the equivalent to the following one:
@@ -286,6 +391,25 @@ class Settings extends React.Component {
                                     alignItems="center"
                                 >
                                     <SimpleColumnContainer width={'400px'}>
+                                        <Collapse in={this.state.openSuccess}>
+                                            <Alert severity="success"
+                                                   action={
+                                                       <IconButton
+                                                           aria-label="close"
+                                                           color="inherit"
+                                                           size="small"
+                                                           onClick={() => {
+                                                               this.setState({openSuccess: false});
+                                                           }}
+                                                       >
+                                                           <CloseIcon fontSize="inherit"/>
+                                                       </IconButton>
+                                                   }
+                                            >
+                                                Account successfully updated!
+                                            </Alert>
+                                            <br/>
+                                        </Collapse>
                                         <SimpleColumnContainer width={'300px'}>
                                             <Label transform={true} width={'100%'}>
                                                 Sound Effects Volume
@@ -364,17 +488,37 @@ class Settings extends React.Component {
                                         this.handleInputChange('newUsername', e.target.value);
                                     }}
                                     />
-                                    <Label>Enter new Password</Label>
-                                    <InputField
-                                    placeholder="Enter here.."
-                                    onChange={e => {
-                                    this.handleInputChange('newPassword', e.target.value);
-                                }}
+                                    <Label>Enter New Password</Label>
+                                    <PasswordField
+                                        placeholder="Enter here.."
+                                        onChange={e => {
+                                            this.handleInputChange('newPassword', e.target.value);
+                                        }}
+                                        style={this.checkPassword() ? ({'margin-bottom': '5px'}) : ({'margin-bottom': '20px'})}
+                                        onKeyDown={this.keyPress}
+                                    />
+
+                                    <Label
+                                        style={{'font-size': '13px', color: 'red', 'font-weight': '400'}}
+                                    >
+                                        {this.state.newPassword ? this.checkPassword(): null}
+                                    </Label>
+
+                                    <Label>Enter New Password Again</Label>
+                                    <PasswordField
+                                        placeholder="Enter here.."
+
+                                        style = {this.state.newPassword ? ((this.state.newPassword == this.state.passwordRepeat) ? ({background: 'rgba(27, 253, 78, 0.3)'}) : ({background: 'rgba(255, 0, 0, 0.3)'}))
+                                            : ({background: 'rgba(255, 255, 255, 0.2)'})}
+                                        onChange={e => {
+                                            this.handleInputChange('passwordRepeat', e.target.value);
+                                        }}
+                                        onKeyDown={this.keyPress}
                                     />
                                     <ButtonContainer>
                                     <Button
                                     width="150px"
-                                    disabled = {!this.state.newUsername && !this.state.newPassword && !this.state.newAvatarId}
+                                    disabled = {!((this.state.newPassword && this.state.newPassword==this.state.passwordRepeat && !this.checkPassword()) || (!this.state.newPassword && (this.state.newUsername || this.state.newAvatarId)))}
                                     onClick={() => {
                                     this.setState({editClicked: false});
                                     this.save();

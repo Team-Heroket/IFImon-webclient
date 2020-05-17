@@ -90,7 +90,8 @@ class Lobby extends React.Component {
             npcs: 0,
             state: null,
             creationTime: null,
-            displayPlayer: null
+            displayPlayer: null,
+            bots: false
         };
     }
 
@@ -119,6 +120,9 @@ class Lobby extends React.Component {
 
             for (let i=0; i<resp2.players.length; i++) {
                 usersList.push(resp2.players[i].user)
+                if (resp2.players[i].user.npc == true) {
+                    this.setState({bots: true})
+                }
                 if (resp2.players[i].user.id == localStorage.getItem('id')) {
                     this.setState({user: resp2.players[i].user}) }
             }
@@ -140,6 +144,7 @@ class Lobby extends React.Component {
 
 
         } catch (error) {
+            localStorage.setItem('info', 'You were kicked from the lobby!')
             this.goToSocialMode();
         }
     }
@@ -321,13 +326,14 @@ class Lobby extends React.Component {
                         justify="space-between"
                         alignItems="flex-start"
                     >
-                        <BackButton action={() => {this.goBack()}}/>
+                        <BackButton
+                            action={() => {this.goBack()}}/>
                         {localStorage.getItem('VolumeMuted')=='true'?
-                            <SoundButton mute={false} action={()=>{
+                            <SoundButton mute={true} action={()=>{
                                 localStorage.setItem('VolumeMuted', 'false');
                                 this.forceUpdate()}} />
                             :
-                            <SoundButton mute={true} action={() => {
+                            <SoundButton mute={false} action={() => {
                                 localStorage.setItem('VolumeMuted', 'true');
                                 this.forceUpdate()}} />
                         }
@@ -394,6 +400,7 @@ class Lobby extends React.Component {
 
                             <MenuButton
                                 width = "50%"
+                                disabled={this.state.admin && this.state.admin.id == localStorage.getItem('id')}
                                 onClick={() => {
                                     this.leaveGame();
                                     this.goToSocialMode();
