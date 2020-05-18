@@ -250,6 +250,12 @@ let PokemonFormatter = (element) => {
 
 export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMethod = ()=>{}, Winner, mute, volume=0) => {
     let formattedPokemon = {}
+    let purge = [" ", "-"]
+    let gifName = pokemon.name.toLowerCase()
+    for(let i =0; i<purge.length; ++i){
+        gifName = gifName.replace(purge[i], '')
+    }
+
     let formattedPokemon2 = {}
     formattedPokemon = PokemonFormatter((pokemon.elements[0]).toLowerCase());
     if(pokemon.elements.length>1) {
@@ -262,7 +268,8 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
                 <CircleContainer color={pokemon.elements.length>1? formattedPokemon2.secondaryColor : formattedPokemon.secondaryColor}>
                     {Winner ?
                         <PokemonGifContainer
-                            src={'https://play.pokemonshowdown.com/sprites/xyani/' + pokemon.name.toString().toLowerCase() + '.gif'}/>
+
+                            src={'https://play.pokemonshowdown.com/sprites/xyani/' + gifName + '.gif'}/>
                         :
                         <PokemonImageContainer src={pokemon.spriteURL}/>}
                 </CircleContainer>

@@ -4,7 +4,7 @@ import {
     BaseContainer,
     ButtonContainer,
     FormContainer, HorizontalButtonContainer,
-    InnerContainerPokedex, PokedexContainer,
+    InnerContainerPokedex, PokedexContainer, SimpleColumnContainer,
     SimpleContainer
 } from '../../../helpers/layout';
 
@@ -17,7 +17,7 @@ import { api, handleError } from '../../../helpers/api';
 import { withRouter } from 'react-router-dom';
 import {
     LogOutButton,
-    MenuButtonIcon, DotButton, PokedexGenerationButton, PageButton,
+    MenuButtonIcon, DotButton, PokedexGenerationButton, PageButton, TransparentButton,
 } from '../../../views/design/Button';
 import Header from "../../../views/Header";
 import {EncounteredPokemonSprite, ForwardIcon, PokemonSprite, NextIcon} from "../../../views/design/Icons";
@@ -71,7 +71,8 @@ class MainMenu extends React.Component {
             user: null,
             step: 0,
             generation: this.genPokemon.I,
-            justInitialized: false
+            justInitialized: false,
+            showGif: false
         };
     }
 
@@ -232,10 +233,10 @@ class MainMenu extends React.Component {
         }
         catch (e) {
         }
-
-        const content = <SimpleContainer>
-            {this.state.displayPokemon ? FocusedPokemonCard(this.state.displayPokemon, true, '0', '', null, false,localStorage.getItem('VolumeMuted')=='true', localStorage.getItem('SFXVol')/100) : <Spinner/>}
-        </SimpleContainer>
+        let content = <SimpleColumnContainer>
+            {this.state.displayPokemon ? FocusedPokemonCard(this.state.displayPokemon, true, '0', '', null, this.state.showGif,localStorage.getItem('VolumeMuted')=='true', localStorage.getItem('SFXVol')/100) : <Spinner/>}
+            <TransparentButton onClick={()=>{this.updatePopupbox(true)}}> {this.state.showGif? 'Show image' : 'Show GIF'} </TransparentButton>
+        </SimpleColumnContainer>
 
             PopupboxManager.open({
                 content,
@@ -246,9 +247,33 @@ class MainMenu extends React.Component {
                     },
                     fadeIn: true,
                     fadeInSpeed: 500,
-                    onClosed: this.setState({'displayPokemon': null})
+                    fadeOut: true,
+                    fadeOutSpeed: 250
                 }
             })
+
+    }
+
+    updatePopupbox(showGif) {
+        this.setState({showGif: showGif})
+        const content = <SimpleColumnContainer>
+            {this.state.displayPokemon ? FocusedPokemonCard(this.state.displayPokemon, true, '0', '', null, showGif,localStorage.getItem('VolumeMuted')=='true', localStorage.getItem('SFXVol')/100) : <Spinner/>}
+            <TransparentButton onClick={()=>{this.updatePopupbox(!showGif)}}> {this.state.showGif? 'Show image' : 'Show GIF'} </TransparentButton>
+        </SimpleColumnContainer>
+
+        PopupboxManager.update({
+            content,
+            config: {
+                titleBar: {
+                    enable: true,
+                    text: this.state.displayPokemon.name
+                },
+                fadeIn: true,
+                fadeInSpeed: 500,
+                fadeOut: true,
+                fadeOutSpeed: 250
+            }
+        })
     }
 
     SpritesGenerator () {
