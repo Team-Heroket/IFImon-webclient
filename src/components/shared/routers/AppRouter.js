@@ -30,8 +30,6 @@ class AppRouter extends React.Component {
       <BrowserRouter>
         <Switch>
           <div>
-
-
               <Route
                   path="/menu"
                   render={() => (

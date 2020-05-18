@@ -76,7 +76,43 @@ class MainMenu extends React.Component {
         };
     }
 
+    playTheme(){
+
+        try{
+            let sound = document.getElementById('MainTheme');
+            console.log('This is the volume '+sound.volume+ ' and is paused '+sound.paused)
+
+            if(localStorage.getItem('VolumeMuted') != 'true' &&( sound.volume != localStorage.getItem('MusicVol')/100 || sound.paused)) {
+                sound.play()
+
+                // Set the point in playback that fadeout begins. This is for a 2 second fade out.
+                let fadePoint = sound.currentTime + 2;
+                sound.volume = 0.1;
+
+
+                var fadeAudio = setInterval(function () {
+
+                    // Only fade if past the fade out point or not at zero already
+                    if ((sound.currentTime >= fadePoint) && (sound.volume != 0.0)) {
+                        sound.volume += 0.05;
+                    }
+                    // When volume at zero stop all the intervalling
+                    if (sound.volume >= localStorage.getItem('MusicVol') / 100) {
+                        sound.volume = localStorage.getItem('MusicVol') / 100
+                        clearInterval(fadeAudio);
+                    }
+                }, 200);
+            }
+
+        }catch (e) {}
+    }
+    async componentDidUpdate(){
+        this.playTheme()
+    }
+
     async componentDidMount(){
+
+        this.playTheme()
         if (localStorage.getItem('justLoggedIn') == 'true') {
             this.setState({justInitialized: true});
             setTimeout(() => {
@@ -131,6 +167,8 @@ class MainMenu extends React.Component {
     async logOut(){
         try {
             console.log('tried to logOut')
+            document.getElementById('MainTheme').pause()
+            document.getElementById('MainTheme').currentTime=0
             const body = JSON.stringify({});
             let token = localStorage.getItem('token');
             localStorage.removeItem('token');

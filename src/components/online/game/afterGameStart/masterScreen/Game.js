@@ -17,6 +17,41 @@ import {RandomPokemonFact} from "../../../mainmenu/RandomPokemonFact";
 import {FinishedTest} from "../subScreens/FinishedTest";
 
 
+const Audio = React.memo(function Audio({children}) {
+    try{
+        let sound = document.getElementById('MainTheme');
+
+        // Set the point in playback that fadeout begins. This is for a 2 second fade out.
+        let fadePoint = sound.currentTime + 1;
+
+        var fadeAudio = setInterval(function () {
+
+            // Only fade if past the fade out point or not at zero already
+            if ((sound.currentTime >= fadePoint) && (sound.volume != 0.0)) {
+                sound.volume -= 0.05;
+            }
+            // When volume at zero stop all the intervalling
+            if (sound.volume <= 0.1) {
+                sound.pause();
+                sound.currentTime = 0;
+                clearInterval(fadeAudio);
+            }
+        }, 200);
+
+    }catch (e) {}
+    return(
+        <div style={{width: '0px', height: '0px', margin: '0px', fontSize: '0'}}>
+            <audio src={require('../../../../shared/BackGroundMusic.mp3')} id="Background"/>
+            {setTimeout(()=> {
+                try{
+                    document.getElementById("Background").volume = localStorage.getItem('VolumeMuted')=='false' ? (localStorage.getItem('MusicVol')/100) : 0;
+                    document.getElementById("Background").play();
+                    document.getElementById("Background").loop = true;
+                }catch (e) {}
+            }, 1000)}
+        </div>
+    )
+})
 
 
 
@@ -24,21 +59,6 @@ const Space = styled.div`
   margin-bottom: 80px
   width: 100%
 `;
-
-const Audio = React.memo(function Audio({children}) {
-    return(
-        <div style={{width: '0px', height: '0px', margin: '0px', fontSize: '0'}}>
-            <audio src={require('../../../../shared/BackGroundMusic.mp3')} id="Background"/>
-            {setTimeout(()=> {
-                try{
-                document.getElementById("Background").volume = localStorage.getItem('VolumeMuted')=='false' ? (localStorage.getItem('MusicVol')/100) : 0;
-                document.getElementById("Background").play();
-                document.getElementById("Background").loop = true;
-                }catch (e) {}
-                }, 500)}
-        </div>
-    )
-})
 
 /**
  1) all clients: get game
@@ -553,6 +573,9 @@ class Game extends React.Component {
         clearTimeout(this.timeout_waitForAdmin);
         this.timeout_waitForAdmin = null;
         this.leaveGame();
+
+        document.getElementById("MainTheme").volume = localStorage.getItem('VolumeMuted')== 'true' ? 0 : localStorage.getItem('MusicVol')/100;
+        document.getElementById('MainTheme').play()
     }
 
     async leaveGame() {

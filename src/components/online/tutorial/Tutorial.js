@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {
     BaseContainer, ButtonContainer,
-    FormContainer,
+    FormContainer, GameContainer,
     SimpleColumnContainer, SimpleRowContainer
 } from '../../../helpers/layout';
 import { withRouter } from 'react-router-dom';
@@ -12,7 +12,7 @@ import {
     BackButton, BerriesIcon, BerriesIconWithBadge, ClickMeIcon, DrawIcon,
     ForwardIcon, LeaderboardIcon, MiniBerriesIcon,
     NextIcon,
-    PossibleWinnerIcon, QuickplayIcon, SettingsIcon, SocialIcon, WinnerIcon
+    PossibleWinnerIcon, QuickplayIcon, SettingsIcon, SocialIcon, SoundButton, WinnerIcon
 } from "../../../views/design/Icons";
 import Grid from "@material-ui/core/Grid";
 import Typewriter from 'typewriter-effect';
@@ -167,10 +167,22 @@ class Tutorial extends React.Component {
                 <Grid
                     container
                     direction="row"
-                    justify="flex-start"
+                    justify="space-between"
                     alignItems="flex-start"
                 >
                     <BackButton action={() => {this.goToMainMenu()}}/>
+                    { this.state.mute ?
+                        <SoundButton mute={true} action={()=>{
+                            localStorage.setItem('VolumeMuted', 'false');
+                            this.setState({mute: false});
+                            document.getElementById("MainTheme").volume = localStorage.getItem('MusicVol')/100;
+                        }} />
+                        :
+                        <SoundButton mute={false} action={() => {
+                            localStorage.setItem('VolumeMuted', 'true');
+                            this.setState({mute: true});
+                            document.getElementById("MainTheme").volume = 0}} />
+                    }
                 </Grid>
             <br/>
                 <Grid

@@ -331,14 +331,16 @@ class Lobby extends React.Component {
                         {localStorage.getItem('VolumeMuted')=='true'?
                             <SoundButton mute={true} action={()=>{
                                 localStorage.setItem('VolumeMuted', 'false');
+                                document.getElementById('MainTheme').play();
                                 this.forceUpdate()}} />
                             :
                             <SoundButton mute={false} action={() => {
                                 localStorage.setItem('VolumeMuted', 'true');
+                                document.getElementById('MainTheme').pause();
                                 this.forceUpdate()}} />
                         }
                     </Grid>
-                <FormContainer>
+                <FormContainer margin={'100px'}>
                     <Form>
                         <CenterContainer >
                             <Collapse in={this.state.openSuccess}>

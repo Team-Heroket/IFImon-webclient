@@ -355,17 +355,13 @@ class Settings extends React.Component {
                 beep.setVolume(newValue/100).play();
                 setTimeout(() => {
                     this.setState({runningSample: false})}, 500)}
-        }else{
+        }else {
             localStorage.setItem('MusicVol', newValue);
-            if(!this.state.runningSample){
-                this.setState({runningSample: true});
-                const beep = new UIFx(music);
-                beep.setVolume(newValue/100).play();
-                setTimeout(() => {
-                    this.setState({runningSample: false})}, 1000)}
+            if (!this.state.runningSample) {
+                document.getElementById("MainTheme").volume = newValue / 100;
+            }
         }
-        this.setState({ [key]: newValue });
-
+        this.setState({[key]: newValue});
     };
 
     render() {
@@ -453,12 +449,14 @@ class Settings extends React.Component {
                                         { this.state.mute=='true' ?
                                             <SoundButton mute={true} action={()=>{
                                                 localStorage.setItem('VolumeMuted', 'false');
+                                                document.getElementById("MainTheme").volume = (localStorage.getItem('MusicVol')/100)
                                                 this.setState({mute: 'false'});
                                                 this.forceUpdate();
                                             }} />
                                             :
                                             <SoundButton mute={false} action={() => {
                                                 localStorage.setItem('VolumeMuted', 'true');
+                                                document.getElementById("MainTheme").volume = 0
                                                 this.setState({mute: 'true'});
                                                 this.forceUpdate()}} />
                                         }
