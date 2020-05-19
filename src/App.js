@@ -12,7 +12,6 @@ const Audio = React.memo(function Audio({children}) {
         {setTimeout(()=> {
           try{
             document.getElementById("MainTheme").volume = localStorage.getItem('VolumeMuted')=='false' ? (localStorage.getItem('MusicVol')/100) : 0;
-            document.getElementById("MainTheme").play();
             document.getElementById("MainTheme").loop = true;
           }catch (e) {}
         }, 500)}

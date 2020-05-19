@@ -50,7 +50,7 @@ class MainMenu extends React.Component {
         IV: [387,493],
         V: [494, 649],
         VI: [650, 721],
-        VII: [722, 809]
+        VII: [722, 802]
     }
 
     constructor() {
@@ -331,7 +331,8 @@ class MainMenu extends React.Component {
                 }
                 else{
                     pokemon_list.push(
-                        <PokemonSprite src={require('../../shared/images/pokemonTypesSVG/unknown.svg')} size={"92px"} index = {i}/>
+                        //<PokemonSprite src={require('../../shared/images/pokemonTypesSVG/unknown.svg')} size={"92px"} index = {i}/>
+
                     )
 
                 }
