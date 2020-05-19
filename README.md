@@ -170,10 +170,9 @@ More Information about [Gradle Wrapper](https://docs.gradle.org/current/userguid
 ### First time Login/register user actions:
 ![GIF of Login/register + tutorial](./public/Readme-assets/loginGIF.gif 'GIF of login/register + tutorial')
 
-### Create new game and start:
-![GIF of Login/register + tutorial](./public/Readme-assets/loginGIF.gif 'GIF of login/register + tutorial')
+### Create new game and start and one turn:
+![GIF Create new game and start and one turn](./public/Readme-assets/GameCreator.gif 'GIF Create new game and start and one turn')
 
-### One round of Top trumps
 
 ## Roadmap:
 - Ability to join random existing lobby
