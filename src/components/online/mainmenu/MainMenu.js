@@ -154,6 +154,9 @@ class MainMenu extends React.Component {
                     alert(`Something went wrong: \n${handleError(error)}`);
                 }
             }
+            else {
+                this.props.history.push('/error')
+            }
 
         }
     }
@@ -195,11 +198,16 @@ class MainMenu extends React.Component {
 
 
         } catch (error) {
-            if (error.response.status == 401) {
-                this.props.history.push('/login')
+            if (error.response) {
+                if (error.response.status == 401) {
+                    this.props.history.push('/login')
+                }
+                else {
+                    alert(`Something went wrong: \n${handleError(error)}`);
+                }
             }
             else {
-                alert(`Something went wrong: \n${handleError(error)}`);
+                this.props.history.push('/login');
             }
 
         }

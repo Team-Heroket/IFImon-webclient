@@ -25,7 +25,9 @@ import {FlippedCard} from "./FlippedCard";
 
 export let Evolve = ({masterState, history, parentMethod}) => {
 
-
+    /**
+     * Returns the left-hand side of the screen with all the players, the stepper and the berries
+     */
     function showLeaderboard() {
         let steps = ['Category selection', 'Evolve Pokémon', 'Results'];
 
@@ -62,7 +64,9 @@ export let Evolve = ({masterState, history, parentMethod}) => {
             </SimpleColumnContainer>
         );
     }
-
+    /**
+     * Returns the evolve buttons. If there are no possible evolutions it displays a corresponding text
+     */
     function evolveButtons() {
         let evolutions = [];
         for (let i=0; i< masterState.deck.cards[0].evolutionNames.length; i++) {
@@ -92,6 +96,9 @@ export let Evolve = ({masterState, history, parentMethod}) => {
         return evolutions;
     }
 
+    /**
+     * If we are the winner, it is set to the text 'Your Card'. Otherwise it is set to the username of the winner
+     */
     let winnersUsername = masterState.winners[0].user.username == masterState.player_me.user.username ? 'Your Card' : masterState.winners[0].user.username;
 
     return (

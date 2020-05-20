@@ -45,6 +45,9 @@ clock = {
 export class ChooseCategory extends React.Component {
 
     stepper = null;
+    /**
+     * Assigns the stepper to the variable stepper
+     */
     componentDidMount() {
         let steps = ['Category selection', 'Evolve Pokémon', 'Results'];
 
@@ -63,7 +66,9 @@ export class ChooseCategory extends React.Component {
         </Stepper>
     }
 
-    //= ({masterState, history, parentMethod})
+    /**
+     * Returns the left-hand side of the screen with all the players, the stepper and the berries
+     */
     showLeaderboard() {
 
         return (<SimpleColumnContainer width={'280px'} sideMargin={'0px'} style={{marginLeft: '10px'}}>

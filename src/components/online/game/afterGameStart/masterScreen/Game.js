@@ -149,7 +149,14 @@ class Game extends React.Component {
         localStorage.setItem('SelectedCat',0);
     }
 
-
+    /**
+     * Makes the get-game request
+     * Creates the ranking within the game relative to the server response
+     * Checks if we are turnplayer
+     * Checks if we are admin
+     * Checks if we have to switch to another period relative to the server response and the goToEvolve variable
+     * Makes the user go back to the main menu if he/she happens to be unauthorized
+     */
     async getGameInfo() {
         try {
             console.log("getGameInfo called");

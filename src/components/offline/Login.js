@@ -86,8 +86,7 @@ class Login extends React.Component {
       password: null,
       username: null,
       openError: false,
-      openSuccess: false,
-      openNetworkError: false
+      openSuccess: false
     };
   }
 
@@ -97,6 +96,9 @@ class Login extends React.Component {
     }
   }
 
+  /**
+   * If we just came from register and created an account, a corresponding "success" alert appears
+   */
   componentDidMount() {
     localStorage.setItem('info', 0)
     localStorage.setItem("justLoggedIn", "false")
@@ -109,7 +111,9 @@ class Login extends React.Component {
     }
   }
 
-
+  /**
+   * Makes the login request. If it is successful, user goes to main menu. Otherwise an alert appears
+   */
   async login() {
     try {
       const requestBody = JSON.stringify({
@@ -145,7 +149,7 @@ class Login extends React.Component {
         }
       }
       else {
-        this.setState({openNetworkError: true})
+        this.props.history.push('/error');
       }
 
     }
@@ -162,12 +166,12 @@ class Login extends React.Component {
     this.setState( {[key]: value} );
   }
 
+  /**
+   * Makes sure that Alerts disappear after 5 seconds
+   */
   componentDidUpdate() {
-    if (this.state.openNetworkError == true) {
-      setTimeout(() => {
-        this.setState({openNetworkError: false})
-      }, 5000)
-    } else if (this.state.open == true) {
+
+    if (this.state.open == true) {
       setTimeout(() => {
         this.setState({open: false, errorCode: false})
       }, 5000)
@@ -222,25 +226,7 @@ class Login extends React.Component {
               </Alert>
               <br/>
             </Collapse>
-            <Collapse in={this.state.openNetworkError}>
-              <Alert severity="error"
-                     action={
-                       <IconButton
-                           aria-label="close"
-                           color="inherit"
-                           size="small"
-                           onClick={() => {
-                             this.setState({openNetworkError: false});
-                           }}
-                       >
-                         <CloseIcon fontSize="inherit"/>
-                       </IconButton>
-                     }
-              >
-                Network Error - Server is Offline
-              </Alert>
-              <br/>
-            </Collapse>
+
             <Label>Username</Label>
             <InputField
               placeholder="Enter here.."

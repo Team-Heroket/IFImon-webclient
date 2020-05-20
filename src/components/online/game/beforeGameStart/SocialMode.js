@@ -109,9 +109,6 @@ class SocialMode extends React.Component {
     }
 
     async join() {
-        //IMPORTANT: Ask backend team if they can also accept id
-        //IMPOORTANT: May need token-authorization. This is not added yet
-        // '/lobby/pokeCode' is not implemented yet neither as a component nor in the AppRouter
         try {
             const requestBody = JSON.stringify({
                 action: "JOIN",
@@ -122,14 +119,19 @@ class SocialMode extends React.Component {
             // Login successfully worked --> navigate to the route /game in the GameRouter
             this.props.history.push(`/lobby/`+this.state.pokeCode);
         } catch (error) {
-            if(error.response.status == 404){
-                this.setState({openError: true, errorCode: 404});
+            if (error.response) {
+                if(error.response.status == 404){
+                    this.setState({openError: true, errorCode: 404});
+                }
+                else if (error.response.status == 400) {
+                    this.setState({openError: true, errorCode: 400});
+                }
+                else if(error.response.status == 500){
+                    this.setState({openError: true, errorCode: 500});
+                }
             }
-            else if (error.response.status == 400) {
-                this.setState({openError: true, errorCode: 400});
-            }
-            else if(error.response.status == 500){
-                this.setState({openError: true, errorCode: 500});
+            else {
+                this.props.history.push('/login')
             }
         }
     }

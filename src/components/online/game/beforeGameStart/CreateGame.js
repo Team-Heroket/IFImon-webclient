@@ -289,7 +289,12 @@ class CreateGame extends React.Component {
             this.goToGame();
 
         } catch (error) {
-            alert(`Something went wrong: \n${handleError(error)}`);
+            if (error.response) {
+                alert(`Something went wrong: \n${handleError(error)}`);
+            }
+            else {
+                this.props.history.push('/error')
+            }
         }
     }
 
