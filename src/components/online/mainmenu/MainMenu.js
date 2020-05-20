@@ -216,7 +216,7 @@ class MainMenu extends React.Component {
                     this.setState({step: 0,
                     generation: this.getGeneration(true)});
                 }
-    };
+    }
 
     /**
      * Updates the Pokedex in order to display the previous page of pokemon of that generation or the first of the previous generation
@@ -231,7 +231,7 @@ class MainMenu extends React.Component {
                 step: Math.floor((next[1]-next[0])/24),
                 generation: next});
         }
-    };
+    }
 
     /**
      * Returns the previous or next generation of the current displayed generation depending on the stepSize

@@ -133,12 +133,11 @@ class Settings extends React.Component {
         while (i<word.length) {
             let character = word.charAt(i);
             if (!isNaN(character * 1)){
-            }else{
+            }else
                 if (character == character.toUpperCase()) {
                     hasUpper = true;
                     return hasUpper;
                 }
-            }
             i++;
         }
         return hasUpper;
@@ -151,11 +150,11 @@ class Settings extends React.Component {
             let character = word.charAt(i);
             if (!isNaN(character * 1)){
 
-            }else{
+            }else
                 if (character == character.toLowerCase()) {
                     hasLower = true;
                     return hasLower;
-                }
+
             }
             i++;
         }
@@ -341,7 +340,7 @@ class Settings extends React.Component {
             }
         }
         this.setState({[key]: newValue});
-    };
+    }
 
     render() {
         //Shows user information

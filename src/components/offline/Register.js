@@ -212,11 +212,9 @@ class Register extends React.Component {
         while (i<word.length) {
             let character = word.charAt(i);
             if (!isNaN(character * 1)){
-            }else{
-                if (character == character.toUpperCase()) {
+            }else if (character == character.toUpperCase()) {
                     hasUpper = true;
                     return hasUpper;
-                }
             }
             i++;
         }
@@ -230,11 +228,9 @@ class Register extends React.Component {
             let character = word.charAt(i);
             if (!isNaN(character * 1)){
 
-            }else{
-                if (character == character.toLowerCase()) {
+            }else if (character == character.toLowerCase()) {
                     hasLower = true;
                     return hasLower;
-                }
             }
             i++;
         }
@@ -359,7 +355,7 @@ class Register extends React.Component {
                             alignItems="center"
                         >
                                 <Button style={{marginLeft: '7px', marginTop: '27px'}}
-                                    disabled={!this.state.username || !this.state.password || !this.state.avatarId || !this.state.passwordRepeat || !(this.state.password == this.state.passwordRepeat) || this.checkPassword()}
+                                    disabled={!this.state.username || !this.state.password || !this.state.avatarId || !this.state.passwordRepeat || this.state.password != this.state.passwordRepeat || this.checkPassword()}
                                     width="50%"
                                     onClick={() => {
                                         this.register();

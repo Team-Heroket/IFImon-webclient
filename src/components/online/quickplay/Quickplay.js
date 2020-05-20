@@ -3,7 +3,7 @@ import {withRouter} from "react-router-dom";
 import {BaseContainer, FormContainer} from "../../../helpers/layout";
 import Header from "../../../views/Header";
 import styled from "styled-components";
-import {BackButton, BackIcon} from "../../../views/design/Icons";
+import {BackButton, } from "../../../views/design/Icons";
 import {api, handleError} from "../../../helpers/api";
 import {Spinner} from "../../../views/design/Spinner";
 

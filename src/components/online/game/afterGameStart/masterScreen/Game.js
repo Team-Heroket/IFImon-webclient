@@ -1,6 +1,6 @@
 import React from 'react';
 import {withRouter} from "react-router-dom";
-import {FormContainer, GameContainer, Row} from "../../../../../helpers/layout";
+import {FormContainer, GameContainer} from "../../../../../helpers/layout";
 import Header from "../../../../../views/Header";
 import styled from "styled-components";
 import {BackButton, SoundButton} from "../../../../../views/design/Icons";
@@ -140,7 +140,6 @@ class Game extends React.Component {
             currentPeriod: this.period.INTERMEDIARY,
             oldPeriod: this.period.INTERMEDIARY,
             currentCard: null,
-            oldCard: null,
             state: null,
             totalCards: null,
             openWarning: false,
@@ -196,17 +195,14 @@ class Game extends React.Component {
             console.log("Am I Admin? "+amIAdmin)
 
             let currentPeriod = null;
-            let oldCard = null;
             if (resp2.state == 'FINISHED') {
                 currentPeriod = this.period.FINISHED;
                 clearInterval(this.timer_waitForNextTurn);
                 this.timer_waitForNextTurn= null;
-                oldCard = this.state.oldCard;
             }
 
             else if (user_me.deck.empty) {
                 currentPeriod = this.period.SPECTATOR;
-                oldCard = this.state.oldCard;
             }
 
 
@@ -324,7 +320,7 @@ class Game extends React.Component {
             });
             let currentBerries = this.state.berries;
             this.setState({berries: currentBerries - this.state.evolveBerries, evolved: true})
-            const response = await api.put('/games/' + this.state.pokeCode + '/berries', requestBody, {headers: {'Token': localStorage.getItem('token')}});
+            await api.put('/games/' + this.state.pokeCode + '/berries', requestBody, {headers: {'Token': localStorage.getItem('token')}});
 
 
         } catch (error) {
@@ -370,7 +366,7 @@ class Game extends React.Component {
      */
 
     async startNormalRound() {
-        let startTime = this.state.startTime;
+
         console.log("entered startNormalRound now")
 
         if (this.state.currentPeriod == this.period.FINISHED) {
@@ -502,19 +498,10 @@ class Game extends React.Component {
         clearInterval(this.recurrentTimer);
         this.recurrentTimer = null;
 
-        if (this.state.amIAdmin) {
-            this.timer_listenToAdmin = setInterval(() => {
-                console.log('getGame made in listenToAdmin with pokeCode: '+this.state.pokeCode)
-                this.getGameWaitForAdmin();
-            }, 1000)
-        }
-        else {
-
-            this.timer_listenToAdmin = setInterval(() => {
-                console.log('getGame made in listenToAdmin with pokeCode: '+this.state.pokeCode)
-                this.getGameWaitForAdmin();
-            }, 1000)
-        }
+        this.timer_listenToAdmin = setInterval(() => {
+            console.log('getGame made in listenToAdmin with pokeCode: '+this.state.pokeCode)
+            this.getGameWaitForAdmin();
+        }, 1000)
 
     }
 
@@ -712,7 +699,7 @@ class Game extends React.Component {
     async makeFinalTurn() {
         console.log("Tried to make final turn")
         try {
-            const response = await api.put('/games/' + this.state.pokeCode + '/next', {}, {headers: {'Token': localStorage.getItem('token')}});
+            await api.put('/games/' + this.state.pokeCode + '/next', {}, {headers: {'Token': localStorage.getItem('token')}});
 
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
