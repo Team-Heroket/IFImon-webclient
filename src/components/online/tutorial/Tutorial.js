@@ -75,7 +75,7 @@ class Tutorial extends React.Component {
         this.state ={
             page: 0,
             pokemonCard: [{"pokemonId":4,"categories":{"SPEED":65,"ATK":52,"HP":39,"CAPTURE_RATING":45,"WEIGHT":85,"DEF":43},"name":"Charmander","spriteURL":"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png","cryURL":"https://play.pokemonshowdown.com/audio/cries/charmander.mp3","elements":["FIRE"],"evolutionNames":["Charmeleon","Charizard"]}],
-            mute: false,
+            mute: localStorage.getItem('VolumeMuted'),
             mutePage3: false,
             berries: 2,
             evolveTo: 0,

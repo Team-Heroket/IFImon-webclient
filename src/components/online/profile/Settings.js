@@ -19,7 +19,6 @@ import VolumeUpRoundedIcon from '@material-ui/icons/VolumeUpRounded';
 import Grid from "@material-ui/core/Grid";
 import UIFx from 'uifx';
 import pokeCry from '../../shared/pikachu.mp3';
-import music from '../../shared/musicSample.mp3';
 import {Alert} from "@material-ui/lab";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
@@ -37,16 +36,6 @@ const Label = styled.label`
   font-size: 16px;
   font-weight: 300;
 `;
-
-
-const Row = styled.div`
-    &::after{
-    content: "";
-    clear: "";
-    display: table "";
-    }
-    
-    `;
 
 const PasswordField = styled.input`
   &::placeholder {
@@ -90,16 +79,6 @@ const InputField = styled.input`
   font-weight: 300;
   
 `;
-
-const Column = styled.div`
-    float: left
-    align-items: center
-    width = 100%
-    
-    @media only screen and (min-width: 768px){
-    width: 50%;
-    }
-`
 
 
 class Settings extends React.Component {

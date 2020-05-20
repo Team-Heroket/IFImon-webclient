@@ -12,7 +12,6 @@ import Lobby from "../../online/game/beforeGameStart/Lobby";
 import CreateGame from "../../online/game/beforeGameStart/CreateGame"
 import Quickplay from "../../online/quickplay/Quickplay";
 import Game from "../../online/game/afterGameStart/masterScreen/Game";
-import Test from "../../offline/Test";
 import Tutorial from "../../online/tutorial/Tutorial";
 
  /**
@@ -35,14 +34,6 @@ class AppRouter extends React.Component {
                   render={() => (
                       <GameGuard>
                           <MainMenu/>
-                      </GameGuard>
-                  )}
-              />
-              <Route
-                  path="/test"
-                  render={() => (
-                      <GameGuard>
-                          <Test/>
                       </GameGuard>
                   )}
               />
