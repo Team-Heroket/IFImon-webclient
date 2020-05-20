@@ -5,7 +5,7 @@ import Header from "../../../../views/Header";
 import styled from "styled-components";
 import {Button, TransparentButton} from "../../../../views/design/Button";
 import {BackButton, OrSeparation, SoundButton} from "../../../../views/design/Icons";
-import {api, handleError} from "../../../../helpers/api";
+import {api} from "../../../../helpers/api";
 import Grid from "@material-ui/core/Grid";
 import Collapse from "@material-ui/core/Collapse";
 import {Alert} from "@material-ui/lab";

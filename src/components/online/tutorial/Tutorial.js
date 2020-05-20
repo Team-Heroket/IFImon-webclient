@@ -2,14 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import {
     BaseContainer, ButtonContainer,
-    FormContainer, GameContainer,
+    FormContainer,
     SimpleColumnContainer, SimpleRowContainer
 } from '../../../helpers/layout';
 import { withRouter } from 'react-router-dom';
 import Header from "../../../views/Header";
 import {
     AmountOfBerries,
-    BackButton, BerriesIcon, BerriesIconWithBadge, ClickMeIcon, DrawIcon,
+    BackButton, BerriesIconWithBadge, ClickMeIcon, DrawIcon,
     ForwardIcon, LeaderboardIcon, MiniBerriesIcon,
     NextIcon,
     PossibleWinnerIcon, QuickplayIcon, SettingsIcon, SocialIcon, SoundButton, WinnerIcon
@@ -19,7 +19,6 @@ import Typewriter from 'typewriter-effect';
 import {api, handleError} from "../../../helpers/api";
 import {TutorialPokemonCard} from "../../../views/design/PokemonCard";
 import {ActiveEvolveButton, Button, EvolveButton} from "../../../views/design/Button";
-import Settings from "../profile/Settings";
 
 const Title = styled.label`
   position: absolute;

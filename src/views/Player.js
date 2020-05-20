@@ -1,10 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import {AmountOfBerries, LogoBadge, PossibleWinnerIcon, SettingsIcon, SocialIcon, WinnerIcon} from "./design/Icons";
+import { LogoBadge} from "./design/Icons";
 import Grid from "@material-ui/core/Grid";
-import {ButtonContainer, SimpleColumnContainer} from "../helpers/layout";
 import {Spinner} from "./design/Spinner";
-import {MenuButtonIcon} from "./design/Button";
 
 const Container = styled.button`
     &:hover {

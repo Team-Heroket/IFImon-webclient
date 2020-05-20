@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React from "react";
-import {BackIcon, LeaderboardIcon, QuickplayIcon, SettingsIcon, SocialIcon, TutorialIcon} from "./Icons";
+import {LeaderboardIcon, QuickplayIcon, SettingsIcon, SocialIcon, TutorialIcon} from "./Icons";
 
 export const Button = styled.button`
   &:hover {

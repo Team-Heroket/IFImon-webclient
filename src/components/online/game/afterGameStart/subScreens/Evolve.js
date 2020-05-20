@@ -26,23 +26,6 @@ import {FlippedCard} from "./FlippedCard";
 
 export let Evolve = ({masterState, history, parentMethod}) => {
 
-    //This function is evoked after 5 seconds (masterState.startTime+20000 - new Date().getTime()) FOR EVERYONE
-    async function evolvePokemon() {
-        try {
-            const requestBody = JSON.stringify({
-                amount: masterState.evolveBerries,
-                id: masterState.player_me.user.id
-            });
-            const response = await api.put('/games/'+masterState.pokeCode+'/berries',requestBody , { headers: {'Token': localStorage.getItem('token')}});
-            let currentBerries = masterState.berries;
-            masterState.berries = currentBerries-masterState.evolveBerries
-
-
-        } catch (error) {
-            alert(`Something went wrong: \n${handleError(error)}`);
-        }
-    }
-
 
     function showLeaderboard() {
         let steps = ['Category selection', 'Evolve Pokémon', 'Results'];

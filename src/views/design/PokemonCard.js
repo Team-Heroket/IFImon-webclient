@@ -1,8 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import ReactTooltip from "react-tooltip";
-import {AmountOfBerries, PlaceholderIcon, PossibleWinnerIcon} from "./Icons";
-import {SimpleColumnContainer} from "../../helpers/layout";
+import {PlaceholderIcon} from "./Icons";
 import {api, handleError} from "../../helpers/api";
 
 const Statistics = styled.button`
@@ -245,7 +244,7 @@ let PokemonFormatter = (element) => {
         case('fairy'):
             return {mainColor: "#FE4365", secondaryColor: "#FF9F80", inverted: false, icon: require("../../components/shared/images/pokemonTypesSVG/"+element+".svg")};
 
-    };
+    }
 
 }
 
@@ -265,7 +264,7 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
                 const requestBody = JSON.stringify({
                     category: category
                 });
-                const response = await api.put('/games/' + pokeCode + '/categories', requestBody, {headers: {'Token': localStorage.getItem('token')}});
+                await api.put('/games/' + pokeCode + '/categories', requestBody, {headers: {'Token': localStorage.getItem('token')}});
             } catch (error) {
                 if (error.response.status != 403) {
                     alert(`Something went wrong: \n${handleError(error)}`);

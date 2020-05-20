@@ -4,19 +4,18 @@ import {
     ButtonContainer,
     FormContainer, PlayerContainer, SimpleColumnContainer, SimpleRowContainer
 } from "../../../../../helpers/layout";
-import {AvatarButton, EvolveButton, LogOutButton} from "../../../../../views/design/Button";
+import {EvolveButton, LogOutButton} from "../../../../../views/design/Button";
 import Confetti from "../../../../shared/Confetti";
 import Grid from "@material-ui/core/Grid";
 import {Clock} from "../Clock";
 import {api, handleError} from "../../../../../helpers/api";
 import {Spinner} from "../../../../../views/design/Spinner";
 import {RandomPokemonFact} from "../../../mainmenu/RandomPokemonFact";
-import {EmoteContainer, PlayerEmote} from "../../../../../views/Player";
+import { PlayerEmote} from "../../../../../views/Player";
 import SpeedDial from "@material-ui/lab/SpeedDial";
 import SpeedDialAction from "@material-ui/lab/SpeedDialAction";
 import SpeedDialIcon from "@material-ui/lab/SpeedDialIcon";
 import TelegramIcon from '@material-ui/icons/Telegram';
-import ReactCardFlip from "react-card-flip";
 
 const Label = styled.label`
   position: relative;

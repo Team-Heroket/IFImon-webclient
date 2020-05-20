@@ -113,4 +113,4 @@ export class ChooseCategory extends React.Component {
         );
     }
 
-};
+}
