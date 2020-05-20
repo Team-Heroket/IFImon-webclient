@@ -132,9 +132,7 @@ class Settings extends React.Component {
         let i=0;
         while (i<word.length) {
             let character = word.charAt(i);
-            if (!isNaN(character * 1)){
-            }else
-                if (character == character.toUpperCase()) {
+                if ( isNaN(character * 1) && character == character.toUpperCase()) {
                     hasUpper = true;
                     return hasUpper;
                 }
@@ -148,10 +146,7 @@ class Settings extends React.Component {
         let i=0;
         while (i<word.length) {
             let character = word.charAt(i);
-            if (!isNaN(character * 1)){
-
-            }else
-                if (character == character.toLowerCase()) {
+                if (isNaN(character * 1) && character == character.toLowerCase()) {
                     hasLower = true;
                     return hasLower;
 
@@ -312,15 +307,6 @@ class Settings extends React.Component {
 
         }
 
-    }
-
-    giveAvatarString(id) {
-        if (id <10) {
-            return '00'+id;
-        }
-        else {
-            return '0'+id
-        }
     }
 
     handleChange(key, newValue) {

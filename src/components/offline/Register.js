@@ -211,8 +211,7 @@ class Register extends React.Component {
         let i=0;
         while (i<word.length) {
             let character = word.charAt(i);
-            if (!isNaN(character * 1)){
-            }else if (character == character.toUpperCase()) {
+            if (isNaN(character * 1) && character == character.toUpperCase()) {
                     hasUpper = true;
                     return hasUpper;
             }
@@ -226,9 +225,7 @@ class Register extends React.Component {
         let i=0;
         while (i<word.length) {
             let character = word.charAt(i);
-            if (!isNaN(character * 1)){
-
-            }else if (character == character.toLowerCase()) {
+            if (isNaN(character * 1) && character == character.toLowerCase()) {
                     hasLower = true;
                     return hasLower;
             }

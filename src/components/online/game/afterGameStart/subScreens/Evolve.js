@@ -8,7 +8,6 @@
 
 
 import React from "react";
-import {api, handleError} from "../../../../../helpers/api";
 import {ButtonContainer, PlayerContainer, SimpleColumnContainer} from "../../../../../helpers/layout";
 import {PlayerGame} from "../../../../../views/Player";
 import {LogOutButton, EvolveButton, ActiveEvolveButton} from "../../../../../views/design/Button";
