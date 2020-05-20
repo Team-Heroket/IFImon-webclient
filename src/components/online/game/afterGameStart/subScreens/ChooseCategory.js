@@ -42,18 +42,32 @@ clock = {
 }
 
 
-export let ChooseCategory = ({masterState, history, parentMethod}) => {
+export class ChooseCategory extends React.Component {
 
-    function showLeaderboard() {
+    stepper = null;
+    componentDidMount() {
         let steps = ['Category selection', 'Evolve Pokémon', 'Results'];
 
-        if(masterState.amITurnPlayer){
+        if(this.props.masterState.amITurnPlayer){
             steps[0] = 'Select category';
         }else{
-            steps[0] = masterState.turnPlayer.user.username + ' is choosing';
+            steps[0] = this.props.masterState.turnPlayer.user.username + ' is choosing';
         }
+
+        this.stepper = <Stepper alternativeLabel activeStep={0} connector={<ColorlibConnector />} style={{ backgroundColor: "transparent" }} style={{padding: '0px', margin: '0px', marginTop: '25px', marginBottom: '25px', background: 'transparent', width: '280px'}}>
+            {steps.map((label) => (
+                <Step key={label}>
+                    <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+                </Step>
+            ))}
+        </Stepper>
+    }
+
+    //= ({masterState, history, parentMethod})
+    showLeaderboard() {
+
         return (<SimpleColumnContainer width={'280px'} sideMargin={'0px'} style={{marginLeft: '10px'}}>
-                {masterState.players.map(player => {
+                {this.props.masterState.players.map(player => {
                     return (
                         <PlayerContainer>
                             {player.user.id == localStorage.getItem('id') ?
@@ -65,42 +79,38 @@ export let ChooseCategory = ({masterState, history, parentMethod}) => {
                     );
                 })}
 
-                <Stepper alternativeLabel activeStep={0} connector={<ColorlibConnector />} style={{ backgroundColor: "transparent" }} style={{padding: '0px', margin: '0px', marginTop: '25px', marginBottom: '25px', background: 'transparent', width: '280px'}}>
-                    {steps.map((label) => (
-                        <Step key={label}>
-                            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
-                        </Step>
-                    ))}
-                </Stepper>
+            {this.stepper};
 
 
-                {BerriesIconWithBadge(masterState.berries)}
+                {BerriesIconWithBadge(this.props.masterState.berries)}
                 <LogOutButton
                     width = "50%"
-                    disabled={masterState.amITurnPlayer}
-                    onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) history.push('/menu') }} > Give Up
+                    disabled={this.props.masterState.amITurnPlayer}
+                    onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) this.props.history.push('/menu') }} > Give Up
                 </LogOutButton>
 
             </SimpleColumnContainer>
         );
     }
-
-    return (
-        <Grid
-            container
-            direction="row"
-            justify="space-between"
-            alignItems="center"
-            style={{marginTop: '50px'}}
-        >
-                {showLeaderboard()}
+    render() {
+        return (
+            <Grid
+                container
+                direction="row"
+                justify="space-between"
+                alignItems="center"
+                style={{marginTop: '50px'}}
+            >
+                {this.showLeaderboard()}
                 {localStorage.getItem('SelectedCat')==0 ?
-                    <FlippedCard front = {FocusedPokemonCard(masterState.deck.cards[0], !masterState.amITurnPlayer, '0', 'Your Card', parentMethod, false, true)}/>
-                :
-                    <FlippedCard front = {FocusedPokemonCard(masterState.deck.cards[0], !masterState.amITurnPlayer, localStorage.getItem('SelectedCat'), 'Your Card', parentMethod, false, true)}/>
+                    <FlippedCard front = {FocusedPokemonCard(this.props.masterState.deck.cards[0], !this.props.masterState.amITurnPlayer, '0', 'Your Card', this.props.parentMethod, false, true, 0, this.props.masterState.pokeCode.toString())}/>
+                    :
+                    <FlippedCard front = {FocusedPokemonCard(this.props.masterState.deck.cards[0], !this.props.masterState.amITurnPlayer, localStorage.getItem('SelectedCat'), 'Your Card', this.props.parentMethod, false, true, 0, this.props.masterState.pokeCode.toString())}/>
                 }
                 {PlaceholderCard()}
 
             </Grid>
-    );
+        );
+    }
+
 };

@@ -14,8 +14,15 @@ import {Clock} from "../Clock";
 import {Spectator} from "../subScreens/Spectator";
 import Grid from "@material-ui/core/Grid";
 import {RandomPokemonFact} from "../../../mainmenu/RandomPokemonFact";
-import {FinishedTest} from "../subScreens/FinishedTest";
+import {Alert} from "@material-ui/lab";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Collapse from "@material-ui/core/Collapse";
 
+const AlertContainer = styled.div`
+  width: 60%;
+  alignItems: center;
+`;
 
 const Audio = React.memo(function Audio({children}) {
     try{
@@ -136,6 +143,8 @@ class Game extends React.Component {
             oldCard: null,
             state: null,
             totalCards: null,
+            openWarning: false,
+            afkCount: 0,
             mute: (localStorage.getItem('VolumeMuted') ? (localStorage.getItem('VolumeMuted')=='true' ? true : false) : false)
         }
         localStorage.setItem('SelectedCat',0);
@@ -212,7 +221,6 @@ class Game extends React.Component {
                 clearInterval(this.timer_listenToAdmin);
                 this.timer_listenToAdmin=null;
 
-                oldCard = user_me.deck.cards[0];
             }
             else {
                 if (this.state.goToEvolve) {
@@ -220,7 +228,6 @@ class Game extends React.Component {
                     clearInterval(this.timer_waitForNextTurn);
                     clearInterval(this.timer_waitForCategory);
                     this.timer_waitForCategory=null;
-                    oldCard = this.state.oldCard;
                 }
                 else {
                     currentPeriod = this.period.RESULT;
@@ -257,11 +264,12 @@ class Game extends React.Component {
             if (error.response.status == 404) {
                 this.props.history.push('/menu')
             }
-            else {
-                alert(`Something went wrong: \n${handleError(error)}`);
+            else if (error.response.status == 403){
+                this.props.history.push('/menu');
             }
         }
     }
+
 
     startGame() {
         console.log("Starttime is: "+this.state.startTime);
@@ -326,29 +334,31 @@ class Game extends React.Component {
 
     async makeTurn() {
         console.log("Make category put request")
+
         //Insert Put Function for turnPlayer to choose
         let category = localStorage.getItem('SelectedCat');
         if (category == 0) {
+            this.setState({afkCount: this.state.afkCount+1})
             let categories = [this.category.HP, this.category.SPEED, this.category.WEIGHT, this.category.CAPTURERATE, this.category.ATTACKPOINTS, this.category.DEFENSEPOINTS];
             let randomIndex = Math.floor(Math.random() * Math.floor(categories.length));
             category = categories[randomIndex]
             localStorage.setItem('SelectedCat', category);
             console.log("Random Category: " + category);
+            try {
+                console.log("Category selected: ", category);
+                const requestBody = JSON.stringify({
+                    category: category
+                });
+                await api.put('/games/' + this.state.pokeCode + '/categories', requestBody, {headers: {'Token': localStorage.getItem('token')}});
+            } catch (error) {
+                alert(`Something went wrong: \n${handleError(error)}`);
+            }
         }
-
-        try {
-            console.log("Category selected: ", category);
-            const requestBody = JSON.stringify({
-                category: category
-            });
-            const response = await api.put('/games/' + this.state.pokeCode + '/categories', requestBody, {headers: {'Token': localStorage.getItem('token')}});
-
-        } catch (error) {
-            alert(`Something went wrong: \n${handleError(error)}`);
+        else {
+            this.setState({afkCount: 0})
         }
-
-
     }
+
 
     /**
      1) all clients: get game - DONE 0-5s
@@ -375,15 +385,20 @@ class Game extends React.Component {
             this.setState({goToEvolve: true, evolved: false});
             if (this.state.amITurnPlayer) {
                 this.timeout_makeTurn = await setTimeout(() => {
-                    this.makeTurn();
+                    this.makeTurn().then(() => {
+                        if (this.state.afkCount > 1) {
+                            console.log("kicked for being afk")
+                            localStorage.setItem('info', 'You were kicked for being AFK')
+                            this.props.history.push('/socialmode');
+                        }
+                    });
                     localStorage.setItem('playedSound', 'false');
                 }, 13000)
-                this.timeout_waitForCategoryResult = setTimeout(() => {
-                    this.timer_waitForCategory= setInterval(() => {
-                        console.log('getGame made in waitForCategory with pokeCode: '+this.state.pokeCode)
-                        this.getGameInfo()
-                    }, 1000)
-                }, 12000)
+
+                this.timer_waitForCategory= setInterval(() => {
+                    console.log('getGame made in waitForCategory with pokeCode: '+this.state.pokeCode)
+                    this.getGameInfo()
+                }, 1000)
             }
             else {
                 this.timer_waitForCategory= setInterval(() => {
@@ -394,6 +409,7 @@ class Game extends React.Component {
         }
         else if (this.state.currentPeriod == this.period.EVOLVE) {
             localStorage.setItem('evolveTo', 0);
+            this.setState({'openWarning': false})
             this.timeout_evolve = setTimeout(() => {
                 if (localStorage.getItem('evolveTo') != 0) {
                     this.evolvePokemon();
@@ -428,7 +444,7 @@ class Game extends React.Component {
     startSpectatorRound() {
         let startTime = this.state.startTime;
 
-        this.setState({period: this.period.SPECTATOR, startTime: startTime + 40000});
+        this.setState({period: this.period.SPECTATOR, startTime: startTime + 40000, afkCount: 0, openWarning: false});
 
         clearTimeout(this.timeout_makeTurn);
         this.timeout_makeTurn = null;
@@ -481,7 +497,7 @@ class Game extends React.Component {
     }
 
     startFinishedRound() {
-        this.setState({period: this.period.FINISHED});
+        this.setState({period: this.period.FINISHED, afkCount: 0, openWarning: false});
 
         clearInterval(this.recurrentTimer);
         this.recurrentTimer = null;
@@ -503,9 +519,7 @@ class Game extends React.Component {
     }
 
     async startRound() {
-
         this.startNormalRound();
-
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -535,6 +549,12 @@ class Game extends React.Component {
             clearTimeout(this.timeout_waitForAdmin);
             this.timeout_waitForAdmin = null;
         }
+
+        if (prevState.currentPeriod && prevState.currentPeriod == this.period.RESULT && this.state.currentPeriod == this.period.CHOOSECATEGORY && this.state.afkCount ==1 && this.state.amITurnPlayer) {
+            this.setState({openWarning: true});
+        }
+
+
     }
 
     componentDidMount() {
@@ -590,8 +610,10 @@ class Game extends React.Component {
             await api.put('/games/'+this.state.pokeCode+'/players', requestBody,{ headers: {'Token': localStorage.getItem('token')}});
         } catch (error) {
             console.log('logged error:'+ error);
-            if (error.response.status != 404) {
-                alert(`Something went wrong: \n${handleError(error)}`);
+            if (error.response) {
+                if (error.response.status != 404) {
+                    alert(`Something went wrong: \n${handleError(error)}`);
+                }
             }
         }
     }
@@ -609,7 +631,7 @@ class Game extends React.Component {
         } else if (this.state.currentPeriod == this.period.SPECTATOR) {
             return <Spectator masterState={this.state} history={this.props.history}/>
         } else if (this.state.currentPeriod == this.period.FINISHED) {
-            return <FinishedTest masterState={this.state} history={this.props.history}/>
+            return <Finished masterState={this.state} history={this.props.history}/>
         } else if (this.state.currentPeriod == this.period.NEWROUNDTIMER) {
             return <Clock remainingTime={this.state.remainingTime} totalTime={5000} type={this.clock.NEWROUND}/>
 
@@ -625,6 +647,8 @@ class Game extends React.Component {
             return this.leaveGame();
         });
     };
+
+
 
     render() {
         return (
@@ -651,6 +675,29 @@ class Game extends React.Component {
                             document.getElementById("Background").volume = 0}} />
                     }
                 </Grid>
+                <Collapse in={this.state.openWarning}>
+                    <AlertContainer>
+                        <Alert severity="warning"
+                               action={
+                                   <IconButton
+                                       aria-label="close"
+                                       color="inherit"
+                                       size="small"
+                                       width={'50%'}
+                                       onClick={() => {
+                                           this.setState({openWarning: false});
+                                       }}
+                                   >
+                                       <CloseIcon fontSize="inherit"/>
+                                   </IconButton>
+                               }
+                        >
+                            Warning: Choose a Category or you will be kicked for being AFK!
+                        </Alert>
+                    </AlertContainer>
+                    <br/>
+                </Collapse>
+
 
                 {this.state.justInitialized ?
 
