@@ -212,16 +212,15 @@ class Lobby extends React.Component {
 
         this.setState({pokeCode: this.props.match.params.pokeCode});
 
-        this.getAndSetUserInformation();
-        setTimeout(() => {
-            if (this.state.admin.id == localStorage.getItem('id')) {
-                this.setState({openSuccess: true});
-                setTimeout(() => {
-                    this.setState({openSuccess: false});
-                }, 5000);
-            }
-        },100)
-
+        this.getAndSetUserInformation().then(r => {
+                if (this.state.admin.id == localStorage.getItem('id')) {
+                    this.setState({openSuccess: true});
+                    setTimeout(() => {
+                        this.setState({openSuccess: false});
+                    }, 5000);
+                }
+        }
+        );
 
         this.getUpdate();
 
@@ -331,14 +330,16 @@ class Lobby extends React.Component {
                         {localStorage.getItem('VolumeMuted')=='true'?
                             <SoundButton mute={true} action={()=>{
                                 localStorage.setItem('VolumeMuted', 'false');
+                                document.getElementById('MainTheme').play();
                                 this.forceUpdate()}} />
                             :
                             <SoundButton mute={false} action={() => {
                                 localStorage.setItem('VolumeMuted', 'true');
+                                document.getElementById('MainTheme').pause();
                                 this.forceUpdate()}} />
                         }
                     </Grid>
-                <FormContainer>
+                <FormContainer margin={'100px'}>
                     <Form>
                         <CenterContainer >
                             <Collapse in={this.state.openSuccess}>
@@ -397,16 +398,17 @@ class Lobby extends React.Component {
                         <CenterContainer>
 
                             <Spinner/>
+                            {this.state.admin && this.state.admin.id == localStorage.getItem('id') ? null :
+                                <MenuButton
+                                    width = "50%"
+                                    onClick={() => {
+                                        this.leaveGame();
+                                        this.goToSocialMode();
+                                    }}>
+                                    Leave
+                                </MenuButton>
+                            }
 
-                            <MenuButton
-                                width = "50%"
-                                disabled={this.state.admin && this.state.admin.id == localStorage.getItem('id')}
-                                onClick={() => {
-                                    this.leaveGame();
-                                    this.goToSocialMode();
-                                }}>
-                                Leave
-                            </MenuButton>
 
                         </CenterContainer>
 

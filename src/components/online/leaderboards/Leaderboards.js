@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import Header from "../../../views/Header";
 import {PlayerStatCard, Player, PlayerMe} from "../../../views/Player";
 
-import {BackButton} from "../../../views/design/Icons";
+import {BackButton, SoundButton} from "../../../views/design/Icons";
 import {Spinner} from "../../../views/design/Spinner";
 import Grid from "@material-ui/core/Grid";
 
@@ -85,14 +85,27 @@ class Leaderboards extends React.Component {
                 <Grid
                     container
                     direction="row"
-                    justify="flex-start"
+                    justify="space-between"
                     alignItems="flex-start"
                 >
-                    <BackButton action={() => {this.goBack()}}/>
+                    <BackButton
+                        action={() => {this.goBack()}}/>
+                    {localStorage.getItem('VolumeMuted')=='true'?
+                        <SoundButton mute={true} action={()=>{
+                            localStorage.setItem('VolumeMuted', 'false');
+                            document.getElementById('MainTheme').play();
+                            this.forceUpdate()}} />
+                        :
+                        <SoundButton mute={false} action={() => {
+                            localStorage.setItem('VolumeMuted', 'true');
+                            document.getElementById('MainTheme').pause();
+                            this.forceUpdate()}} />
+                    }
                 </Grid>
                 {(!this.state.users || !this.state.user) ? (
-                    <FormContainer><Spinner /></FormContainer>
+                    <FormContainer margin={'150px'}><Spinner /></FormContainer>
                     ) : (
+                    <FormContainer margin={'50px'}>
                     <Row>
                     <Column>
                     <ButtonContainer>
@@ -134,6 +147,7 @@ class Leaderboards extends React.Component {
                     }
                 </Column>
                 </Row>
+                    </FormContainer>
 
                 )
                     }

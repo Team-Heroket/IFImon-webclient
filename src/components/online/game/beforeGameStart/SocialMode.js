@@ -125,6 +125,9 @@ class SocialMode extends React.Component {
             if(error.response.status == 404){
                 this.setState({openError: true, errorCode: 404});
             }
+            else if (error.response.status == 400) {
+                this.setState({openError: true, errorCode: 400});
+            }
             else if(error.response.status == 500){
                 this.setState({openError: true, errorCode: 500});
             }
@@ -151,10 +154,12 @@ class SocialMode extends React.Component {
                         {localStorage.getItem('VolumeMuted')=='true'?
                             <SoundButton mute={true} action={()=>{
                                 localStorage.setItem('VolumeMuted', 'false');
+                                document.getElementById('MainTheme').play();
                                 this.forceUpdate()}} />
                             :
                             <SoundButton mute={false} action={() => {
                                 localStorage.setItem('VolumeMuted', 'true');
+                                document.getElementById('MainTheme').pause();
                                 this.forceUpdate()}} />
                         }
                     </Grid>
@@ -196,7 +201,7 @@ class SocialMode extends React.Component {
                                           </IconButton>
                                       }
                                >
-                                   {this.state.errorCode == 404 ? 'PokeCode does not exist!' : (this.state.errorCode == 500 ? 'Internal Server Error' : null)}
+                                   {this.state.errorCode == 404 ? 'PokeCode does not exist!' : (this.state.errorCode == 500 ? 'Internal Server Error' : (this.state.errorCode == 400 ? 'Game is already running!' : null))}
                                </Alert>
                                <br/>
                            </Collapse>

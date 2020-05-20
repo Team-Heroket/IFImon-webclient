@@ -3,6 +3,7 @@ import styled from "styled-components";
 import ReactTooltip from "react-tooltip";
 import {AmountOfBerries, PlaceholderIcon, PossibleWinnerIcon} from "./Icons";
 import {SimpleColumnContainer} from "../../helpers/layout";
+import {api, handleError} from "../../helpers/api";
 
 const Statistics = styled.button`
   width: 230px;
@@ -248,7 +249,7 @@ let PokemonFormatter = (element) => {
 
 }
 
-export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMethod = ()=>{}, Winner, mute, volume=0) => {
+export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMethod = ()=>{}, Winner, mute, volume=0, pokeCode='0') => {
     let formattedPokemon = {}
     let purge = [" ", "-"]
     let gifName = pokemon.name.toLowerCase()
@@ -256,6 +257,23 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
         gifName = gifName.replace(purge[i], '')
     }
 
+    async function makeTurn(category) {
+        console.log('Went in here with pokeCoce: '+pokeCode)
+        if (pokeCode != '0') {
+            try {
+                console.log("Made Turn with "+ category);
+                const requestBody = JSON.stringify({
+                    category: category
+                });
+                const response = await api.put('/games/' + pokeCode + '/categories', requestBody, {headers: {'Token': localStorage.getItem('token')}});
+            } catch (error) {
+                if (error.response.status != 403) {
+                    alert(`Something went wrong: \n${handleError(error)}`);
+                }
+
+            }
+        }
+    }
     let formattedPokemon2 = {}
     formattedPokemon = PokemonFormatter((pokemon.elements[0]).toLowerCase());
     if(pokemon.elements.length>1) {
@@ -281,6 +299,7 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
                         <Statistics toBeFocused={toFocus == 'ATK'} color={formattedPokemon.mainColor}
                                     disabled={disabled} onClick={() => {
                             localStorage.setItem('SelectedCat', 'ATK');
+                            makeTurn('ATK')
                             parentMethod()
                         }}>
                             <StatName>Attack</StatName>
@@ -288,6 +307,7 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
                         </Statistics>
                         <Statistics toBeFocused={toFocus == 'DEF'} color={formattedPokemon.mainColor}
                                     disabled={disabled} onClick={() => {
+                            makeTurn('DEF')
                             localStorage.setItem('SelectedCat', 'DEF');
                             parentMethod()
                         }}>
@@ -296,6 +316,7 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
                         </Statistics>
                         <Statistics toBeFocused={toFocus == 'SPEED'} color={formattedPokemon.mainColor}
                                     disabled={disabled} onClick={() => {
+                            makeTurn('SPEED')
                             localStorage.setItem("SelectedCat", 'SPEED');
                             parentMethod()
                         }}>
@@ -304,6 +325,7 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
                         </Statistics>
                         <Statistics toBeFocused={toFocus == 'CAPTURE_RATING'} color={formattedPokemon.mainColor}
                                     disabled={disabled} onClick={() => {
+                            makeTurn('CAPTURE_RATING')
                             localStorage.setItem("SelectedCat", 'CAPTURE_RATING');
                             parentMethod()
                         }}>
@@ -312,6 +334,7 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
                         </Statistics>
                         <Statistics toBeFocused={toFocus == 'HP'} color={formattedPokemon.mainColor} disabled={disabled}
                                     onClick={() => {
+                                        makeTurn('HP')
                                         localStorage.setItem("SelectedCat", 'HP');
                                         parentMethod()
                                     }}>
@@ -319,7 +342,8 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
                             <StatValue>{pokemon.categories.HP}</StatValue>
                         </Statistics>
                         <Statistics toBeFocused={toFocus == 'WEIGHT'} color={formattedPokemon.mainColor}
-                                    disabled={disabled} onClick={() => {
+                                    disabled={disabled || localStorage.getItem("SelectedCat")!=0} onClick={() => {
+                            makeTurn('WEIGHT')
                             localStorage.setItem("SelectedCat", 'WEIGHT');
                             parentMethod()
                         }}>

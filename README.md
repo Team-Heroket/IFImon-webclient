@@ -1,33 +1,106 @@
+
+![Pokémon Top Trumps](./public/Readme-assets/logo.png)
+
 # SoPra FS20 - Group 20
 
 # IFImon - Top Trumps
 
-Read and go through those Tutorials, It will make your life easier!
+Server-repository: https://github.com/Team-Heroket/IFImon-server
 
-- Read the React [Docs](https://reactjs.org/docs/getting-started.html)
-- Do this React [Getting Started](https://reactjs.org/tutorial/tutorial.html) Tutorial (it doesn’t assume any existing React knowledge)
-- Get an Understanding of [CSS](http://localhost:3000) and [HTML](https://www.w3schools.com/html/html_intro.asp)!
+Play here: https://sopra-fs20-group-20-client.herokuapp.com/
 
-Once you have done all of this, in the template there are two main external dependencies that you should look at:
 
-- [styled-components](https://www.styled-components.com/docs)
-  It removes the mapping between components and styles (i.e. external css files). This means that when you're defining your styles, you're actually creating a normal React component, that has your styles attached to it
-* [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start) Declarative routing for React being a collection of navigational components that compose declaratively with your application. 
+## Introduction:
 
-<!-- ## IDE Recommendation
-As a student, you have the possibility with [JetBrains](https://www.jetbrains.com/student/) to obtain a free individual license and have access to several IDEs. 
-We recommend you to use [WebStorm](https://www.jetbrains.com/webstorm/specials/webstorm/webstorm.html?gclid=EAIaIQobChMIyPOj5f723wIVqRXTCh3SKwtYEAAYASAAEgLtMvD_BwE&gclsrc=aw.ds) for your front-end. 
-Once you have downloaded and installed it, you can add the following WebStorm plugins: 
-> Go to Preferences > Plugins > Browse Repositories and look for: 
-* [styled-components](https://plugins.jetbrains.com/plugin/9997-styled-components) (provides coding assistance like CSS Highlighting for Styled Components)
-* [prettier](https://plugins.jetbrains.com/plugin/10456-prettier) (a smart code formatter)
-* [Material Theme UI](https://plugins.jetbrains.com/plugin/8006-material-theme-ui) (Material Theme for Jetbrains IDEs, allowing a total customization of the IDE including Themes, Color Schemes, Icons and many other features.)
+This Pokèmon inspired game is based on the popular card game [Top Trumps](https://en.wikipedia.org/wiki/Top_Trumps). 
 
-Feel free to use other IDEs (e.g. [VisualStudio](https://code.visualstudio.com/)) if you want.  -->
+Every player in a game is dealt a fixed amount of cards (between 2 and 6), the game creator is the first assigned turnplayer. 
 
-## Prerequisites and Installation
+Every card represents a Pokémon with unique values to the stats: Attack, Defense, Speed, Capture rate, HP and Weight.
+When the game starts, every player is dealt between 2 to 6 random cards and an amount of berries equal to the number of players participating in the game.
 
-For your local development environment you'll need Node.js >= 8.10. You can download it [here](https://nodejs.org). All other dependencies including React get installed with:
+The creator of the lobby starts as the first turn player.
+The turn player has then 14 seconds to choose a category which he thinks has the highest value.
+
+After these 14s have passed, everyone will have the possibility to see the card which has the highest value in the choosen category and choose to either evolve their Pokemon or not. 
+
+If there are evolutions available for a Pokemon, buttons will appear which displays the Evolution name and it's cost.
+At the start of each game each player receives as many berries as the number of players in the game. Once those are used up there are no new ones handed out!
+You have 10 seconds to decide, if you misclick you can click again on the button to deselect it!
+
+After these 10s the results of the current round are displayed for 10s before a new turn starts.
+
+The game ends when all players except one have 0 cards in their deck. 
+
+![Example Pokemon Card](./public/Readme-assets/PokemonCard.png "Example Pokemon Card")
+
+## Technologies:
+ 
+ We used following `npm` packages:
+ - [Styled-components](https://styled-components.com/): Utilising tagged template literals (a recent addition to JavaScript) and the power of CSS, styled-components allows you to write actual CSS code to style your components. It also removes the mapping between components and styles – using components as a low-level styling construct could not be easier!
+ - [react-router-dom](https://reacttraining.com/react-router/web/guides/quick-start): Declarative routing for React being a collection of navigational components that compose declaratively with your application.                                                      
+ - [@material-ui](https://material-ui.com/): Open-source project that features React components that implement Google's Material Design.                                                  
+ - [react-confetti](https://www.npmjs.com/package/react-confetti): For an confetti animation. Confetti without the cleanup.                                                   
+ - [typewriter-effect](https://www.npmjs.com/package/typewriter-effect): A simple yet powerful native JS plugin for a cool typewriter effect.
+ - [typewriter-effect](https://www.npmjs.com/package/typewriter-effect): A simple yet powerful native JS plugin for a cool typewriter effect.
+ - [react-popupbox](https://www.npmjs.com/package/react-popupbox): A simple lightbox component for react, inspired by colorbox and React-Lightbox.
+ - [react-countdown-circle-timer](https://www.npmjs.com/package/react-countdown-circle-timer): React countdown timer component in a circle shape with color and progress animation.
+ - [react-card-flip](https://www.npmjs.com/package/react-card-flip): React Card Flip is allows you to use the card flipping animation.
+                                    
+## High-level components:
+#### Game Component
+Our game is structured in an hierachical manner, we have a master screen which handles all the in-game server requests.
+And it switches between the various subscreens based on the server responses and it also handels all the in-game timers.
+All the subscreen are visible in the state diagram below, and effectively represents what a user will see dring the course of a game. 
+
+![Game State Diagram](./public/Readme-assets/GameStateDiagram.png "Game State Diagram")
+
+#### Pokemon Card Component:
+This component handles the representation of all the pokemon's information we recieve from the API. 
+for example this is the response for Pikachu (number 25):
+    
+    {
+        "pokemonId": 25,
+        "categories": {
+            "DEF": 40,
+            "HP": 35,
+            "SPEED": 90,
+            "CAPTURE_RATING": 190,
+            "ATK": 55,
+            "WEIGHT": 60
+        },
+        "name": "Pikachu",
+        "spriteURL": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+        "cryURL": "https://play.pokemonshowdown.com/audio/cries/pikachu.mp3",
+        "elements": [
+            "ELECTRIC"
+        ],
+        "evolutionNames": [
+            "Raichu"
+        ]
+    }
+    
+and we display it as follows: 
+
+![Pikachu Card](./public/Readme-assets/pikachu.png 'Pikachu Card')
+
+#### Create Game component:
+This Component handles the initialization of a new game. The user is able to choose the amount of NPC players he wants in the game, the number of cards and the range of Pokemon generation he wants to see.
+He can also kick people from the lobby that joined 'his' game. Once the creator clicks start,he is sent to the normal lobby and as soon as the server generated all cards the game will start. 
+During the lobby and/or create game it is possible to click on a user to see the corresponding user statistc card.
+
+#### Pokedex Component:
+In the main menu page all the player's encountered pokemons are displayed and when one of these pokemons is clicked it's corresponding card is generated and displayed. 
+
+#### Leaderboard Component:
+All the server's users are displayed in descending order by rank and are clickable. When a user is clicked it's corresponding user statistics card is displayed on the right below the logged user one.
+This makes it easier to compare the statistics between the user and the rest. 
+ - Rank: a user start witha  rank = 0 the more games you win the higher the rank becomes: `rank = 2*amount of wins - amount of losses`
+
+## Launch & Deployment:
+
+### Client deployment:
+For your local development environment you'll need Node.js >= 13.0. You can download it [here](https://nodejs.org). All other dependencies including React get installed with:
 
 ### `npm install`
 
@@ -56,9 +129,77 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-## Learn More
+### Server deployment:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+#### IFImon-Server:
+The [IFImon-Server](https://github.com/Team-Heroket/IFImon-server) must be running in order for the application to run correctly.
 
 
+#### Building with Gradle:
+
+
+You can use the local Gradle Wrapper to build the application.
+
+Plattform-Prefix:
+
+-   MAC OS X: `./gradlew`
+-   Linux: `./gradlew`
+-   Windows: `./gradlew.bat`
+
+More Information about [Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html) and [Gradle](https://gradle.org/docs/).
+
+##### Build
+
+```bash
+./gradlew build
+```
+
+##### Run
+
+```bash
+./gradlew bootRun
+```
+
+##### Test
+
+```bash
+./gradlew test
+```
+
+## Illustrations:
+### First time Login/register user actions:
+![GIF of Login/register + tutorial](./public/Readme-assets/loginGIF.gif 'GIF of login/register + tutorial')
+
+### Create new game and start and one turn:
+![GIF Create new game and start and one turn](./public/Readme-assets/GameCreator.gif 'GIF Create new game and start and one turn')
+
+
+## Roadmap:
+- Ability to join random existing lobby
+- Add a carreer mode with premade decks with increasing difficulty
+- Selectable difficulty level of BOTS
+- More detailed Ranking system, with formatting/icons based on the players ranks
+- Ability to change background music
+- Add SFXs throughout the game (for example when a pokemon evolves, card is handed out)
+
+
+## Authors and acknoledgements:
+#### Authors:
+[@alexandertheus](https://github.com/alexandertheus) 
+[@timothyZimmermann](https://github.com/timothyZimmermann)
+
+#### Acknoledgements:
+[@royru](https://github.com/royru) for the Software Praktikum template
 >Thanks to Lucas Pelloni for the template
+
+
+
+## License:
+Apache License 2.0
+
+
+Pokémon and Pokémon character names are trademarks of Nintendo.
+
+
+
+

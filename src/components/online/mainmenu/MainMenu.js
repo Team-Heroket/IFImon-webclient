@@ -8,7 +8,7 @@ import {
     SimpleContainer
 } from '../../../helpers/layout';
 
-import {FocusedPokemonCard, PlaceholderCard} from "../../../views/design/PokemonCard";
+import {FocusedPokemonCard} from "../../../views/design/PokemonCard";
 
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
 import "react-popupbox/dist/react-popupbox.css"
@@ -50,9 +50,13 @@ class MainMenu extends React.Component {
         IV: [387,493],
         V: [494, 649],
         VI: [650, 721],
-        VII: [722, 809]
+        VII: [722, 802]
     }
 
+    /**
+     * If a user enters the main menu for the first time the volume settings are set in the localstorage
+     * all the needed states are then initialized
+     */
     constructor() {
         super();
 
@@ -76,7 +80,50 @@ class MainMenu extends React.Component {
         };
     }
 
+    /**
+     * When a player enters the main menu after registering the main pokemon theme starts to play.
+     */
+    playTheme(){
+
+        try{
+            let sound = document.getElementById('MainTheme');
+            console.log('This is the volume '+sound.volume+ ' and is paused '+sound.paused)
+
+            if(localStorage.getItem('VolumeMuted') != 'true' &&( sound.volume != localStorage.getItem('MusicVol')/100 || sound.paused)) {
+                sound.play()
+
+                // Set the point in playback that fadeout begins. This is for a 2 second fade out.
+                let fadePoint = sound.currentTime + 2;
+                sound.volume = 0.1;
+
+
+                var fadeAudio = setInterval(function () {
+
+                    // Only fade if past the fade out point or not at zero already
+                    if ((sound.currentTime >= fadePoint) && (sound.volume != 0.0)) {
+                        sound.volume += 0.05;
+                    }
+                    // When volume at zero stop all the intervalling
+                    if (sound.volume >= localStorage.getItem('MusicVol') / 100) {
+                        sound.volume = localStorage.getItem('MusicVol') / 100
+                        clearInterval(fadeAudio);
+                    }
+                }, 200);
+            }
+
+        }catch (e) {}
+    }
+
+    async componentDidUpdate(){
+        this.playTheme()
+    }
+
+    /**
+     * Checks if the user is new and if so it sends him to the tutorial
+     */
     async componentDidMount(){
+
+        this.playTheme()
         if (localStorage.getItem('justLoggedIn') == 'true') {
             this.setState({justInitialized: true});
             setTimeout(() => {
@@ -97,14 +144,17 @@ class MainMenu extends React.Component {
 
         }
         catch (error) {
-            if (error.response.status == 401) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('id');
-                this.props.history.push('/login')
+            if (error.response) {
+                if (error.response.status == 401) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('id');
+                    this.props.history.push('/login')
+                }
+                else {
+                    alert(`Something went wrong: \n${handleError(error)}`);
+                }
             }
-            else {
-                alert(`Something went wrong: \n${handleError(error)}`);
-            }
+
         }
     }
 
@@ -131,6 +181,8 @@ class MainMenu extends React.Component {
     async logOut(){
         try {
             console.log('tried to logOut')
+            document.getElementById('MainTheme').pause()
+            document.getElementById('MainTheme').currentTime=0
             const body = JSON.stringify({});
             let token = localStorage.getItem('token');
             localStorage.removeItem('token');
@@ -153,6 +205,9 @@ class MainMenu extends React.Component {
         }
     }
 
+    /**
+     * Updates the Pokedex in order to display the next page of pokemon of that generation or the first of the next generation
+     */
     nextPage(){
         let temp = this.state.step;
                 if(this.state.generation[1]>(this.state.generation[0]+24*(this.state.step+1)+this.state.step)){
@@ -163,6 +218,9 @@ class MainMenu extends React.Component {
                 }
     };
 
+    /**
+     * Updates the Pokedex in order to display the previous page of pokemon of that generation or the first of the previous generation
+     */
     previousPage(){
         let temp = this.state.step;
         if(this.state.step > 0){
@@ -175,6 +233,11 @@ class MainMenu extends React.Component {
         }
     };
 
+    /**
+     * Returns the previous or next generation of the current displayed generation depending on the stepSize
+     *
+     * @param stepSize bool where true indicate the current+1 generation otherwise current-1 generation
+     */
     getGeneration(stepSize){
         switch (this.state.generation) {
             case(this.genPokemon.I):
@@ -221,6 +284,10 @@ class MainMenu extends React.Component {
         }
     }
 
+    /**
+     * Handles the pokedex click events, when a pokemon is clicked a popup box containing the respective card is displayed
+     *
+     */
     async handleClick(event) {
         console.log('Previous val: '+this.state.displayPokemon);
         console.log("Clicked Pokemon: "+event.currentTarget.id);
@@ -254,11 +321,16 @@ class MainMenu extends React.Component {
 
     }
 
+    /**
+     * Updates the popup box either in order to display the gif animation of the pokemon or the image.
+     *
+     * @param showGif bool updates the show animation state and if true it displays the gif animation otherwise the static image
+     */
     updatePopupbox(showGif) {
         this.setState({showGif: showGif})
         const content = <SimpleColumnContainer>
             {this.state.displayPokemon ? FocusedPokemonCard(this.state.displayPokemon, true, '0', '', null, showGif,localStorage.getItem('VolumeMuted')=='true', localStorage.getItem('SFXVol')/100) : <Spinner/>}
-            <TransparentButton onClick={()=>{this.updatePopupbox(!showGif)}}> {this.state.showGif? 'Show image' : 'Show GIF'} </TransparentButton>
+            <TransparentButton onClick={()=>{this.updatePopupbox(!showGif)}}> {showGif? 'Show image' : 'Show GIF'} </TransparentButton>
         </SimpleColumnContainer>
 
         PopupboxManager.update({
@@ -276,6 +348,10 @@ class MainMenu extends React.Component {
         })
     }
 
+    /**
+     * Returns a container containing all the encountered pokemon's sprite if a pokemon is not encontered then a question mark is displayed
+     * it also contains the left/right arrow and buttons
+     */
     SpritesGenerator () {
         let windowButtons = [];
         let pokemon_list = [];
@@ -294,6 +370,7 @@ class MainMenu extends React.Component {
                 else{
                     pokemon_list.push(
                         <PokemonSprite src={require('../../shared/images/pokemonTypesSVG/unknown.svg')} size={"92px"} index = {i}/>
+
                     )
 
                 }
@@ -333,6 +410,10 @@ class MainMenu extends React.Component {
             </PokedexContainer>)
     }
 
+    /**
+     * Returns an empty pokedex with a text informing the user that he has to play before being able to see the pokemons.
+     *
+     */
     emptyPokedex() {
         return(
             <PokedexContainer height={'550px'} width={'500px'} margin={"0px"}>
@@ -343,6 +424,9 @@ class MainMenu extends React.Component {
         )
     }
 
+    /**
+     * Returns a container which contains the buttons that display the amount of pages in the current generation
+     */
     generationTabs() {
         return (<HorizontalButtonContainer align={'top'}>
             {Object.keys(this.genPokemon).map((key,index) => {
@@ -358,11 +442,17 @@ class MainMenu extends React.Component {
 
     }
 
+    /**
+     * handles the event that a user clickes a generation button
+     */
     goToGeneration(newGeneration){
         this.setState({step: 0})
         this.setState({generation: (newGeneration)})
     }
 
+    /**
+     * handles the event that a user clickes a page button
+     */
     goToStep(newStep) {
         this.setState({step: (newStep)} )
     }

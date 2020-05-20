@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {
     BaseContainer, ButtonContainer,
-    FormContainer,
+    FormContainer, GameContainer,
     SimpleColumnContainer, SimpleRowContainer
 } from '../../../helpers/layout';
 import { withRouter } from 'react-router-dom';
@@ -12,7 +12,7 @@ import {
     BackButton, BerriesIcon, BerriesIconWithBadge, ClickMeIcon, DrawIcon,
     ForwardIcon, LeaderboardIcon, MiniBerriesIcon,
     NextIcon,
-    PossibleWinnerIcon, QuickplayIcon, SettingsIcon, SocialIcon, WinnerIcon
+    PossibleWinnerIcon, QuickplayIcon, SettingsIcon, SocialIcon, SoundButton, WinnerIcon
 } from "../../../views/design/Icons";
 import Grid from "@material-ui/core/Grid";
 import Typewriter from 'typewriter-effect';
@@ -75,7 +75,7 @@ class Tutorial extends React.Component {
         this.state ={
             page: 0,
             pokemonCard: [{"pokemonId":4,"categories":{"SPEED":65,"ATK":52,"HP":39,"CAPTURE_RATING":45,"WEIGHT":85,"DEF":43},"name":"Charmander","spriteURL":"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png","cryURL":"https://play.pokemonshowdown.com/audio/cries/charmander.mp3","elements":["FIRE"],"evolutionNames":["Charmeleon","Charizard"]}],
-            mute: false,
+            mute: localStorage.getItem('VolumeMuted'),
             mutePage3: false,
             berries: 2,
             evolveTo: 0,
@@ -167,10 +167,22 @@ class Tutorial extends React.Component {
                 <Grid
                     container
                     direction="row"
-                    justify="flex-start"
+                    justify="space-between"
                     alignItems="flex-start"
                 >
                     <BackButton action={() => {this.goToMainMenu()}}/>
+                    { this.state.mute ?
+                        <SoundButton mute={true} action={()=>{
+                            localStorage.setItem('VolumeMuted', 'false');
+                            this.setState({mute: false});
+                            document.getElementById("MainTheme").volume = localStorage.getItem('MusicVol')/100;
+                        }} />
+                        :
+                        <SoundButton mute={false} action={() => {
+                            localStorage.setItem('VolumeMuted', 'true');
+                            this.setState({mute: true});
+                            document.getElementById("MainTheme").volume = 0}} />
+                    }
                 </Grid>
             <br/>
                 <Grid

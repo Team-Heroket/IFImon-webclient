@@ -110,7 +110,7 @@ export let Evolve = ({masterState, history, parentMethod}) => {
         return evolutions;
     }
 
-
+    let winnersUsername = masterState.winners[0].user.username == masterState.player_me.user.username ? 'Your Card' : masterState.winners[0].user.username;
 
     return (
         <div>
@@ -143,7 +143,7 @@ export let Evolve = ({masterState, history, parentMethod}) => {
 
                 <FlippedCardEvolve front = {<SimpleColumnContainer align='left'>
                     <AmountOfBerries width={'50px'} style={{ marginBottom: '-45px', marginLeft: '-5px',paddingLeft: '10px', background: 'radial-gradient(174.31% 329.79% at -6.61% -61.9%, #00D1FF 0%, rgba(255, 255, 255, 0) 100%), #5259FF', zIndex: '100'}} > <PossibleWinnerIcon/> </AmountOfBerries>
-                    {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, masterState.winners[0].user.username, null ,false, true)}
+                    {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, winnersUsername, null ,false, true)}
                 </SimpleColumnContainer>}/>
 
             </Grid>

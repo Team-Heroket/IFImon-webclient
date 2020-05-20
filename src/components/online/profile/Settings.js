@@ -19,7 +19,6 @@ import VolumeUpRoundedIcon from '@material-ui/icons/VolumeUpRounded';
 import Grid from "@material-ui/core/Grid";
 import UIFx from 'uifx';
 import pokeCry from '../../shared/pikachu.mp3';
-import music from '../../shared/musicSample.mp3';
 import {Alert} from "@material-ui/lab";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
@@ -37,16 +36,6 @@ const Label = styled.label`
   font-size: 16px;
   font-weight: 300;
 `;
-
-
-const Row = styled.div`
-    &::after{
-    content: "";
-    clear: "";
-    display: table "";
-    }
-    
-    `;
 
 const PasswordField = styled.input`
   &::placeholder {
@@ -90,16 +79,6 @@ const InputField = styled.input`
   font-weight: 300;
   
 `;
-
-const Column = styled.div`
-    float: left
-    align-items: center
-    width = 100%
-    
-    @media only screen and (min-width: 768px){
-    width: 50%;
-    }
-`
 
 
 class Settings extends React.Component {
@@ -355,17 +334,13 @@ class Settings extends React.Component {
                 beep.setVolume(newValue/100).play();
                 setTimeout(() => {
                     this.setState({runningSample: false})}, 500)}
-        }else{
+        }else {
             localStorage.setItem('MusicVol', newValue);
-            if(!this.state.runningSample){
-                this.setState({runningSample: true});
-                const beep = new UIFx(music);
-                beep.setVolume(newValue/100).play();
-                setTimeout(() => {
-                    this.setState({runningSample: false})}, 1000)}
+            if (!this.state.runningSample) {
+                document.getElementById("MainTheme").volume = newValue / 100;
+            }
         }
-        this.setState({ [key]: newValue });
-
+        this.setState({[key]: newValue});
     };
 
     render() {
@@ -453,12 +428,14 @@ class Settings extends React.Component {
                                         { this.state.mute=='true' ?
                                             <SoundButton mute={true} action={()=>{
                                                 localStorage.setItem('VolumeMuted', 'false');
+                                                document.getElementById("MainTheme").volume = (localStorage.getItem('MusicVol')/100)
                                                 this.setState({mute: 'false'});
                                                 this.forceUpdate();
                                             }} />
                                             :
                                             <SoundButton mute={false} action={() => {
                                                 localStorage.setItem('VolumeMuted', 'true');
+                                                document.getElementById("MainTheme").volume = 0
                                                 this.setState({mute: 'true'});
                                                 this.forceUpdate()}} />
                                         }
