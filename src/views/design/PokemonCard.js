@@ -328,7 +328,7 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
                             localStorage.setItem("SelectedCat", 'CAPTURE_RATING');
                             parentMethod()
                         }}>
-                            <StatName>Capture rate</StatName>
+                            <StatName>Spawn Rate</StatName>
                             <StatValue>{pokemon.categories.CAPTURE_RATING}</StatValue>
                         </Statistics>
                         <Statistics toBeFocused={toFocus == 'HP'} color={formattedPokemon.mainColor} disabled={disabled}
@@ -337,7 +337,7 @@ export let FocusedPokemonCard = (pokemon, disabled, toFocus, Trainer, parentMeth
                                         localStorage.setItem("SelectedCat", 'HP');
                                         parentMethod()
                                     }}>
-                            <StatName>HP</StatName>
+                            <StatName>Health</StatName>
                             <StatValue>{pokemon.categories.HP}</StatValue>
                         </Statistics>
                         <Statistics toBeFocused={toFocus == 'WEIGHT'} color={formattedPokemon.mainColor}
@@ -424,7 +424,7 @@ export let TutorialPokemonCard = (pokemon, toFocus, Trainer, parentMethod = ()=>
                         parentMethod();
                                 }}
 
-                                data-tip='The Attack Statistic ranges from 0 to 255 <br /> Evolving usually increases this value'>
+                                data-tip='Attack ranges from 0 to 150 with some exceptions <br /> Evolving usually increases this value'>
                         <StatName>Attack</StatName>
                         <StatValue>{pokemon.categories.ATK}</StatValue>
                     </Statistics>
@@ -433,7 +433,7 @@ export let TutorialPokemonCard = (pokemon, toFocus, Trainer, parentMethod = ()=>
                         localStorage.setItem('SelectedCat', 'DEF');
                         parentMethod();
                     }}
-                                data-tip='The Defense Statistic ranges from 0 to 255 <br /> Evolving usually increases this value'>
+                                data-tip='Defense ranges from 0 to 150 with some exceptions <br /> Evolving usually increases this value'>
                         <StatName>Defense</StatName>
                         <StatValue>{pokemon.categories.DEF}</StatValue>
                     </Statistics>
@@ -442,7 +442,7 @@ export let TutorialPokemonCard = (pokemon, toFocus, Trainer, parentMethod = ()=>
                         localStorage.setItem("SelectedCat", 'SPEED');
                         parentMethod();
                     }}
-                                data-tip='The Speed Statistic ranges from 0 to 255 <br /> Evolving usually increases this value'>
+                                data-tip='Speed ranges from 0 to 150 with some exceptions <br /> Evolving usually increases this value'>
                         <StatName>Speed</StatName>
                         <StatValue>{pokemon.categories.SPEED}</StatValue>
                     </Statistics>
@@ -451,8 +451,8 @@ export let TutorialPokemonCard = (pokemon, toFocus, Trainer, parentMethod = ()=>
                         localStorage.setItem("SelectedCat", 'CAPTURE_RATING');
                         parentMethod();
                     }}
-                                data-tip='The Attack Statistic ranges from 0 to 255 <br /> Evolving usually decreases this value'>
-                        <StatName>Capture rate</StatName>
+                                data-tip='Spawn Rate ranges from 0 to 255 <br /> Evolving usually decreases this value'>
+                        <StatName>Spawn Rate</StatName>
                         <StatValue>{pokemon.categories.CAPTURE_RATING}</StatValue>
                     </Statistics>
                     <Statistics toBeFocused={toFocus == 'HP'} color={formattedPokemon.mainColor} disabled={false}
@@ -460,8 +460,8 @@ export let TutorialPokemonCard = (pokemon, toFocus, Trainer, parentMethod = ()=>
                                     localStorage.setItem("SelectedCat", 'HP');
                                     parentMethod();
                                 }}
-                                data-tip='Health Points [HP] ranges from 0 to 255 <br /> Evolving usually increases this value'>
-                        <StatName>HP</StatName>
+                                data-tip='Health ranges from 0 to 150 with some exceptions <br /> Evolving usually increases this value'>
+                        <StatName>Health</StatName>
                         <StatValue>{pokemon.categories.HP}</StatValue>
                     </Statistics>
                     <Statistics toBeFocused={toFocus == 'WEIGHT'} color={formattedPokemon.mainColor}
@@ -469,7 +469,7 @@ export let TutorialPokemonCard = (pokemon, toFocus, Trainer, parentMethod = ()=>
                         localStorage.setItem("SelectedCat", 'WEIGHT');
                         parentMethod();
                     }}
-                                data-tip='The Weigth Statistic ranges from 0 to 255 <br /> Evolving usually increases this value'>
+                                data-tip='Weight ranges from 0 to 500kg with some exceptions <br /> Evolving usually increases this value'>
                         <StatName>Weight</StatName>
                         <StatValue>{pokemon.categories.WEIGHT.valueOf() / 10} kg</StatValue>
                     </Statistics>

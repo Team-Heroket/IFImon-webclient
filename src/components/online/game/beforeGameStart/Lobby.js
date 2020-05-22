@@ -160,7 +160,7 @@ class Lobby extends React.Component {
             } catch (error) {
                 alert(`Something went wrong: \n${handleError(error)}`);
             }
-        }, 10000)
+        }, 3000)
     }
 
     async leaveGame() {

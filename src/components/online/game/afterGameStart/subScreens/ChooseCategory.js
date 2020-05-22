@@ -24,6 +24,11 @@ import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import {BerriesIconWithBadge} from "../../../../../views/design/Icons";
 import {FlippedCard} from "./FlippedCard";
+import {Alert} from "@material-ui/lab";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Collapse from "@material-ui/core/Collapse";
+import styled from "styled-components";
 
 let category;
 category = {
@@ -41,6 +46,10 @@ clock = {
     PERIOD: "period"
 }
 
+const AlertContainer = styled.div`
+  width: 100%;
+  alignItems: center;
+`;
 
 export class ChooseCategory extends React.Component {
 
@@ -72,6 +81,26 @@ export class ChooseCategory extends React.Component {
     showLeaderboard() {
 
         return (<SimpleColumnContainer width={'280px'} sideMargin={'0px'} style={{marginLeft: '10px'}}>
+                <Collapse in={this.props.masterState.openWarning}>
+                    <AlertContainer>
+                        <Alert severity="warning"
+                               action={
+                                   <IconButton
+                                       aria-label="close"
+                                       color="inherit"
+                                       size="small"
+                                       width={'50%'}
+
+                                   >
+                                       <CloseIcon fontSize="inherit"/>
+                                   </IconButton>
+                               }
+                        >
+                            Warning: Choose a Category or you will be kicked for being AFK!
+                        </Alert>
+                    </AlertContainer>
+                    <br/>
+                </Collapse>
                 {this.props.masterState.players.map(player => {
                     return (
                         <PlayerContainer>
@@ -84,7 +113,7 @@ export class ChooseCategory extends React.Component {
                     );
                 })}
 
-            {this.stepper};
+            {this.stepper}
 
 
                 {BerriesIconWithBadge(this.props.masterState.berries)}

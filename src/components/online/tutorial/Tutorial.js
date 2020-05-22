@@ -19,6 +19,7 @@ import Typewriter from 'typewriter-effect';
 import {api, handleError} from "../../../helpers/api";
 import {TutorialPokemonCard} from "../../../views/design/PokemonCard";
 import {ActiveEvolveButton, Button, EvolveButton} from "../../../views/design/Button";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 const Title = styled.label`
   position: absolute;
@@ -41,6 +42,11 @@ const Text = styled.label`
   font-size: 20px;
   font-weight: 300;
   text-align: justify;
+`
+
+const GenericButton = styled.button`
+background: transparent;
+border: 0px;
 `
 
 export const PageButton = styled.button`
@@ -78,6 +84,7 @@ class Tutorial extends React.Component {
             mutePage3: false,
             berries: 2,
             evolveTo: 0,
+            categoryClicked: false
         }
         localStorage.setItem('SelectedCat', '')
         localStorage.setItem("evolveTo", 0)
@@ -244,11 +251,18 @@ class Tutorial extends React.Component {
                                     <br/> The creator of the lobby starts as the first turn player.
                                     <br/> The turn player has 14 seconds to choose a category which he thinks has the highest value.
                                     <br/>
-                                    <br/> Now you will be able to evolve your Pokemon!
+                                    <br/>
+                                    {this.state.categoryClicked ? <Text style={{width: '60%'}}>Choose a category to continue!</Text> :
+                                        <Text style={{width: '60%'}}><Text style={{fontWeight: '700'}}>Choose a category</Text> to continue!</Text>
+                                    }
                                 </Text>
                                     <SimpleColumnContainer align='left' style={{paddingTop: '50px'}}>
                                         <AmountOfBerries width={'50px'} style={{ marginBottom: '-45px', marginLeft: '-5px', paddingLeft: '10px', background: 'radial-gradient(174.31% 329.79% at -6.61% -61.9%, #00D1FF 0%, rgba(255, 255, 255, 0) 100%), #5259FF', zIndex: '200'}}   data-tip='Hover above the card to see more info!'> <ClickMeIcon/> </AmountOfBerries>
-                                        {TutorialPokemonCard(this.state.pokemonCard[0], '0', localStorage.getItem('username'), () => {this.forceUpdate(); this.setState({'mute': true})}, this.state.mute)}
+                                        <GenericButton
+                                        onClick = {()=>this.setState({categoryClicked: true})}
+                                        >
+                                            {TutorialPokemonCard(this.state.pokemonCard[0], '0', localStorage.getItem('username'), () => {this.forceUpdate(); this.setState({'mute': true})}, this.state.mute)}
+                                        </GenericButton>
                                     </SimpleColumnContainer>
                                 </Grid>
                             </FormContainer> : null}
@@ -263,17 +277,25 @@ class Tutorial extends React.Component {
                                 > <Text style={{width: '40%'}}>
                                     <br/> To evolve your card, you can select one of the buttons displayed on the right. Each Button displays the Evolution name and it's cost.
                                     <br/> You currently have 2 berries, but fear not, At the start of each game you will receive as many as the number of players in the game. Once those are used up there are no new ones handed out!
-                                    <br/> You have 10 seconds to decide, if you misclick you can click again on the button to deselect it!
+                                    <br/> You have 10 seconds to decide whether to evolve or not, but be aware; once you click you cannot undo your evolution!
                                     <br/> After the time is up you will see the result page with you evolved Pokemon.
+                                    <br/>
+                                    {this.state.evolveTo != 0 ? <Text style={{width: '60%'}}>Evolve your Pokémon to continue!</Text> :
+                                        <Text style={{width: '60%'}}><Text style={{fontWeight: '700'}}>Evolve your Pokémon</Text> to continue!</Text>
+                                    }
+
                                 </Text>
                                     <SimpleColumnContainer align='left' style={{paddingTop: '50px'}}>
                                         {BerriesIconWithBadge(this.state.berries)}
 
                                         <ButtonContainer>
-                                            Do you want to evolve?
-                                            <br/>
-                                            {this.evolveButtons()}
-                                            <br/>
+                                            {this.state.evolveTo != 0 ? <div><ButtonContainer><CheckCircleIcon/></ButtonContainer>
+                                                <ButtonContainer>Evolution submitted!</ButtonContainer></div> : <ButtonContainer>
+                                                Do you want to evolve?
+                                                <br/>
+                                                {this.evolveButtons()}
+                                            </ButtonContainer>}
+
                                         </ButtonContainer>
 
                                     </SimpleColumnContainer>

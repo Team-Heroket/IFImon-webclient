@@ -20,22 +20,30 @@ import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import {FlippedCardEvolve} from "./FlippedCardEvolve";
 import {FlippedCard} from "./FlippedCard";
+import {api, handleError} from "../../../../../helpers/api";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 
-
-export let Evolve = ({masterState, history, parentMethod}) => {
+export class Evolve extends React.Component {
+    constructor() {
+        super();
+        this.handleClick = this.handleClick.bind(this)
+        this.state = {
+            evolved: false
+        }
+    }
 
     /**
      * Returns the left-hand side of the screen with all the players, the stepper and the berries
      */
-    function showLeaderboard() {
+    showLeaderboard() {
         let steps = ['Category selection', 'Evolve Pokémon', 'Results'];
 
-        if(masterState.amITurnPlayer){
+        if(this.props.masterState.amITurnPlayer){
             steps[0] = 'Select category';
         }
         return (<SimpleColumnContainer width={'280px'} sideMargin={'0px'} style={{marginLeft: '10px'}}>
-                {masterState.players.map(player => {
+                {this.props.masterState.players.map(player => {
                     return (
                         <PlayerContainer>
                             {player.user.id == localStorage.getItem('id') ?
@@ -54,25 +62,65 @@ export let Evolve = ({masterState, history, parentMethod}) => {
                         </Step>
                     ))}
                 </Stepper>
-                {BerriesIconWithBadge(masterState.berries)}
+                {BerriesIconWithBadge(this.props.masterState.berries)}
                 <LogOutButton
                     width = "50%"
-                    disabled={masterState.amITurnPlayer}
-                    onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) history.push('/menu') }} > Give Up
+                    disabled={this.props.masterState.amITurnPlayer}
+                    onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) this.props.history.push('/menu') }} > Give Up
                 </LogOutButton>
 
             </SimpleColumnContainer>
         );
     }
+    async handleClick(event) {
+        console.log("Make evolve put request")
+        try {
+            this.setState({'evolved':true})
+            const requestBody = JSON.stringify({
+                amount: event.currentTarget.id+1,
+                id: this.props.masterState.player_me.user.id
+            });
+
+            await api.put('/games/' + this.state.pokeCode + '/berries', requestBody, {headers: {'Token': localStorage.getItem('token')}});
+
+        } catch (error) {
+            alert(`Something went wrong: \n${handleError(error)}`);
+        }
+    }
     /**
      * Returns the evolve buttons. If there are no possible evolutions it displays a corresponding text
      */
-    function evolveButtons() {
+    evolveButtons() {
         let evolutions = [];
-        for (let i=0; i< masterState.deck.cards[0].evolutionNames.length; i++) {
-            let disableButton = (masterState.berries<i+1);
+        for (let i=0; i< this.props.masterState.deck.cards[0].evolutionNames.length; i++) {
+            let disableButton = (this.props.masterState.berries<i+1);
             evolutions.push(
-                localStorage.getItem('evolveTo')==i+1 ?
+                !this.state.evolved ?
+                    <EvolveButton
+                        id = {i}
+                        onClick={() => {
+                            try {
+                                this.setState({'evolved':true})
+                                const requestBody = JSON.stringify({
+                                    amount: i+1,
+                                    id: this.props.masterState.player_me.user.id
+                                });
+
+                                api.put('/games/' + this.props.masterState.pokeCode + '/berries', requestBody, {headers: {'Token': localStorage.getItem('token')}});
+
+                            } catch (error) {
+                                alert(`Something went wrong: \n${handleError(error)}`);
+                            }
+                            localStorage.setItem("evolveTo", i+1)
+                            setTimeout(this.props.parentMethod(), 5000)}}
+                        disabled={disableButton}
+                    >
+                        {this.props.masterState.deck.cards[0].evolutionNames[i]} Cost: {i+1}
+                    </EvolveButton> : null
+
+
+                /*
+                 localStorage.getItem('evolveTo')==i+1 ?
                     <ActiveEvolveButton
                         id = {i}
                         onClick={() => {localStorage.setItem("evolveTo", 0);
@@ -90,6 +138,8 @@ export let Evolve = ({masterState, history, parentMethod}) => {
                 >
                     {masterState.deck.cards[0].evolutionNames[i]} Cost: {i+1}
                 </EvolveButton>
+
+                 */
             )
         }
 
@@ -99,44 +149,50 @@ export let Evolve = ({masterState, history, parentMethod}) => {
     /**
      * If we are the winner, it is set to the text 'Your Card'. Otherwise it is set to the username of the winner
      */
-    let winnersUsername = masterState.winners[0].user.username == masterState.player_me.user.username ? 'Your Card' : masterState.winners[0].user.username;
 
-    return (
-        <div>
-            <Grid
-                container
-                direction="row"
-                justify="space-between"
-                alignItems="center"
-                style={{marginTop: '50px'}}
-            >
-                {showLeaderboard()}
-                {masterState.turnPlayer.user.npc ?
-                <FlippedCard front={FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', null, false, true)}/>
-                : FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', null, false, true)}
+    render() {
+        let winnersUsername = this.props.masterState.winners[0].user.username == this.props.masterState.player_me.user.username ? 'Your Card' : this.props.masterState.winners[0].user.username;
+        return (
+            <div>
+                <Grid
+                    container
+                    direction="row"
+                    justify="space-between"
+                    alignItems="center"
+                    style={{marginTop: '50px'}}
+                >
+                    {this.showLeaderboard()}
+                    {this.props.masterState.turnPlayer.user.npc ?
+                        <FlippedCard front={FocusedPokemonCard(this.props.masterState.deck.cards[0], true, this.props.masterState.chosenCategory, 'Your Card', null, false, true)}/>
+                        : FocusedPokemonCard(this.props.masterState.deck.cards[0], true, this.props.masterState.chosenCategory, 'Your Card', null, false, true)}
 
-                {
-                    masterState.deck.cards[0].evolutionNames.length == 0 ?
-                        <ButtonContainer>
-                            {masterState.deck.cards[0].name} has no evolutions!
-                        </ButtonContainer>
-                        :
-                        <ButtonContainer>
-                            Do you want to evolve?
-                            <br/>
-                            {evolveButtons()}
-                        </ButtonContainer>
+                    {
+                        this.props.masterState.deck.cards[0].evolutionNames.length == 0 ?
+                            <ButtonContainer>
+                                {this.props.masterState.deck.cards[0].name} has no evolutions!
+                            </ButtonContainer>
+                            :
+                            <ButtonContainer>
+                                {this.state.evolved ? <div><ButtonContainer><CheckCircleIcon/></ButtonContainer>
+                                    <ButtonContainer>Evolution submitted!</ButtonContainer></div> : <ButtonContainer>
+                                    Do you want to evolve?
+                                </ButtonContainer>}
+                                <br/>
+                                {this.evolveButtons()}
+                            </ButtonContainer>
 
-                }
+                    }
 
 
-                <FlippedCardEvolve front = {<SimpleColumnContainer align='left'>
-                    <AmountOfBerries width={'50px'} style={{ marginBottom: '-45px', marginLeft: '-5px',paddingLeft: '10px', background: 'radial-gradient(174.31% 329.79% at -6.61% -61.9%, #00D1FF 0%, rgba(255, 255, 255, 0) 100%), #5259FF', zIndex: '100'}} > <PossibleWinnerIcon/> </AmountOfBerries>
-                    {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, winnersUsername, null ,false, true)}
-                </SimpleColumnContainer>}/>
+                    <FlippedCardEvolve front = {<SimpleColumnContainer align='left'>
+                        <AmountOfBerries width={'50px'} style={{ marginBottom: '-45px', marginLeft: '-5px',paddingLeft: '10px', background: 'radial-gradient(174.31% 329.79% at -6.61% -61.9%, #00D1FF 0%, rgba(255, 255, 255, 0) 100%), #5259FF', zIndex: '100'}} > <PossibleWinnerIcon/> </AmountOfBerries>
+                        {FocusedPokemonCard((this.props.masterState.winners[0]).deck.cards[0], true, this.props.masterState.chosenCategory, winnersUsername, null ,false, true)}
+                    </SimpleColumnContainer>}/>
 
-            </Grid>
-        </div>
+                </Grid>
+            </div>
 
-    );
+        );
+    }
+
 };
