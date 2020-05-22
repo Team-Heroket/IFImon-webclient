@@ -21,7 +21,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import ReactTooltip from "react-tooltip";
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
 import "react-popupbox/dist/react-popupbox.css"
-
+import posed from 'react-pose';
 
 const Label = styled.label`
   position: relative;
@@ -76,6 +76,21 @@ const InputField = styled.input`
   color: white;
 `;
 
+const Box = posed.div({
+    hoverable: true,
+    pressable: true,
+    init: {
+        scale: 1,
+
+    },
+    hover: {
+        scale: 1.05,
+
+    },
+    press: {
+        scale: 1.05,
+    }
+});
 
 const PrettoSlider = withStyles({
     root: {
@@ -271,7 +286,7 @@ class CreateGame extends React.Component {
             } catch (error) {
                 alert(`Something went wrong: \n${handleError(error)}`);
             }
-        }, 10000)
+        }, 3000)
     }
 
     async startGame() {
@@ -678,11 +693,13 @@ class CreateGame extends React.Component {
                                 this.state.users.map(player => {
                                     return (
                                         <ButtonRow >
+                                            <Box className="box" >
                                          <PlayerButton id={player.id} onClick={this.handleClick}>
                                              <PlayerContainer>
                                                  {this.displayPlayer(player)}
                                              </PlayerContainer>
                                          </PlayerButton>
+                                            </Box>
 
                                             { (player.id == localStorage.getItem('id')) ? null :
                                                 <KickContainer onClick={()=> this.kick(player)}>

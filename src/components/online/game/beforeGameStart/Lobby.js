@@ -21,7 +21,23 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Collapse from "@material-ui/core/Collapse";
 import {PopupboxContainer, PopupboxManager} from "react-popupbox";
+import posed from 'react-pose';
 
+const Box = posed.div({
+    hoverable: true,
+    pressable: true,
+    init: {
+        scale: 1,
+
+    },
+    hover: {
+        scale: 1.05,
+
+    },
+    press: {
+        scale: 1.05,
+    }
+});
 
 
 const Form = styled.div`
@@ -382,12 +398,14 @@ class Lobby extends React.Component {
                                 this.state.users.map(player => {
                                     return (
                                         <ButtonRow id={player.id} onClick={this.handleClick}>
+                                            <Box className="box" >
                                             <PlayerContainer onClick={() => {
 
                                             }}>
                                                 {this.displayPlayer(player)}
 
                                             </PlayerContainer>
+                                            </Box>
                                         </ButtonRow>
 
                                     );

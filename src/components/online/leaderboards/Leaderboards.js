@@ -9,6 +9,24 @@ import {PlayerStatCard, Player, PlayerMe} from "../../../views/Player";
 import {BackButton, SoundButton} from "../../../views/design/Icons";
 import {Spinner} from "../../../views/design/Spinner";
 import Grid from "@material-ui/core/Grid";
+import posed from 'react-pose';
+
+
+const BoxBlowUp = posed.div({
+    hoverable: true,
+    pressable: true,
+    init: {
+        scale: 1,
+
+    },
+    hover: {
+        scale: 1.05,
+
+    },
+    press: {
+        scale: 1.05,
+    }
+});
 
 const Row = styled.div`
     &::after{
@@ -27,7 +45,11 @@ const Column = styled.div`
     width: 50%;
     }
 `
+const Box = posed.div({
+    hidden: { opacity: 0, y:500 },
+    visible: { opacity: 1, y: 0},
 
+});
 
 
 class Leaderboards extends React.Component {
@@ -37,7 +59,8 @@ class Leaderboards extends React.Component {
         this.state = {
             displaySecondaryCard: null,
             users: null,
-            user: null
+            user: null,
+            cardVisible: false
         };
 
     }
@@ -80,7 +103,22 @@ class Leaderboards extends React.Component {
 
 
     displayPlayerCard() {
-        return <PlayerStatCard user={this.state.displaySecondaryCard} />
+        return <Box className="box" pose={this.state.cardVisibility ? 'visible' : 'hidden'}>
+                <PlayerStatCard user={this.state.displaySecondaryCard} />
+            </Box>
+    }
+
+    cardVisibility(newCard) {
+        if (newCard != null) {
+            this.setState({displaySecondaryCard: newCard})
+            setTimeout(()=> {this.setState({cardVisibility: true})}, 100);
+        }
+        else {
+            setTimeout(()=> {this.setState({cardVisibility: false})}, 100);
+            setTimeout(()=> {this.setState({displaySecondaryCard: null})}, 400);
+
+        }
+
     }
 
     render() {
@@ -121,20 +159,22 @@ class Leaderboards extends React.Component {
                                         console.log('Player Clicked:', player);
                                         if (this.state.user.username != player.username) {
                                             if (this.state.displaySecondaryCard != null && this.state.displaySecondaryCard.username == player.username) {
-                                                this.setState({displaySecondaryCard: null});
+                                                this.cardVisibility(null);
                                             }
                                             else {
-                                                this.setState({displaySecondaryCard: player});
+                                                this.cardVisibility(player);
+                                                //this.setState({displaySecondaryCard: player}, this.cardVisibility);
                                             }
                                         }
                                         else{
-                                                this.setState({displaySecondaryCard: null});
+                                            this.cardVisibility(null);
+                                                //this.setState({displaySecondaryCard: null}, this.cardVisibility);
                                             }
                                         console.log(this.state.displaySecondaryCard);
                                     }}>
                                         {player.id == localStorage.getItem('id') ?
-                                            (<PlayerMe user={player}  />) :
-                                            (<Player user={player}  />)
+                                            (<BoxBlowUp className="box"><PlayerMe user={player}  /></BoxBlowUp>) :
+                                            (<BoxBlowUp className="box"><Player user={player}  /></BoxBlowUp>)
                                         }
                                     </PlayerContainer>
 

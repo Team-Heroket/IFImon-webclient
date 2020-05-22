@@ -18,13 +18,11 @@ const Box = posed.div({
         scale: 1.05,
         boxShadow: '0px 2px 5px rgba(0,0,0,0.1)'
     },
-    hidden: { opacity: 0, y: 1000, transition: { duration: 300 }},
+    hidden: { opacity: 0, y: -1000, transition: { duration: 300 }},
     visible: { opacity: 1, y: 0, transition: { duration: 300 }},
-
 });
 
-
-export class FlippedCard extends React.Component {
+export class FlippedCardEvolveSecond extends React.Component {
     front;
 
 
@@ -41,16 +39,21 @@ export class FlippedCard extends React.Component {
         setTimeout(() => {
             this.setState({isFlipped: false})
         }, 400)
+
+        setTimeout(() => {
+            this.setState({isFlipped: true})
+        }, 9000)
     }
 
     render() {
         const front = this.props.front;
         return (
             <ReactCardFlip isFlipped={this.state.isFlipped} flipDirection="horizontal">
-                <Box className="box" >{front}</Box>
+                <Box className="box">{front}</Box>
 
                 <Box className="box" pose={this.state.visible ? 'visible' : 'hidden'}>{PlaceholderCard()}</Box>
             </ReactCardFlip>
+
         )
     }
 

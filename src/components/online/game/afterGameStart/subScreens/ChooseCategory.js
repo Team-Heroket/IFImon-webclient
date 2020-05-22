@@ -29,6 +29,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Collapse from "@material-ui/core/Collapse";
 import styled from "styled-components";
+import posed from 'react-pose';
 
 let category;
 category = {
@@ -51,7 +52,36 @@ const AlertContainer = styled.div`
   alignItems: center;
 `;
 
+const Box = posed.div({
+    hoverable: true,
+    pressable: true,
+    init: {
+        scale: 1,
+        boxShadow: '0px 0px 0px rgba(0,0,0,0)'
+    },
+    hover: {
+        scale: 1.05,
+        boxShadow: '0px 5px 10px rgba(0,0,0,0.2)'
+    },
+    press: {
+        scale: 1.05,
+        boxShadow: '0px 2px 5px rgba(0,0,0,0.1)'
+    },
+    hidden: { opacity: 0, y: -1000, transition: { duration: 300 }},
+    visible: { opacity: 1, y: 0, transition: { duration: 300 }},
+
+});
+
 export class ChooseCategory extends React.Component {
+
+    constructor() {
+        super();
+        this.state = {
+            visible: false
+        };
+    }
+
+
 
     stepper = null;
     /**
@@ -73,6 +103,8 @@ export class ChooseCategory extends React.Component {
                 </Step>
             ))}
         </Stepper>
+
+        this.setState({visible: true})
     }
 
     /**
@@ -137,11 +169,12 @@ export class ChooseCategory extends React.Component {
             >
                 {this.showLeaderboard()}
                 {localStorage.getItem('SelectedCat')==0 ?
-                    <FlippedCard front = {FocusedPokemonCard(this.props.masterState.deck.cards[0], !this.props.masterState.amITurnPlayer, '0', 'Your Card', this.props.parentMethod, false, true, 0, this.props.masterState.pokeCode.toString())}/>
+                    <FlippedCard front = {FocusedPokemonCard(this.props.masterState.deck.cards[0], !this.props.masterState.amITurnPlayer, '0', 'Your Card', this.props.parentMethod, false, true, 0, this.props.masterState.pokeCode.toString()) }/>
                     :
                     <FlippedCard front = {FocusedPokemonCard(this.props.masterState.deck.cards[0], !this.props.masterState.amITurnPlayer, localStorage.getItem('SelectedCat'), 'Your Card', this.props.parentMethod, false, true, 0, this.props.masterState.pokeCode.toString())}/>
                 }
-                {PlaceholderCard()}
+                <Box className="box" pose={this.state.visible ? 'visible' : 'hidden'}>{PlaceholderCard()}</Box>
+
 
             </Grid>
         );

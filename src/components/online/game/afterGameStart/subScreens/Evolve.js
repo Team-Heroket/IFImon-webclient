@@ -22,7 +22,25 @@ import {FlippedCardEvolve} from "./FlippedCardEvolve";
 import {FlippedCard} from "./FlippedCard";
 import {api, handleError} from "../../../../../helpers/api";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import posed from 'react-pose';
+import {FlippedCardEvolveSecond} from "./FlippedCardEvolveSecond";
 
+const Box = posed.div({
+    hoverable: true,
+    pressable: true,
+    init: {
+        scale: 1,
+        boxShadow: '0px 0px 0px rgba(0,0,0,0)'
+    },
+    hover: {
+        scale: 1.05,
+        boxShadow: '0px 5px 10px rgba(0,0,0,0.2)'
+    },
+    press: {
+        scale: 1.05,
+        boxShadow: '0px 2px 5px rgba(0,0,0,0.1)'
+    }
+});
 
 export class Evolve extends React.Component {
     constructor() {
@@ -164,7 +182,7 @@ export class Evolve extends React.Component {
                     {this.showLeaderboard()}
                     {this.props.masterState.turnPlayer.user.npc ?
                         <FlippedCard front={FocusedPokemonCard(this.props.masterState.deck.cards[0], true, this.props.masterState.chosenCategory, 'Your Card', null, false, true)}/>
-                        : FocusedPokemonCard(this.props.masterState.deck.cards[0], true, this.props.masterState.chosenCategory, 'Your Card', null, false, true)}
+                        : <Box className="box">{FocusedPokemonCard(this.props.masterState.deck.cards[0], true, this.props.masterState.chosenCategory, 'Your Card', null, false, true)}</Box>}
 
                     {
                         this.props.masterState.deck.cards[0].evolutionNames.length == 0 ?
@@ -182,12 +200,16 @@ export class Evolve extends React.Component {
                             </ButtonContainer>
 
                     }
-
-
+                    {this.props.masterState.turnPlayer.user.npc ?
+                        <FlippedCardEvolveSecond front = {<SimpleColumnContainer align='left'>
+                            <AmountOfBerries width={'50px'} style={{ marginBottom: '-45px', marginLeft: '-5px',paddingLeft: '10px', background: 'radial-gradient(174.31% 329.79% at -6.61% -61.9%, #00D1FF 0%, rgba(255, 255, 255, 0) 100%), #5259FF', zIndex: '100'}} > <PossibleWinnerIcon/> </AmountOfBerries>
+                            {FocusedPokemonCard((this.props.masterState.winners[0]).deck.cards[0], true, this.props.masterState.chosenCategory, winnersUsername, null ,false, true)}
+                        </SimpleColumnContainer>}/>
+                        :
                     <FlippedCardEvolve front = {<SimpleColumnContainer align='left'>
                         <AmountOfBerries width={'50px'} style={{ marginBottom: '-45px', marginLeft: '-5px',paddingLeft: '10px', background: 'radial-gradient(174.31% 329.79% at -6.61% -61.9%, #00D1FF 0%, rgba(255, 255, 255, 0) 100%), #5259FF', zIndex: '100'}} > <PossibleWinnerIcon/> </AmountOfBerries>
                         {FocusedPokemonCard((this.props.masterState.winners[0]).deck.cards[0], true, this.props.masterState.chosenCategory, winnersUsername, null ,false, true)}
-                    </SimpleColumnContainer>}/>
+                    </SimpleColumnContainer>}/> }
 
                 </Grid>
             </div>

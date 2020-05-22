@@ -12,6 +12,7 @@ import Collapse from "@material-ui/core/Collapse";
 import {OrSeparation} from "../../views/design/Icons";
 
 
+
 const Form = styled.div`
   display: flex;
   flex-direction: column;
@@ -228,13 +229,15 @@ class Login extends React.Component {
             </Collapse>
 
             <Label>Username</Label>
-            <InputField
-              placeholder="Enter here.."
-              onChange={e => {
-                this.handleInputChange('username', e.target.value);
-              }}
-              onKeyDown={this.keyPress}
-            />
+
+              <InputField
+                  placeholder="Enter here.."
+                  onChange={e => {
+                    this.handleInputChange('username', e.target.value);
+                  }}
+                  onKeyDown={this.keyPress}
+              />
+
             <Label>Password</Label>
             <PasswordField
               placeholder="Enter here.."

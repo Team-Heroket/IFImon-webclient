@@ -20,25 +20,43 @@ import Stepper from "@material-ui/core/Stepper";
 import Badge from "@material-ui/core/Badge";
 import {FlippedCardResult} from "./FlippedCardResult";
 import {FlippedCardResultOur} from "./FlippedCardResultOur";
+import posed from 'react-pose';
+import {Spinner} from "../../../../../views/design/Spinner";
+
+const Box = posed.div({
+
+    hidden: { opacity: 0, scale: 0, transition: { duration: 300 }},
+    visible: { opacity: 1, scale: 1, transition: { duration: 300 }},
+});
 
 
+export class Result extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            visible: true
+        }
+    }
 
-export let Result = ({masterState, history}) => {
+    componentDidMount() {
+        setTimeout(() => {
+            this.setState({visible: false})
+        }, 11000)
+    }
 
-
-    function showCards() {
+    showCards() {
         return(<ButtonContainer>
             {
-                masterState.players.map(player => {
-                    if(masterState.winners.length>1){
+                this.props.masterState.players.map(player => {
+                    if(this.props.masterState.winners.length>1){
                         let printed = false;
-                        for (let c = 0; c < masterState.winners.length; c++) {
-                            if (masterState.winners[c].user.username == player.user.username) {
+                        for (let c = 0; c < this.props.masterState.winners.length; c++) {
+                            if (this.props.masterState.winners[c].user.username == player.user.username) {
                                 printed = true;
                                 return (
                                     <Badge color={"primary"} badgeContent={"Draw"}>
                                         <PlayerContainer>
-                                            <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
+                                            <PlayersCard player={player} addOn = {this.props.masterState.chosenCategory}/>
                                         </PlayerContainer>
                                     </Badge>
                                 )
@@ -47,26 +65,29 @@ export let Result = ({masterState, history}) => {
                         if(!printed){
                             return (
                                 <PlayerContainer>
-                                    <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
+                                    <PlayersCard player={player} addOn = {this.props.masterState.chosenCategory}/>
                                 </PlayerContainer>
                             );
                         }
                     }else{
-                    if(masterState.winners[0].user.id === player.user.id){
+                    if(this.props.masterState.winners[0].user.id === player.user.id){
                         return (
                             <Badge color={"secondary"} badgeContent={'Winner'}>
                             <PlayerContainer>
-                                <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
+                                <PlayersCard player={player} addOn = {this.props.masterState.chosenCategory}/>
                             </PlayerContainer>
                             </Badge>
                         )
                     }
                     else{
-                        return(
+                        if (!player.deck.empty) {
+                            return(
                                 <PlayerContainer>
-                                    <PlayersCard player={player} addOn = {masterState.chosenCategory}/>
+                                    <PlayersCard player={player} addOn = {this.props.masterState.chosenCategory}/>
                                 </PlayerContainer>
-                        )
+                            )
+                        }
+
                     }}
 
 
@@ -75,14 +96,14 @@ export let Result = ({masterState, history}) => {
         </ButtonContainer>);
     }
 
-    function showLeaderboard() {
+    showLeaderboard() {
         let steps = ['Category selection', 'Evolve Pokémon', 'Results'];
 
-        if(masterState.amITurnPlayer){
+        if(this.props.masterState.amITurnPlayer){
             steps[0] = 'Select category';
         }
         return (<SimpleColumnContainer width={'280px'} sideMargin={'0px'} style={{marginLeft: '10px'}}>
-                {masterState.players.map(player => {
+                {this.props.masterState.players.map(player => {
                     return (
                         <PlayerContainer>
                             {player.user.id == localStorage.getItem('id') ?
@@ -103,48 +124,76 @@ export let Result = ({masterState, history}) => {
                 </Stepper>
 
 
-                {BerriesIconWithBadge(masterState.berries)}
+                {BerriesIconWithBadge(this.props.masterState.berries)}
                 <LogOutButton
                     width = "50%"
-                    disabled={masterState.amITurnPlayer}
-                    onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) history.push('/menu') }} > Give Up
+                    disabled={this.props.masterState.amITurnPlayer}
+                    onClick={() => { if (window.confirm('Are you sure you want to leave the game?')) this.props.history.push('/menu') }} > Give Up
                 </LogOutButton>
 
             </SimpleColumnContainer>
         );
     }
 
-    let winnersUsername = masterState.winners[0].user.username == masterState.player_me.user.username ? 'Your Card' : masterState.winners[0].user.username;
 
-    return (
-        <Grid
-            container
-            direction="row"
-            justify="space-between"
-            alignItems="center"
-            style={{marginTop: '50px'}}
-        >
-            {showLeaderboard()}
-            <FlippedCardResultOur front = {
-                FocusedPokemonCard(masterState.deck.cards[0], true, masterState.chosenCategory, 'Your Card', null ,false, true)
-            }/>
-            {showCards()}
-            <FlippedCardResult front = {
+    myCards() {
+        if (this.props.masterState.winners.length == 1) {
+            if (this.props.masterState.winners[0].user.id == localStorage.getItem('id')) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+
+    draw() {
+        if (this.props.masterState.winners.length == 1) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    render() {
+        let winnersUsername = this.props.masterState.winners[0].user.username == this.props.masterState.player_me.user.username ? 'Your Card' : this.props.masterState.winners[0].user.username;
+        return (
+            <Grid
+                container
+                direction="row"
+                justify="space-between"
+                alignItems="center"
+                style={{marginTop: '50px'}}
+            >
+                {this.showLeaderboard()}
+                <FlippedCardResultOur our = {this.draw() || this.myCards()}  front = {
+                    FocusedPokemonCard(this.props.masterState.deck.cards[0], true, this.props.masterState.chosenCategory, 'Your Card', null ,false, true)
+                }/>
+                <Box className="box" pose={this.state.visible ? 'visible' : 'hidden'}>{this.showCards()}</Box>
+                <Box className="box" pose={this.state.visible ? 'hidden' : 'visible'}> <Spinner/></Box>
+                <FlippedCardResult our = {this.myCards()} front = {
                     <SimpleColumnContainer align='left'>
                         <AmountOfBerries width={'50px'} style={{
                             marginBottom: '-45px',
                             marginLeft: '-5px',
                             paddingLeft: '10px',
-                            background: masterState.winners.length >1 ?'radial-gradient(174.31% 329.79% at -6.61% -61.9%, #00D1FF 0%, rgba(255, 255, 255, 0) 100%), #5259FF': 'linear-gradient(227.89deg, #F53E28 1.67%, rgba(255, 255, 255, 0) 322.73%), #FCE93A',
+                            background: this.props.masterState.winners.length >1 ?'radial-gradient(174.31% 329.79% at -6.61% -61.9%, #00D1FF 0%, rgba(255, 255, 255, 0) 100%), #5259FF': 'linear-gradient(227.89deg, #F53E28 1.67%, rgba(255, 255, 255, 0) 322.73%), #FCE93A',
                             zIndex: '100'}} >
-                            {masterState.winners.length >1 ? <DrawIcon/> : <WinnerIcon/> }
+                            {this.props.masterState.winners.length >1 ? <DrawIcon/> : <WinnerIcon/> }
                         </AmountOfBerries>
-                        {FocusedPokemonCard((masterState.winners[0]).deck.cards[0], true, masterState.chosenCategory, winnersUsername, null ,true, localStorage.getItem('playedSound')=='true' ? true : masterState.mute , localStorage.getItem('SFXVol')/100) }
+                        {FocusedPokemonCard((this.props.masterState.winners[0]).deck.cards[0], true, this.props.masterState.chosenCategory, winnersUsername, null ,true, localStorage.getItem('playedSound')=='true' ? true : this.props.masterState.mute , localStorage.getItem('SFXVol')/100) }
                     </SimpleColumnContainer>
-            }/>
+                }/>
 
 
-        </Grid>
+            </Grid>
 
-    );
+        );
+    }
+
 };
