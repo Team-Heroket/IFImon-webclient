@@ -18,8 +18,8 @@ const Box = posed.div({
         scale: 1.05,
         boxShadow: '0px 2px 5px rgba(0,0,0,0.1)'
     },
-    hidden: { opacity: 0, y: -1000, transition: { duration: 300 }},
-    visible: { opacity: 1, y: 0, transition: { duration: 300 }},
+    hidden: { opacity: 0, y: -1000, transition: { duration: 500 }},
+    visible: { opacity: 1, y: 0, transition: { duration: 500 }},
 });
 
 export class FlippedCardEvolveSecond extends React.Component {
@@ -38,7 +38,7 @@ export class FlippedCardEvolveSecond extends React.Component {
         this.setState({visible: true})
         setTimeout(() => {
             this.setState({isFlipped: false})
-        }, 400)
+        }, 600)
 
         setTimeout(() => {
             this.setState({isFlipped: true})
