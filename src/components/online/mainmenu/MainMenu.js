@@ -57,7 +57,7 @@ const Box = posed.div({
 });
 
 const BoxPokedex = posed.div({
-    hidden: { opacity: 0, scale: 0.8, transition: { duration: 500 }},
+    hidden: { opacity: 0, scale: 0.9, transition: { duration: 500 }},
     visible: { opacity: 1, scale: 1, transition: { duration: 500 }},
 });
 

@@ -23,6 +23,7 @@ import {Alert} from "@material-ui/lab";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Collapse from "@material-ui/core/Collapse";
+import posed from 'react-pose';
 
 const Label = styled.label`
   position: relative;
@@ -80,6 +81,12 @@ const InputField = styled.input`
   
 `;
 
+const BoxCard = posed.div({
+    hidden: { opacity: 0, scale: 0.9, transition: { duration: 300 }},
+    visible: { opacity: 1, scale: 1, transition: { duration: 300 }},
+});
+
+
 
 class Settings extends React.Component {
 
@@ -101,7 +108,8 @@ class Settings extends React.Component {
             MusicVol :  (localStorage.getItem('MusicVol') ?  localStorage.getItem('MusicVol') : 50),
             runningSample: false,
             saveClicked: false,
-            openSuccess: false
+            openSuccess: false,
+            visible: false
         };
     }
 
@@ -212,7 +220,10 @@ class Settings extends React.Component {
     }
 
     componentDidMount() {
+        console.log("state is: "+this.state.visible)
         //Checks if id in URL corresponds with our id. If it does, we can see edit button
+        setTimeout(() => {this.setState({visible: true})}, 100)
+
         let url_id = this.props.match.params.id;
 
         if (url_id !== localStorage.getItem('id')) {
@@ -282,6 +293,7 @@ class Settings extends React.Component {
     }
 
     componentDidUpdate() {
+        console.log("State is: "+this.state.visible)
         if (this.state.openSuccess ==true) {
             setTimeout(() => {
                 this.setState({openSuccess: false})
@@ -289,6 +301,9 @@ class Settings extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        this.setState({visible: false})
+    }
 
 
     handleInputChange(key, value) {
@@ -431,7 +446,10 @@ class Settings extends React.Component {
                                         }
                                     </SimpleColumnContainer>
                                     <SimpleColumnContainer>
-                                        <PlayerStatCard user={this.state.user}/>
+                                        <BoxCard pose={this.state.visible ? 'visible' : 'hidden'}>
+                                            <PlayerStatCard user={this.state.user}/>
+                                        </BoxCard>
+
                                         <Button width="30%"
                                                 onClick={() => {this.setState({editClicked: true});}}
                                         >

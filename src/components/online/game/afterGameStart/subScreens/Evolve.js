@@ -42,13 +42,27 @@ const Box = posed.div({
     }
 });
 
+const BoxEvolutions = posed.div({
+    hidden: { opacity: 0, scale: 0.8, transition: { duration: 500 }},
+    visible: { opacity: 1, scale: 1, transition: { duration: 500 }},
+});
+
+
 export class Evolve extends React.Component {
     constructor() {
         super();
         this.handleClick = this.handleClick.bind(this)
         this.state = {
-            evolved: false
+            evolved: false,
+            visible: false
         }
+    }
+
+    componentDidMount() {
+        this.setState({visible: true})
+        setTimeout(() => {
+            this.setState({visible: false})
+        }, 9400)
     }
 
     /**
@@ -183,23 +197,27 @@ export class Evolve extends React.Component {
                     {this.props.masterState.turnPlayer.user.npc ?
                         <FlippedCard front={FocusedPokemonCard(this.props.masterState.deck.cards[0], true, this.props.masterState.chosenCategory, 'Your Card', null, false, true)}/>
                         : <Box className="box">{FocusedPokemonCard(this.props.masterState.deck.cards[0], true, this.props.masterState.chosenCategory, 'Your Card', null, false, true)}</Box>}
+                        <BoxEvolutions pose={this.state.visible ? 'visible' : 'hidden'}>
+                            {
+                                this.props.masterState.deck.cards[0].evolutionNames.length == 0 ?
+                                    <ButtonContainer>
+                                        {this.props.masterState.deck.cards[0].name} has no evolutions!
+                                    </ButtonContainer>
+                                    :
+                                    <ButtonContainer>
+                                        {this.state.evolved ? <div><ButtonContainer><CheckCircleIcon/></ButtonContainer>
+                                            <ButtonContainer>Evolution submitted!</ButtonContainer></div> : <ButtonContainer>
+                                            Do you want to evolve?
+                                        </ButtonContainer>}
+                                        <br/>
+                                        {this.evolveButtons()}
+                                    </ButtonContainer>
 
-                    {
-                        this.props.masterState.deck.cards[0].evolutionNames.length == 0 ?
-                            <ButtonContainer>
-                                {this.props.masterState.deck.cards[0].name} has no evolutions!
-                            </ButtonContainer>
-                            :
-                            <ButtonContainer>
-                                {this.state.evolved ? <div><ButtonContainer><CheckCircleIcon/></ButtonContainer>
-                                    <ButtonContainer>Evolution submitted!</ButtonContainer></div> : <ButtonContainer>
-                                    Do you want to evolve?
-                                </ButtonContainer>}
-                                <br/>
-                                {this.evolveButtons()}
-                            </ButtonContainer>
+                            }
 
-                    }
+                        </BoxEvolutions>
+
+
                     {this.props.masterState.turnPlayer.user.npc ?
                         <FlippedCardEvolveSecond front = {<SimpleColumnContainer align='left'>
                             <AmountOfBerries width={'50px'} style={{ marginBottom: '-45px', marginLeft: '-5px',paddingLeft: '10px', background: 'radial-gradient(174.31% 329.79% at -6.61% -61.9%, #00D1FF 0%, rgba(255, 255, 255, 0) 100%), #5259FF', zIndex: '100'}} > <PossibleWinnerIcon/> </AmountOfBerries>

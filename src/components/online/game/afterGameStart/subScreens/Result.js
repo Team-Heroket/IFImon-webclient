@@ -23,10 +23,10 @@ import {FlippedCardResultOur} from "./FlippedCardResultOur";
 import posed from 'react-pose';
 import {Spinner} from "../../../../../views/design/Spinner";
 
-const Box = posed.div({
 
-    hidden: { opacity: 0, scale: 0, transition: { duration: 300 }},
-    visible: { opacity: 1, scale: 1, transition: { duration: 300 }},
+const Box = posed.div({
+    hidden: { opacity: 0, scale: 0.8, transition: { duration: 500 }},
+    visible: { opacity: 1, scale: 1, transition: { duration: 500 }},
 });
 
 
@@ -34,13 +34,16 @@ export class Result extends React.Component {
     constructor() {
         super();
         this.state = {
-            visible: true
+            visible: false,
+            visibleSecond: false
         }
     }
 
     componentDidMount() {
+        this.setState({visible: true})
+
         setTimeout(() => {
-            this.setState({visible: false})
+            this.setState({visible: false, visibleSecond: true})
         }, 11000)
     }
 
@@ -174,8 +177,15 @@ export class Result extends React.Component {
                 <FlippedCardResultOur our = {this.draw() || this.myCards()}  front = {
                     FocusedPokemonCard(this.props.masterState.deck.cards[0], true, this.props.masterState.chosenCategory, 'Your Card', null ,false, true)
                 }/>
-                <Box className="box" pose={this.state.visible ? 'visible' : 'hidden'}>{this.showCards()}</Box>
-                <Box className="box" pose={this.state.visible ? 'hidden' : 'visible'}> <Spinner/></Box>
+                <div>
+                    <Box className="box" pose={this.state.visibleSecond ? 'visible' : 'hidden'}>
+                        
+                        <Spinner/>
+                    </Box>
+                    <Box className="box" pose={this.state.visible ? 'visible' : 'hidden'}>{this.showCards()}</Box>
+                </div>
+
+
                 <FlippedCardResult our = {this.myCards()} front = {
                     <SimpleColumnContainer align='left'>
                         <AmountOfBerries width={'50px'} style={{

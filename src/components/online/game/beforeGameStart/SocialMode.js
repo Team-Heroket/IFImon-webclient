@@ -12,6 +12,7 @@ import {Alert} from "@material-ui/lab";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import {CenterContainer} from "./Lobby";
+import posed from 'react-pose';
 
 const Form = styled.div`
   display: flex;
@@ -58,7 +59,10 @@ const InputField = styled.input`
 `;
 
 
-
+const Box = posed.div({
+    hidden: { opacity: 0, scale: 0.8, transition: { duration: 300 }},
+    visible: { opacity: 1, scale: 1, transition: { duration: 300 }},
+});
 
 
 
@@ -69,11 +73,13 @@ class SocialMode extends React.Component {
         this.state = {
             pokeCode: null,
             openInfo: false,
-            openError: false
+            openError: false,
+            visible: false
         };
     }
 
     componentDidMount() {
+        this.setState({visible: true})
         if (localStorage.getItem('info')!= 0) {
             this.setState({openInfo: true})
             setTimeout(() => {
@@ -166,6 +172,7 @@ class SocialMode extends React.Component {
                         }
                     </Grid>
                 </Row>
+                <Box className="box" pose={this.state.visible ? 'visible' : 'hidden'}>
                 <FormContainer>
                    <Form>
                        <CenterContainer >
@@ -241,7 +248,7 @@ class SocialMode extends React.Component {
                    </Form>
 
                 </FormContainer>
-
+                </Box>
             </BaseContainer>
 
         );

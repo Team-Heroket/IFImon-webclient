@@ -28,6 +28,11 @@ const BoxBlowUp = posed.div({
     }
 });
 
+const Box = posed.div({
+    hidden: { opacity: 0, scale: 0.8, transition: { duration: 300 }},
+    visible: { opacity: 1, scale: 1, transition: { duration: 300 }},
+});
+
 const Row = styled.div`
     &::after{
     content: "";
@@ -45,11 +50,8 @@ const Column = styled.div`
     width: 50%;
     }
 `
-const Box = posed.div({
-    hidden: { opacity: 0, y:500 },
-    visible: { opacity: 1, y: 0},
 
-});
+
 
 
 class Leaderboards extends React.Component {
@@ -60,7 +62,8 @@ class Leaderboards extends React.Component {
             displaySecondaryCard: null,
             users: null,
             user: null,
-            cardVisible: false
+            cardVisible: false,
+            visible: false
         };
 
     }
@@ -75,10 +78,11 @@ class Leaderboards extends React.Component {
 
             const response2 = await api.get('/users/'+localStorage.getItem('id'), { headers: {'Token': localStorage.getItem('token')}});
             await this.setState({user: response2.data,
-                users: response1.data});
+                users: response1.data, visible: true});
             // See here to get more data.
             console.log("response me", response2.data);
             console.log("response all", response1.data);
+
         } catch (error) {
             if (error.response) {
                 if (error.response.status == 401) {
@@ -185,7 +189,10 @@ class Leaderboards extends React.Component {
                     </ButtonContainer>
                 </Column>
                 <Column>
-                    <PlayerStatCard user={this.state.user} />
+                    <Box className="box" pose={this.state.visible ? 'visible' : 'hidden'}>
+                        <PlayerStatCard user={this.state.user} />
+                    </Box>
+
                     {this.state.displaySecondaryCard ? (
                         this.displayPlayerCard()
                     ) : null
