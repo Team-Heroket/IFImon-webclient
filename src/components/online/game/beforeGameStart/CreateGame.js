@@ -18,10 +18,10 @@ import {CenterContainer} from "./Lobby";
 import Grid from "@material-ui/core/Grid";
 import Slider from "@material-ui/core/Slider";
 import withStyles from "@material-ui/core/styles/withStyles";
-
+import ReactTooltip from "react-tooltip";
 import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
 import "react-popupbox/dist/react-popupbox.css"
-
+import posed from 'react-pose';
 
 const Label = styled.label`
   position: relative;
@@ -53,7 +53,8 @@ const Column = styled.div`
     }
 `
 const PlayerButton = styled.button`
-
+background: transparent;
+border: 0px;
 `
 
 
@@ -75,6 +76,21 @@ const InputField = styled.input`
   color: white;
 `;
 
+const Box = posed.div({
+    hoverable: true,
+    pressable: true,
+    init: {
+        scale: 1,
+
+    },
+    hover: {
+        scale: 1.05,
+
+    },
+    press: {
+        scale: 1.05,
+    }
+});
 
 const PrettoSlider = withStyles({
     root: {
@@ -270,7 +286,7 @@ class CreateGame extends React.Component {
             } catch (error) {
                 alert(`Something went wrong: \n${handleError(error)}`);
             }
-        }, 10000)
+        }, 3000)
     }
 
     async startGame() {
@@ -289,7 +305,12 @@ class CreateGame extends React.Component {
             this.goToGame();
 
         } catch (error) {
-            alert(`Something went wrong: \n${handleError(error)}`);
+            if (error.response) {
+                alert(`Something went wrong: \n${handleError(error)}`);
+            }
+            else {
+                this.props.history.push('/error')
+            }
         }
     }
 
@@ -522,6 +543,7 @@ class CreateGame extends React.Component {
         return (
             <BaseContainer>
                 <Header height={140} top={33}/>
+
                 <Grid
                     container
                     direction="row"
@@ -580,7 +602,18 @@ class CreateGame extends React.Component {
                         </PokeCodeContainer>
 
                         <br/>
-                        <Label>Amount of NPCs: </Label>
+                            <ReactTooltip type="dark" effect="solid" multiline={true}
+                                          overridePosition={ (
+                                              { left, top },
+                                              currentEvent, currentTarget, node) => {
+                                              const d = document.documentElement;
+                                              left = Math.min(d.clientWidth - node.clientWidth, left);
+                                              top = Math.min(d.clientHeight - node.clientHeight, top);
+                                              left = Math.max(0, left);
+                                              top = Math.max(0, top);
+                                              return { top, left }
+                                          } }/>
+                        <Label data-tip = "NPCs are computer-generated players">Amount of NPCs: </Label>
                         <SimpleContainer width={"55%"} defFloat={"center"}>
                                 <Column width={"15%"} floate={"left"}>
                                     <TextRoundContainer onClick={() => this.handleNPCEvent(-1)}>
@@ -620,7 +653,22 @@ class CreateGame extends React.Component {
 
                         </SimpleContainer>
                         <br/>
-                        <Label>Generation(s): </Label>
+                        <ReactTooltip type="dark" effect="solid" multiline={true}
+                                      id='overridePosition'
+                                      overridePosition={ (
+                                          { left, top },
+                                          currentEvent, currentTarget, node) => {
+                                          const d = document.documentElement;
+                                          left = Math.min(d.clientWidth - node.clientWidth, left);
+                                          top = Math.min(d.clientHeight - node.clientHeight, top);
+                                          left = Math.max(0, left);
+                                          top = Math.max(0, top);
+                                          return { top, left }
+                                      } }/>
+
+                            <Label data-tip data-for='overridePosition' data-tip = "Here you can choose which generations your cards should be from">Generation(s): </Label>
+
+
                         <SimpleContainer width={"320px"} defFloat={"center"}>
                             <PrettoSlider
                                 color = "white"
@@ -644,10 +692,15 @@ class CreateGame extends React.Component {
                             {
                                 this.state.users.map(player => {
                                     return (
-                                        <ButtonRow id={player.id} onClick={this.handleClick}>
-                                        <PlayerContainer >
-                                            {this.displayPlayer(player)}
-                                        </PlayerContainer>
+                                        <ButtonRow >
+                                            <Box className="box" >
+                                         <PlayerButton id={player.id} onClick={this.handleClick}>
+                                             <PlayerContainer>
+                                                 {this.displayPlayer(player)}
+                                             </PlayerContainer>
+                                         </PlayerButton>
+                                            </Box>
+
                                             { (player.id == localStorage.getItem('id')) ? null :
                                                 <KickContainer onClick={()=> this.kick(player)}>
                                                     <KickIcon/>

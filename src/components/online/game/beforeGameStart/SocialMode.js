@@ -12,6 +12,7 @@ import {Alert} from "@material-ui/lab";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import {CenterContainer} from "./Lobby";
+import posed from 'react-pose';
 
 const Form = styled.div`
   display: flex;
@@ -58,7 +59,10 @@ const InputField = styled.input`
 `;
 
 
-
+const Box = posed.div({
+    hidden: { opacity: 0, scale: 0.8, transition: { duration: 300 }},
+    visible: { opacity: 1, scale: 1, transition: { duration: 300 }},
+});
 
 
 
@@ -69,11 +73,13 @@ class SocialMode extends React.Component {
         this.state = {
             pokeCode: null,
             openInfo: false,
-            openError: false
+            openError: false,
+            visible: false
         };
     }
 
     componentDidMount() {
+        this.setState({visible: true})
         if (localStorage.getItem('info')!= 0) {
             this.setState({openInfo: true})
             setTimeout(() => {
@@ -109,9 +115,6 @@ class SocialMode extends React.Component {
     }
 
     async join() {
-        //IMPORTANT: Ask backend team if they can also accept id
-        //IMPOORTANT: May need token-authorization. This is not added yet
-        // '/lobby/pokeCode' is not implemented yet neither as a component nor in the AppRouter
         try {
             const requestBody = JSON.stringify({
                 action: "JOIN",
@@ -122,14 +125,19 @@ class SocialMode extends React.Component {
             // Login successfully worked --> navigate to the route /game in the GameRouter
             this.props.history.push(`/lobby/`+this.state.pokeCode);
         } catch (error) {
-            if(error.response.status == 404){
-                this.setState({openError: true, errorCode: 404});
+            if (error.response) {
+                if(error.response.status == 404){
+                    this.setState({openError: true, errorCode: 404});
+                }
+                else if (error.response.status == 400) {
+                    this.setState({openError: true, errorCode: 400});
+                }
+                else if(error.response.status == 500){
+                    this.setState({openError: true, errorCode: 500});
+                }
             }
-            else if (error.response.status == 400) {
-                this.setState({openError: true, errorCode: 400});
-            }
-            else if(error.response.status == 500){
-                this.setState({openError: true, errorCode: 500});
+            else {
+                this.props.history.push('/login')
             }
         }
     }
@@ -164,6 +172,7 @@ class SocialMode extends React.Component {
                         }
                     </Grid>
                 </Row>
+                <Box className="box" pose={this.state.visible ? 'visible' : 'hidden'}>
                 <FormContainer>
                    <Form>
                        <CenterContainer >
@@ -239,7 +248,7 @@ class SocialMode extends React.Component {
                    </Form>
 
                 </FormContainer>
-
+                </Box>
             </BaseContainer>
 
         );

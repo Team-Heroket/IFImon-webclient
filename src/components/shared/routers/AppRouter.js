@@ -13,6 +13,7 @@ import CreateGame from "../../online/game/beforeGameStart/CreateGame"
 import Quickplay from "../../online/quickplay/Quickplay";
 import Game from "../../online/game/afterGameStart/masterScreen/Game";
 import Tutorial from "../../online/tutorial/Tutorial";
+import NetworkError from "../../offline/NetworkError";
 
  /**
  * Main router of your application.
@@ -122,6 +123,16 @@ class AppRouter extends React.Component {
                       <LoginGuard>
                           <Register />
                       </LoginGuard>
+                  )}
+              />
+
+              <Route
+                  path="/error"
+                  exact
+                  render={() => (
+
+                          <NetworkError />
+
                   )}
               />
 
