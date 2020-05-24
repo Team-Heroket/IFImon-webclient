@@ -24,6 +24,12 @@ import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import {BerriesIconWithBadge} from "../../../../../views/design/Icons";
 import {FlippedCard} from "./FlippedCard";
+import {Alert} from "@material-ui/lab";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Collapse from "@material-ui/core/Collapse";
+import styled from "styled-components";
+import posed from 'react-pose';
 
 let category;
 category = {
@@ -41,10 +47,46 @@ clock = {
     PERIOD: "period"
 }
 
+const AlertContainer = styled.div`
+  width: 100%;
+  alignItems: center;
+`;
+
+const Box = posed.div({
+    hoverable: true,
+    pressable: true,
+    init: {
+        scale: 1,
+        boxShadow: '0px 0px 0px rgba(0,0,0,0)'
+    },
+    hover: {
+        scale: 1.05,
+        boxShadow: '0px 5px 10px rgba(0,0,0,0.2)'
+    },
+    press: {
+        scale: 1.05,
+        boxShadow: '0px 2px 5px rgba(0,0,0,0.1)'
+    },
+    hidden: { opacity: 0, y: -1000, transition: { duration: 500 }},
+    visible: { opacity: 1, y: 0, transition: { duration: 500 }},
+
+});
 
 export class ChooseCategory extends React.Component {
 
+    constructor() {
+        super();
+        this.state = {
+            visible: false
+        };
+    }
+
+
+
     stepper = null;
+    /**
+     * Assigns the stepper to the variable stepper
+     */
     componentDidMount() {
         let steps = ['Category selection', 'Evolve Pokémon', 'Results'];
 
@@ -61,12 +103,36 @@ export class ChooseCategory extends React.Component {
                 </Step>
             ))}
         </Stepper>
+
+        this.setState({visible: true})
     }
 
-    //= ({masterState, history, parentMethod})
+    /**
+     * Returns the left-hand side of the screen with all the players, the stepper and the berries
+     */
     showLeaderboard() {
 
         return (<SimpleColumnContainer width={'280px'} sideMargin={'0px'} style={{marginLeft: '10px'}}>
+                <Collapse in={this.props.masterState.openWarning}>
+                    <AlertContainer>
+                        <Alert severity="warning"
+                               action={
+                                   <IconButton
+                                       aria-label="close"
+                                       color="inherit"
+                                       size="small"
+                                       width={'50%'}
+
+                                   >
+                                       <CloseIcon fontSize="inherit"/>
+                                   </IconButton>
+                               }
+                        >
+                            Warning: Choose a Category or you will be kicked for being AFK!
+                        </Alert>
+                    </AlertContainer>
+                    <br/>
+                </Collapse>
                 {this.props.masterState.players.map(player => {
                     return (
                         <PlayerContainer>
@@ -79,7 +145,7 @@ export class ChooseCategory extends React.Component {
                     );
                 })}
 
-            {this.stepper};
+            {this.stepper}
 
 
                 {BerriesIconWithBadge(this.props.masterState.berries)}
@@ -103,11 +169,12 @@ export class ChooseCategory extends React.Component {
             >
                 {this.showLeaderboard()}
                 {localStorage.getItem('SelectedCat')==0 ?
-                    <FlippedCard front = {FocusedPokemonCard(this.props.masterState.deck.cards[0], !this.props.masterState.amITurnPlayer, '0', 'Your Card', this.props.parentMethod, false, true, 0, this.props.masterState.pokeCode.toString())}/>
+                    <FlippedCard front = {FocusedPokemonCard(this.props.masterState.deck.cards[0], !this.props.masterState.amITurnPlayer, '0', 'Your Card', this.props.parentMethod, false, true, 0, this.props.masterState.pokeCode.toString()) }/>
                     :
                     <FlippedCard front = {FocusedPokemonCard(this.props.masterState.deck.cards[0], !this.props.masterState.amITurnPlayer, localStorage.getItem('SelectedCat'), 'Your Card', this.props.parentMethod, false, true, 0, this.props.masterState.pokeCode.toString())}/>
                 }
-                {PlaceholderCard()}
+                <Box className="box" pose={this.state.visible ? 'visible' : 'hidden'}>{PlaceholderCard()}</Box>
+
 
             </Grid>
         );

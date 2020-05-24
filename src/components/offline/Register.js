@@ -88,8 +88,7 @@ class Register extends React.Component {
             passwordRepeat: null,
             username: null,
             avatarId: null,
-            avatarClicked: null,
-            openNetworkError: false
+            avatarClicked: null
         };
     }
 
@@ -107,12 +106,7 @@ class Register extends React.Component {
     }
 
     componentDidUpdate() {
-        if (this.state.openNetworkError ==true) {
-            setTimeout(() => {
-                this.setState({openNetworkError: false})
-            }, 5000)
-        }
-        else if (this.state.open ==true) {
+        if (this.state.open ==true) {
             setTimeout(() => {
                 this.setState({open: false, errorCode: false})
             }, 5000)
@@ -153,6 +147,9 @@ class Register extends React.Component {
     }
 
 
+    /**
+     * Creates an account. If it is unsuccessful a corresponding alert appears.
+     */
     async register() {
         try {
             const requestBody = JSON.stringify({
@@ -175,7 +172,7 @@ class Register extends React.Component {
                     alert(`Something went wrong during the login: \n${handleError(error)}`);}
             }
             else {
-                this.setState({openNetworkError: true})
+                this.props.history.push('/error')
             }
         }
     }
@@ -184,6 +181,10 @@ class Register extends React.Component {
         this.props.history.push('/login');
     }
 
+    /**
+     * Checks if password satisfies the security constraints
+     *
+     */
     checkPassword() {
         if (this.state.password) {
             if (this.state.password.length < 8) {
@@ -205,6 +206,10 @@ class Register extends React.Component {
         }
 
     }
+
+    /**
+     * If word has at least one uppercase letter it returns true
+     */
     hasUpperCase(word) {
         let hasUpper = false
         console.log("word length is: "+word.length)
@@ -220,6 +225,9 @@ class Register extends React.Component {
         return hasUpper;
     }
 
+    /**
+     * If word has at least one lowercase letter it returns true
+     */
     hasLowerCase(word) {
         let hasLower = false
         let i=0;
@@ -234,6 +242,9 @@ class Register extends React.Component {
         return false;
     }
 
+    /**
+     * If word has at least one number it returns true
+     */
     hasNumber(word) {
         let hasLower = false
         let i=0;
@@ -288,25 +299,7 @@ class Register extends React.Component {
                                 </Alert>
                                 <br/>
                             </Collapse>
-                        <Collapse in={this.state.openNetworkError}>
-                            <Alert severity="error"
-                                   action={
-                                       <IconButton
-                                           aria-label="close"
-                                           color="inherit"
-                                           size="small"
-                                           onClick={() => {
-                                               this.setState({openNetworkError: false});
-                                           }}
-                                       >
-                                           <CloseIcon fontSize="inherit"/>
-                                       </IconButton>
-                                   }
-                            >
-                                Network Error - Server is Offline
-                            </Alert>
-                            <br/>
-                        </Collapse>
+
                             <Label>Enter Username</Label>
                             <InputField
                                 placeholder="Enter here.."

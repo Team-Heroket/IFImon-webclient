@@ -24,6 +24,7 @@ import {EncounteredPokemonSprite, ForwardIcon, PokemonSprite, NextIcon} from "..
 import {Spinner} from "../../../views/design/Spinner";
 import Grid from "@material-ui/core/Grid";
 import {RandomPokemonFact} from "./RandomPokemonFact";
+import posed from 'react-pose';
 
 const Form = styled.div`
   display: flex;
@@ -39,6 +40,26 @@ const Form = styled.div`
   transition: opacity 0.5s ease, transform 0.5s ease;
 `;
 
+const Box = posed.div({
+    hoverable: true,
+    pressable: true,
+    init: {
+        scale: 1,
+
+    },
+    hover: {
+        scale: 1.25,
+
+    },
+    press: {
+        scale: 1.25,
+    }
+});
+
+const BoxPokedex = posed.div({
+    hidden: { opacity: 0, scale: 0.9, transition: { duration: 500 }},
+    visible: { opacity: 1, scale: 1, transition: { duration: 500 }},
+});
 
 
 class MainMenu extends React.Component {
@@ -59,8 +80,8 @@ class MainMenu extends React.Component {
      */
     constructor() {
         super();
-
         this.handleClick = this.handleClick.bind(this);
+
         if(!localStorage.getItem('SFXVol')){
             console.log('entered SFXVOL non existing')
             localStorage.setItem('SFXVol', 33);
@@ -76,7 +97,8 @@ class MainMenu extends React.Component {
             step: 0,
             generation: this.genPokemon.I,
             justInitialized: false,
-            showGif: false
+            showGif: false,
+            visible: false
         };
     }
 
@@ -127,9 +149,14 @@ class MainMenu extends React.Component {
         if (localStorage.getItem('justLoggedIn') == 'true') {
             this.setState({justInitialized: true});
             setTimeout(() => {
-                this.setState({justInitialized: false})
+                this.setState({justInitialized: false, visible: true})
+
             }, 4000)
         }
+        else {
+            this.setState({visible: true})
+        }
+
 
         localStorage.setItem('justLoggedIn', 'false');
         try {
@@ -153,6 +180,9 @@ class MainMenu extends React.Component {
                 else {
                     alert(`Something went wrong: \n${handleError(error)}`);
                 }
+            }
+            else {
+                this.props.history.push('/error')
             }
 
         }
@@ -195,11 +225,16 @@ class MainMenu extends React.Component {
 
 
         } catch (error) {
-            if (error.response.status == 401) {
-                this.props.history.push('/login')
+            if (error.response) {
+                if (error.response.status == 401) {
+                    this.props.history.push('/login')
+                }
+                else {
+                    alert(`Something went wrong: \n${handleError(error)}`);
+                }
             }
             else {
-                alert(`Something went wrong: \n${handleError(error)}`);
+                this.props.history.push('/login');
             }
 
         }
@@ -363,14 +398,19 @@ class MainMenu extends React.Component {
                 if(this.state.user.statistics.encounteredPokemon.includes(i)){
                     pokemon_list.push(
                         <EncounteredPokemonSprite size={"92px"} id={i} onClick={this.handleClick}>
+                            <Box className="box">
                             <PokemonSprite alt="avatar" src={'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/'+i+'.png'} size={"92px"} index = {i}/>
+                            </Box>
                         </EncounteredPokemonSprite>
                         )
                 }
                 else{
                     pokemon_list.push(
-                        <PokemonSprite src={require('../../shared/images/pokemonTypesSVG/unknown.svg')} size={"92px"} index = {i}/>
-
+                        <EncounteredPokemonSprite size={"92px"} >
+                            <Box className="box">
+                                <PokemonSprite src={require('../../shared/images/pokemonTypesSVG/unknown.svg')} size={"92px"} index = {i}/>
+                            </Box>
+                        </EncounteredPokemonSprite>
                     )
 
                 }
@@ -532,7 +572,7 @@ class MainMenu extends React.Component {
                         <div><br/><br/>
                             <PopupboxContainer style={{color: '#FFFFFF', background: 'transparent', justifyContent: 'center', alignContent: 'center', boxShadow: '0px 0px 0px -200px rgba(0,0,0,0)'}}/>
                             {
-                                this.state.user ? this.SpritesGenerator() : this.emptyPokedex()
+                                this.state.user ? <BoxPokedex className="box" pose={this.state.visible ? 'visible' : 'hidden'}>{this.SpritesGenerator()}</BoxPokedex> : <BoxPokedex className="box" pose={this.state.visible ? 'visible' : 'hidden'}>{this.emptyPokedex()}</BoxPokedex>
                             }
                         </div>
                     </Grid>

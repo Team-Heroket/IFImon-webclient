@@ -149,7 +149,14 @@ class Game extends React.Component {
         localStorage.setItem('SelectedCat',0);
     }
 
-
+    /**
+     * Makes the get-game request
+     * Creates the ranking within the game relative to the server response
+     * Checks if we are turnplayer
+     * Checks if we are admin
+     * Checks if we have to switch to another period relative to the server response and the goToEvolve variable
+     * Makes the user go back to the main menu if he/she happens to be unauthorized
+     */
     async getGameInfo() {
         try {
             console.log("getGameInfo called");
@@ -321,8 +328,7 @@ class Game extends React.Component {
             let currentBerries = this.state.berries;
             this.setState({berries: currentBerries - this.state.evolveBerries, evolved: true})
             await api.put('/games/' + this.state.pokeCode + '/berries', requestBody, {headers: {'Token': localStorage.getItem('token')}});
-
-
+            this.setState({afkCount: 0, openWarning: false, evolved: true})
         } catch (error) {
             alert(`Something went wrong: \n${handleError(error)}`);
         }
@@ -408,9 +414,11 @@ class Game extends React.Component {
             this.setState({'openWarning': false})
             this.timeout_evolve = setTimeout(() => {
                 if (localStorage.getItem('evolveTo') != 0) {
-                    this.evolvePokemon();
+                    this.setState({goToEvolve: false, berries: this.state.berries - this.state.evolveBerries, evolved: true, afkCount: 0, openWarning: false}, this.getGameInfo)
                 }
-                this.setState({goToEvolve: false},  this.getGameInfo);
+                else {
+                    this.setState({goToEvolve: false},  this.getGameInfo)
+                }
                 localStorage.setItem('playedSound', 'false');
             }, 10000)
         }
@@ -427,11 +435,8 @@ class Game extends React.Component {
 
             if (this.state.amIAdmin) {
                 this.timeout_callNext = setTimeout(() => {
-                    this.makeFinalTurn();
-                    setTimeout(() => {
-                        this.setState({goToEvolve: true},  this.getGameInfo);
-                    }, 2000)
-                }, 10000)
+                    this.makeFinalTurn().then(() => {this.setState({goToEvolve: true},  this.getGameInfo);});
+                }, 11500)
             }
         }
 
@@ -662,28 +667,7 @@ class Game extends React.Component {
                             document.getElementById("Background").volume = 0}} />
                     }
                 </Grid>
-                <Collapse in={this.state.openWarning}>
-                    <AlertContainer>
-                        <Alert severity="warning"
-                               action={
-                                   <IconButton
-                                       aria-label="close"
-                                       color="inherit"
-                                       size="small"
-                                       width={'50%'}
-                                       onClick={() => {
-                                           this.setState({openWarning: false});
-                                       }}
-                                   >
-                                       <CloseIcon fontSize="inherit"/>
-                                   </IconButton>
-                               }
-                        >
-                            Warning: Choose a Category or you will be kicked for being AFK!
-                        </Alert>
-                    </AlertContainer>
-                    <br/>
-                </Collapse>
+
 
 
                 {this.state.justInitialized ?
