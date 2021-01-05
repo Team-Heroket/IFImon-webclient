@@ -9,7 +9,7 @@
     "@fortawesome/react-native-fontawesome": "^0.2.3",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.51",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "react": "^16.12.0",
     "react-card-flip": "^1.0.10",
     "react-confetti": "^5.0.1",
